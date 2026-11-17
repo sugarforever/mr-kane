@@ -17,6 +17,7 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import Recorder from '#lib/Recorder.svelte';
 	import ReadingText from '$lib/ReadingText.svelte';
+	import { readingUnits, type ReadingUnit } from '$lib/reading-levels';
 	import Vocabulary from '$lib/Vocabulary.svelte';
 	import AIProviders from '#lib/AIProviders.svelte';
 	import type { AISettings } from '#lib/ai-types';
@@ -158,6 +159,7 @@
 	let material = $state('');
 	let useResearch = $state(true);
 	let mode: 'writing' | 'speaking' = $state('writing');
+	let readingUnit = $state<ReadingUnit>('words');
 	let showHistory = $state(false);
 	const current = $derived(
 		notebook.practices.find(
@@ -317,13 +319,15 @@
 	async function generateVocabulary(
 		words: string[],
 		practiceMode: 'writing' | 'speaking',
+		unit?: ReadingUnit,
 	) {
 		if (busy || micBusy || !aiConfigured || storageBroken) return;
-		await generate({ words, mode: practiceMode });
+		await generate({ words, mode: practiceMode, unit });
 	}
 	async function generate(vocabulary?: {
 		words: string[];
 		mode: 'writing' | 'speaking';
+		unit?: ReadingUnit;
 	}) {
 		notice = '';
 		const parsed = requestSchema.safeParse({
@@ -332,6 +336,9 @@
 			sourceType: vocabulary ? 'daily' : sourceType,
 			material: vocabulary ? '' : material,
 			research: vocabulary ? false : useResearch,
+			...((vocabulary?.mode ?? mode) === 'speaking'
+				? { readingUnit: vocabulary?.unit ?? readingUnit }
+				: {}),
 			...(vocabulary ? { selectedVocabulary: vocabulary.words } : {}),
 		});
 		if (!parsed.success) {
@@ -356,7 +363,7 @@
 			tab = result.mode;
 			notice =
 				result.origin === 'demo'
-					? 'A fixed A2 sample is ready. Connect a model for practice tailored to your interests, level, and source material.'
+					? 'A fixed sample is ready. Connect a model for practice tailored to your interests, level, and source material.'
 					: 'Your new practice is saved.';
 		} catch (e) {
 			notice =
@@ -723,6 +730,24 @@
 						are sent to search. AI adapts the material to your level, vocabulary and
 						grammar. Sources are saved with your practice.
 					</p>
+					{#if mode === 'speaking'}
+						<Label class="block my-4"
+							>Reading training unit<NativeSelect
+								bind:value={readingUnit}
+								disabled={busy}
+								class="w-full"
+								>{#each readingUnits as unit}<option value={unit.value}
+										>{unit.label}</option
+									>{/each}</NativeSelect
+							></Label
+						>
+						<p class="fineprint">
+							{readingUnits.find((unit) => unit.value === readingUnit)
+								?.description} This controls the length of your practice. Your A1–B2
+							language level controls vocabulary and grammar. New to the language?
+							Start with words and A1 in My learning profile.
+						</p>
+					{/if}
 					<div class="builder-footer">
 						<Tabs.Root bind:value={mode}
 							><Tabs.List aria-label="Practice mode"
@@ -744,8 +769,9 @@
 						>
 					</div>
 					{#if !aiConfigured}<p class="fineprint">
-							Demo mode uses fixed A2 samples, not personalised practice. News,
-							exam topics, and writing feedback need a connected AI model.
+							Demo mode uses fixed samples, not personalised practice. Reading
+							samples follow your selected training unit. News, exam topics, and
+							writing feedback need a connected AI model.
 						</p>{/if}
 				</Card.Root>
 			{:else if tab === 'writing'}
@@ -1068,7 +1094,10 @@
 						devices. Clearing browser data removes them. Writing submitted for
 						AI feedback is sent to the configured model provider. AI requests
 						and responses are also saved privately on this server for recovery.
-						Audio is never uploaded.
+						Audio stays local unless you request a reading check, which sends
+						the recording and language to your selected speech provider through
+						this server. Remote reading voices send learning text to your
+						selected TTS provider.
 					</p>
 					<Button variant="outline" class="secondary" onclick={exportData}
 						>Export text backup ↗</Button
@@ -1092,8 +1121,14 @@
 								>
 							</div>
 							<h2>{current.title}</h2>
-							{#key current.id + current.profile.language + current.script}<ReadingText
+							{#if current.readingUnit}<p class="fineprint">
+									Training unit · {readingUnits.find(
+										(unit) => unit.value === current.readingUnit,
+									)?.label}
+								</p>{/if}
+							{#key current.id + current.profile.language + current.script + (current.readingUnit ?? '')}<ReadingText
 									text={current.script}
+									unit={current.readingUnit}
 									language={current.profile.language}
 									recording={micBusy}
 								/>{/key}

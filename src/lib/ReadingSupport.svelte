@@ -1,23 +1,26 @@
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
+	import { readingItems, type ReadingUnit } from '$lib/reading-levels';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
-	import { matchingVoice, parsePassageTranslation } from '$lib/reading';
+	import { parsePassageTranslation } from '$lib/reading';
 	import { cachedPassage, cachePassage } from '$lib/client/passage-cache';
 	import {
-		createPassageSpeech,
-		type PlaybackState,
-	} from '$lib/client/passage-speech';
+		createSpeechPlayback,
+		type SpeechPlaybackState,
+	} from '$lib/client/speech-playback';
 	let {
 		text,
 		language,
+		unit,
 		recording,
 		children,
 	}: {
 		text: string;
 		language: 'ga' | 'es';
+		unit?: ReadingUnit;
 		recording: boolean;
 		children: Snippet;
 	} = $props();
@@ -27,38 +30,31 @@
 	let error = $state('');
 	let cacheNotice = $state('');
 	let audioError = $state('');
-	let voice = $state<SpeechSynthesisVoice>();
-	let playback = $state<PlaybackState>('idle');
+	let speechAvailable = $state(false);
+	let speechDescription = $state('Loading speech settings…');
+	let playback = $state<SpeechPlaybackState>('idle');
 	let rate = $state('1');
-	let player: ReturnType<typeof createPassageSpeech> | undefined;
+	let player: ReturnType<typeof createSpeechPlayback> | undefined;
 	let controller: AbortController | undefined;
 	let version = 0;
 	const comparisonId = $props.id();
 	onMount(() => {
-		const synth = window.speechSynthesis;
-		const updateVoices = () => {
-			voice =
-				synth && player
-					? matchingVoice(synth.getVoices(), language)
-					: undefined;
-		};
-		if (synth && typeof SpeechSynthesisUtterance !== 'undefined')
-			player = createPassageSpeech(synth, (state, message) => {
+		if (unit === 'words' || unit === 'sentences') rate = '0.8';
+		player = createSpeechPlayback(
+			language,
+			(state, message) => {
 				playback = state;
 				audioError = message ?? '';
-			});
-		updateVoices();
-		synth?.addEventListener('voiceschanged', updateVoices);
-		const hidden = () => {
-			if (document.hidden) player?.stop();
-		};
-		document.addEventListener('visibilitychange', hidden);
+			},
+			(info) => {
+				speechAvailable = info.available;
+				speechDescription = info.description;
+			},
+		);
 		return () => {
 			version++;
 			controller?.abort();
 			player?.dispose();
-			synth?.removeEventListener('voiceschanged', updateVoices);
-			document.removeEventListener('visibilitychange', hidden);
 		};
 	});
 	$effect(() => {
@@ -136,10 +132,13 @@
 	>
 	<Button
 		variant="outline"
-		disabled={!voice || recording || playback !== 'idle'}
+		disabled={!speechAvailable || recording || playback !== 'idle'}
 		onclick={() => {
-			if (voice && !recording) player?.play(text, voice, Number(rate));
-		}}>Listen to passage</Button
+			if (speechAvailable && !recording) void player?.play(text, Number(rate));
+		}}
+		>{unit === 'words' || unit === 'sentences'
+			? 'Listen to all items'
+			: 'Listen to passage'}</Button
 	>
 	<Label
 		>Reading speed<NativeSelect
@@ -153,6 +152,7 @@
 	{#if playback !== 'idle'}
 		<Button
 			variant="outline"
+			disabled={playback === 'loading'}
 			onclick={() =>
 				playback === 'paused' ? player?.resume() : player?.pause()}
 			>{playback === 'paused' ? 'Resume' : 'Pause'}</Button
@@ -163,15 +163,34 @@
 <p class="fineprint" role="status">
 	{recording
 		? 'Stop recording before listening to the passage.'
-		: voice
-			? `Local browser voice: ${voice.name} (${voice.lang}). Device voice quality varies; this is not a teacher recording or AI-generated audio.`
-			: `Reading audio unavailable: no local ${language === 'ga' ? 'Irish' : 'Spanish'} voice was found. Install a matching device voice and reload. No substitute language voice will be used.`}{playback ===
-	'paused'
+		: speechDescription}{playback === 'paused'
 		? ' Playback paused.'
 		: playback === 'playing'
-			? ' Playing the original passage.'
+			? ' Playing the original reading text.'
 			: ''}
 </p>
+{#if unit === 'words' || unit === 'sentences'}
+	<div class="my-4 space-y-2" aria-label="Listen and repeat one item at a time">
+		<p class="fineprint">
+			Listen to one item, repeat it, then move to the next. Use Slow if you need
+			more time.
+		</p>
+		{#each readingItems(text) as item, index}<div
+				class="flex flex-wrap items-center gap-3 rounded-lg border p-3"
+			>
+				<span lang={language} class="flex-1 whitespace-pre-wrap">{item}</span
+				><Button
+					variant="outline"
+					disabled={!speechAvailable || recording}
+					onclick={() => {
+						if (speechAvailable && !recording)
+							void player?.play(item, Number(rate));
+					}}
+					aria-label={`Listen to item ${index + 1}`}>Listen to item</Button
+				>
+			</div>{/each}
+	</div>
+{/if}
 {#if audioError}<Alert.Root role="alert" class="my-2">{audioError}</Alert.Root
 	>{/if}
 <div class={showEnglish ? 'grid gap-6 md:grid-cols-2' : ''}>

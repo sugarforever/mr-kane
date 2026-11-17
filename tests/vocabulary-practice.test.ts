@@ -85,3 +85,34 @@ it.each(['writing', 'speaking'])(
 		);
 	},
 );
+
+it('persists a reading unit and rejects model output that does not match it', async () => {
+	const content = {
+		title: 'Words',
+		prompt: 'Listen and repeat.',
+		script: 'páirc\n\ncrann',
+		vocabulary: ['páirc · park', 'crann · tree'],
+		focus: 'Words',
+		sourceNote: 'Original vocabulary practice.',
+	};
+	vi.mocked(runCoach).mockResolvedValue(JSON.stringify(content));
+	const response = await POST(
+		request({ ...input, mode: 'speaking', readingUnit: 'words' }) as any,
+	);
+	expect(await response.json()).toMatchObject({
+		readingUnit: 'words',
+		script: content.script,
+	});
+	expect(runCoach).toHaveBeenCalledWith(
+		'practice',
+		expect.objectContaining({ readingUnit: 'words' }),
+		expect.any(Object),
+		'vocabulary-test',
+	);
+	vi.mocked(runCoach).mockResolvedValue(
+		JSON.stringify({ ...content, script: 'word '.repeat(100) }),
+	);
+	await expect(
+		POST(request({ ...input, mode: 'speaking', readingUnit: 'words' }) as any),
+	).rejects.toMatchObject({ status: 502 });
+});

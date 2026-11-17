@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { readingUnitSchema } from './reading-levels';
 const short = z.string().trim().min(1).max(2000);
 export const profileSchema = z.object({
 	language: z.enum(['ga', 'es']),
@@ -24,6 +25,7 @@ export const requestSchema = z.object({
 	material: z.string().max(12000),
 	research: z.boolean().optional(),
 	selectedVocabulary: selectedVocabularySchema.optional(),
+	readingUnit: readingUnitSchema.optional(),
 });
 export const sourceSchema = z.object({
 	title: z.string().max(300),
@@ -44,6 +46,7 @@ export const practiceContentSchema = z.object({
 export const practiceSchema = practiceContentSchema.extend({
 	id: z.string(),
 	targetVocabulary: selectedVocabularySchema.optional(),
+	readingUnit: readingUnitSchema.optional(),
 	sources: z.array(sourceSchema).max(4).default([]),
 	searchedAt: z.string().optional(),
 	searchQuery: z.string().optional(),

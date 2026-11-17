@@ -11,6 +11,7 @@
 
 	import { onMount, onDestroy } from 'svelte';
 	import SearchSettings from '#lib/SearchSettings.svelte';
+	import SpeechSettings from '$lib/SpeechSettings.svelte';
 	import type {
 		AISettings,
 		CatalogEntry,
@@ -635,4 +636,5 @@
 		</Card.Root>{/if}
 </div>
 
+<SpeechSettings />
 <SearchSettings />

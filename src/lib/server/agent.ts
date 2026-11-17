@@ -21,6 +21,7 @@ import {
 } from './providers-store';
 import { modelsFor } from './providers-models';
 import { research } from './research';
+import { createSpeechTools } from './speech/tools';
 import { requestSchema } from '#lib/domain';
 import type { Connection } from '#lib/ai-types';
 export const configured = () => {
@@ -32,6 +33,7 @@ type Snapshot = {
 	skill: string;
 	content: string;
 	research?: Awaited<ReturnType<typeof research>>;
+	speechTools?: boolean;
 };
 const state = globalThis as typeof globalThis & {
 	__kaneJobs?: Map<string, Promise<string>>;
@@ -42,11 +44,15 @@ export async function runCoach(
 	data: unknown,
 	schema: unknown,
 	requestId: string = randomUUID(),
+	options: { speechTools?: boolean } = {},
 ): Promise<string> {
 	if (!/^[a-zA-Z0-9-]{1,80}$/.test(requestId))
 		throw new Error('Invalid request ID.');
 	const content = JSON.stringify({ operation, data, outputSchema: schema });
-	const hash = createHash('sha256').update(content).digest('hex');
+	const hashContent = options.speechTools
+		? content + '\nspeech-tools-enabled'
+		: content;
+	const hash = createHash('sha256').update(hashContent).digest('hex');
 	const connection = defaultConnection();
 	const db = database();
 	let snapshot: Snapshot;
@@ -63,6 +69,7 @@ export async function runCoach(
 				throw new Error('Connect an AI provider in Settings first.');
 			snapshot = {
 				connection,
+				speechTools: options.speechTools === true,
 				skill: await readFile(
 					resolve('skills/language-coach/SKILL.md'),
 					'utf8',
@@ -144,8 +151,10 @@ async function execute(snapshot: Snapshot, id: string) {
 	closeSync(openSync(file, 'a', 0o600));
 	chmodSync(file, 0o600);
 	const registry = createRegistry();
+	const speechTools = createSpeechTools(id);
 	registry.install({
 		name: 'language-coach',
+		tools: speechTools,
 		sections: [{ key: 'teaching', tag: false, render: () => snapshot.skill }],
 	});
 	const storage = await openNodeSqliteStorage(file);
@@ -175,9 +184,9 @@ async function execute(snapshot: Snapshot, id: string) {
 					provider: snapshot.connection.service,
 					modelId: snapshot.connection.modelId,
 				},
-				tools: [],
+				tools: snapshot.speechTools ? speechTools : [],
 				thinkingLevel: 'off',
-				maxTurns: 1,
+				maxTurns: snapshot.speechTools ? 4 : 1,
 			},
 		});
 		const submission = await root.submit(

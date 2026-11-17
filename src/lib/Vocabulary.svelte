@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { readingUnits, type ReadingUnit } from '$lib/reading-levels';
+	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -23,8 +25,13 @@
 		busy?: boolean;
 		canGenerate?: boolean;
 		blocked?: boolean;
-		ongenerate: (words: string[], mode: 'writing' | 'speaking') => void;
+		ongenerate: (
+			words: string[],
+			mode: 'writing' | 'speaking',
+			unit?: ReadingUnit,
+		) => void;
 	} = $props();
+	let readingUnit = $state<ReadingUnit>('words');
 	let entries = $state<VocabularyEntry[]>([]);
 	let chosen = $state<string[]>([]);
 	const chosenEntries = $derived(
@@ -143,6 +150,17 @@
 		stay in this browser. Limit: 200 characters per entry and 1,000 characters
 		total.
 	</p>
+	<Label class="block my-3"
+		>Reading training unit<NativeSelect bind:value={readingUnit} disabled={busy}
+			>{#each readingUnits as unit}<option value={unit.value}
+					>{unit.label}</option
+				>{/each}</NativeSelect
+		></Label
+	>
+	<p class="fineprint">
+		{readingUnits.find((unit) => unit.value === readingUnit)?.description} This choice
+		applies to reading practice; writing practice stays unchanged.
+	</p>
 	<p class="my-2" role="status">{chosenEntries.length} selected</p>
 	<div class="flex flex-wrap gap-2">
 		<Button
@@ -160,7 +178,8 @@
 				ongenerate(
 					chosenEntries.map((e) => e.text),
 					'speaking',
-				)}>Generate reading passage</Button
+					readingUnit,
+				)}>Generate reading practice</Button
 		>
 		<Button
 			variant="ghost"

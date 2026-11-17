@@ -81,7 +81,7 @@ Subsequent changes belong in AI Providers; changing `.env` does not overwrite sa
 
 Pasted material is optional for every scene. News always searches before generation; search is optional (enabled by default) for other scenes. Exam practice is labelled exam-inspired unless the retrieved/supplied source establishes a specific paper. Today is a learner-initiated recommendation screen, not a background push service.
 
-Audio is for self-listening only: no uploads, transcription, pronunciation grading, or speech evaluation. Microphone access requires localhost or HTTPS and a browser supporting MediaRecorder.
+Recordings are saved locally. Optional reading checks send audio and language to the selected STT provider and compare the transcript against the reading target; this is not a pronunciation score. Microphone access requires localhost or HTTPS and a browser supporting MediaRecorder.
 
 ## Storage and privacy
 
@@ -89,7 +89,7 @@ Drafts, learning records and text backups use localStorage; audio blobs and orig
 
 AI inputs, research evidence, responses and captured request configuration are also stored in the private server data directory for recovery. Search keys, provider credentials and OAuth refresh tokens are stored server-side in SQLite and are never returned by settings/status endpoints. SQLite credential leases serialize token rotation across runtimes. The data directory is mode 0700 and database files are 0600; secrets are not encrypted at rest. Back up this directory securely. Replacing credentials keeps retired slots for already admitted request recovery. Removing a connection does not erase the request archive or its captured credentials. Disconnect removes the current OAuth slot; revoke provider-side access in the provider account when needed.
 
-Profile preferences, supplied material and writing submitted for AI feedback are sent to the selected provider. Audio is never uploaded. The application binds to loopback for development and has no multi-user authentication. Add authentication, user isolation, quotas and deployment controls before public hosting.
+Profile preferences, supplied material and writing submitted for AI feedback are sent to the selected provider. Audio stays local unless the learner enables a reading check; that sends the recording and language to the selected speech-to-text provider through the server. Transcripts and comparisons are saved with the local recording. Configure speech providers in AI Providers → Speech settings; ChatGPT subscription OAuth alone does not enable audio APIs. The application binds to loopback for development and has no multi-user authentication. Add authentication, user isolation, quotas and deployment controls before public hosting.
 
 ## Checks and production build
 
@@ -105,3 +105,24 @@ The Node adapter produces `build/`. Run it from the repository root so the bundl
 Tests cover request limits and origin checks, input/output validation, writing history, audio persistence, connection isolation, secret redaction, model discovery, the real Pi wire path, persisted result replay, and upstream Codex device authentication/refresh with synthetic external responses.
 
 `npm run test:smoke:ai` builds and runs an isolated local provider/application fixture on port 4173. It kills the app with SIGKILL during generation, restarts it with the same data, resumes the original request, and checks replay does not make another model call. It uses synthetic credentials and deletes only its own temporary test directory. No paid model account is used. Real account eligibility and microphone hardware still require user/device verification.
+
+Speech recognition and synthesis use independent provider/model selections. OpenAI recognition defaults to `gpt-transcribe`; MiniMax uses `asr-1.0` with WAV conversion. Set `BODY_SIZE_LIMIT=21M` when running the production Node adapter to allow audio requests above its default body limit; the app route still enforces 20 MB. Audio is forwarded in memory and is not stored on the server by this route. Transcription API usage requires its own API access and billing.
+
+
+### Speech provider extension points
+
+`src/lib/speech.ts` defines the public capability/model/language/voice catalog and validated settings. `src/lib/server/speech/contracts.ts` defines `SpeechToTextProvider` and `TextToSpeechProvider`; implementations live in `providers.ts`, and `service.ts` resolves the saved choice and credential. Add a provider implementation and its catalog entries, then add a protocol test. Feature components use `client/speech-service.ts` for recognition and `client/speech-playback.ts` for all playback, including exclusive playback and microphone cancellation.
+
+Dedicated keys are private server credentials, never returned by Settings APIs. Precedence is dedicated speech key, matching saved API-provider connection, environment fallback (`OPENAI_API_KEY` / `MINIMAX_API_KEY`). No automatic provider fallback occurs when a model, language or key is unavailable. Browser-local TTS remains the default. MiniMax STT/TTS and remote OpenAI TTS are available for Spanish; Irish playback requires a matching local voice. OpenAI file TTS models are compatibility options with the documented January 6, 2027 shutdown; a future Realtime adapter belongs behind the same interface, not in feature components.
+
+### Agent speech tools
+
+`src/lib/server/speech/tools.ts` exposes `speech_to_text` and `text_to_speech` as Pi tools over the same provider services used by the UI. Provider/model/voice selection stays in Speech settings; tools never accept API keys, URLs, or filesystem paths. Reading assessment remains a separate workflow.
+
+- `speech_to_text({ artifactId, language })` returns `{ status, transcript, message? }`.
+- `text_to_speech({ text, language, rate? })` returns `{ artifactId, mimeType, bytes, expiresAt }`. It uses the configured remote voice; local browser voices cannot create a server audio file. Text is limited to 4,000 characters per call.
+- Language is `ga` or `es`, subject to the selected provider's support. Provider calls receive the agent cancellation signal. Interrupted calls are not automatically replayed, to avoid duplicate billable requests.
+
+Audio artifacts are private server files (20 MB maximum), scoped to an application request ID. They expire after 24 hours and are deleted on expired reads or the next artifact creation. Upload audio with `POST /api/speech/artifacts?requestId=REQUEST_ID` (binary audio body, matching Origin, audio Content-Type). Retrieve it with `GET /api/speech/artifacts/ARTIFACT_ID?requestId=REQUEST_ID`. These endpoints follow the app's existing single-user deployment model.
+
+Server workflows opt into the tool-enabled coach with `runCoach(operation, data, outputSchema, requestId, { speechTools: true })`. Include uploaded artifact IDs in `data` using that same `requestId`. Tool-enabled requests allow up to four model turns; existing text-only workflows keep their single-turn behavior. For direct programmatic use, install `createSpeechTools(requestId)` into a Pi registry and pass the returned tool objects to the agent. Audio bytes never enter the model transcript. Tool artifacts must already use a format accepted by the selected STT model; WAV-only models reject WebM/MP4 uploads with conversion guidance.
