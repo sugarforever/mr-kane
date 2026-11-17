@@ -33,3 +33,32 @@ export function readingSelection(
 		return '';
 	return selection.toString().trim();
 }
+
+export const passageInput = z
+	.object({
+		language: z.enum(['ga', 'es']),
+		text: z.string().trim().min(1).max(12000),
+	})
+	.strict()
+	.refine(
+		(value) => passageParagraphs(value.text).length <= 100,
+		'Use up to 100 paragraphs.',
+	);
+export const passageOutput = z.object({
+	paragraphs: z.array(z.string().trim().min(1).max(16000)).min(1).max(100),
+});
+export function passageParagraphs(text: string) {
+	return text
+		.trim()
+		.split(/\n\s*\n/)
+		.filter(Boolean);
+}
+export function parsePassageTranslation(value: unknown, source: string) {
+	const parsed = passageOutput.parse(value);
+	if (
+		parsed.paragraphs.length !== passageParagraphs(source).length ||
+		parsed.paragraphs.join('\n\n').length > 24000
+	)
+		throw new Error('The translation did not match the reading passage.');
+	return parsed.paragraphs;
+}

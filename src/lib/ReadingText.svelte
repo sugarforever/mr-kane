@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import ReadingSupport from '$lib/ReadingSupport.svelte';
 	import { addVocabulary } from '$lib/client/vocabulary';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
@@ -125,6 +126,8 @@
 		if (!voice || recording || !selected || selected.length > selectionLimit)
 			return;
 		stop();
+		window.speechSynthesis.cancel();
+		window.speechSynthesis.resume();
 		const audio = new SpeechSynthesisUtterance(selected);
 		utterance = audio;
 		audio.voice = voice;
@@ -154,18 +157,20 @@
 	}
 </script>
 
-<div
-	class="reading-script"
-	lang={language}
-	bind:this={script}
-	tabindex="0"
-	role="textbox"
-	aria-readonly="true"
-	aria-multiline="true"
-	aria-label="Reading script. Select text with touch, a mouse, or Shift and the arrow keys in caret browsing mode."
->
-	{text}
-</div>
+<ReadingSupport {text} {language} {recording}>
+	<div
+		class="reading-script whitespace-pre-wrap"
+		lang={language}
+		bind:this={script}
+		tabindex="0"
+		role="textbox"
+		aria-readonly="true"
+		aria-multiline="true"
+		aria-label="Reading script. Select text with touch, a mouse, or Shift and the arrow keys in caret browsing mode."
+	>
+		{text}
+	</div>
+</ReadingSupport>
 <p class="fineprint">
 	Select a word or passage, then open Selection actions. For keyboard selection,
 	enable your browser’s caret browsing and use Shift + arrow keys.

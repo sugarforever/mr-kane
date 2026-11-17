@@ -1092,7 +1092,7 @@
 								>
 							</div>
 							<h2>{current.title}</h2>
-							{#key current.id}<ReadingText
+							{#key current.id + current.profile.language + current.script}<ReadingText
 									text={current.script}
 									language={current.profile.language}
 									recording={micBusy}
