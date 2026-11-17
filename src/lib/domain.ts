@@ -9,12 +9,21 @@ export const profileSchema = z.object({
 	grammar: z.string().max(1000),
 });
 export type Profile = z.infer<typeof profileSchema>;
+export const selectedVocabularySchema = z
+	.array(z.string().trim().min(1).max(200))
+	.min(1)
+	.max(12)
+	.refine(
+		(words) => words.join(' ').length <= 1000,
+		'Choose up to 1,000 characters of vocabulary.',
+	);
 export const requestSchema = z.object({
 	profile: profileSchema,
 	mode: z.enum(['writing', 'speaking']),
 	sourceType: z.enum(['daily', 'science', 'nature', 'news', 'exam']),
 	material: z.string().max(12000),
 	research: z.boolean().optional(),
+	selectedVocabulary: selectedVocabularySchema.optional(),
 });
 export const sourceSchema = z.object({
 	title: z.string().max(300),
@@ -34,6 +43,7 @@ export const practiceContentSchema = z.object({
 });
 export const practiceSchema = practiceContentSchema.extend({
 	id: z.string(),
+	targetVocabulary: selectedVocabularySchema.optional(),
 	sources: z.array(sourceSchema).max(4).default([]),
 	searchedAt: z.string().optional(),
 	searchQuery: z.string().optional(),

@@ -118,6 +118,7 @@ async function execute(snapshot: Snapshot, id: string) {
 			: null;
 	if (
 		practice?.success &&
+		!practice.data.selectedVocabulary &&
 		(practice.data.research !== false || practice.data.sourceType === 'news') &&
 		!snapshot.research
 	) {

@@ -16,6 +16,8 @@
 	import { Compass, PenLine, Mic, BookOpen, Settings } from '@lucide/svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import Recorder from '#lib/Recorder.svelte';
+	import ReadingText from '$lib/ReadingText.svelte';
+	import Vocabulary from '$lib/Vocabulary.svelte';
 	import AIProviders from '#lib/AIProviders.svelte';
 	import type { AISettings } from '#lib/ai-types';
 	import {
@@ -37,7 +39,13 @@
 	import '../app.css';
 	let { data } = $props();
 	type Tab =
-		'today' | 'writing' | 'speaking' | 'review' | 'profile' | 'providers';
+		| 'today'
+		| 'writing'
+		| 'speaking'
+		| 'review'
+		| 'profile'
+		| 'providers'
+		| 'vocabulary';
 	let aiOverride: AISettings | null = $state(null);
 	const aiSettings = $derived(aiOverride ?? data.aiSettings);
 	const aiConfigured = $derived(
@@ -63,6 +71,7 @@
 		{ id: 'writing', icon: PenLine, label: 'Writing studio' },
 		{ id: 'speaking', icon: Mic, label: 'Reading room' },
 		{ id: 'review', icon: BookOpen, label: 'Review notes' },
+		{ id: 'vocabulary', icon: BookOpen, label: 'Vocabulary' },
 		{ id: 'providers', icon: Settings, label: 'AI Providers' },
 	];
 	type PendingAI = {
@@ -305,14 +314,25 @@
 		return sendAI(pending);
 	}
 
-	async function generate() {
+	async function generateVocabulary(
+		words: string[],
+		practiceMode: 'writing' | 'speaking',
+	) {
+		if (busy || micBusy || !aiConfigured || storageBroken) return;
+		await generate({ words, mode: practiceMode });
+	}
+	async function generate(vocabulary?: {
+		words: string[];
+		mode: 'writing' | 'speaking';
+	}) {
 		notice = '';
 		const parsed = requestSchema.safeParse({
 			profile: $state.snapshot(profile),
-			mode,
-			sourceType,
-			material,
-			research: useResearch,
+			mode: vocabulary?.mode ?? mode,
+			sourceType: vocabulary ? 'daily' : sourceType,
+			material: vocabulary ? '' : material,
+			research: vocabulary ? false : useResearch,
+			...(vocabulary ? { selectedVocabulary: vocabulary.words } : {}),
 		});
 		if (!parsed.success) {
 			notice = parsed.error.issues[0].message;
@@ -333,7 +353,7 @@
 			});
 			clearPending();
 			choose(result);
-			tab = mode;
+			tab = result.mode;
 			notice =
 				result.origin === 'demo'
 					? 'A fixed A2 sample is ready. Connect a model for practice tailored to your interests, level, and source material.'
@@ -435,6 +455,7 @@
 					JSON.stringify(
 						{
 							notebook: localStorage.getItem('mr-kane-notebook'),
+							vocabulary: localStorage.getItem('mr-kane-vocabulary'),
 							profiles: localStorage.getItem('mr-kane-profiles'),
 							drafts: Object.fromEntries(
 								Object.keys(localStorage)
@@ -713,7 +734,7 @@
 						<Button
 							variant="default"
 							class="primary"
-							onclick={generate}
+							onclick={() => generate()}
 							disabled={!ready || busy || storageBroken}
 							>{busy
 								? 'Preparing…'
@@ -913,6 +934,14 @@
 						disabled={micBusy}>＋ Find a new script</Button
 					>
 				</div>
+			{:else if tab === 'vocabulary'}
+				<Vocabulary
+					language={profile.language}
+					{busy}
+					canGenerate={aiConfigured}
+					blocked={storageBroken || !!pendingAI}
+					ongenerate={generateVocabulary}
+				/>
 			{:else if tab === 'review'}
 				<div class="eyebrow">LITTLE NOTES, LASTING LEARNING</div>
 				<div class="page-heading">
@@ -1063,9 +1092,11 @@
 								>
 							</div>
 							<h2>{current.title}</h2>
-							<p class="reading-script" lang={profile.language}>
-								{current.script}
-							</p>
+							{#key current.id}<ReadingText
+									text={current.script}
+									language={current.profile.language}
+									recording={micBusy}
+								/>{/key}
 							<div class="vocab-list">
 								{#each current.vocabulary as v}<span>{v}</span>{/each}
 							</div>

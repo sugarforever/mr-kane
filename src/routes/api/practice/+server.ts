@@ -19,6 +19,11 @@ export async function POST({ request, url }) {
 	const input = parsed.data;
 	const live =
 		configured() || hasCoachRequest(request.headers.get('x-request-id'));
+	if (!live && input.selectedVocabulary)
+		error(
+			503,
+			'Connect an AI model in Settings to generate practice from your vocabulary.',
+		);
 	if (!live && ['news', 'exam'].includes(input.sourceType))
 		error(
 			503,
@@ -41,6 +46,9 @@ export async function POST({ request, url }) {
 			id: requestId,
 			...(live ? coachSources(requestId) : { sources: [] }),
 			profile: input.profile,
+			...(input.selectedVocabulary
+				? { targetVocabulary: input.selectedVocabulary }
+				: {}),
 			mode: input.mode,
 			origin: live ? 'pi' : 'demo',
 			createdAt: new Date().toISOString(),

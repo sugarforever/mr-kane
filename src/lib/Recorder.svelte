@@ -89,6 +89,7 @@
 			return;
 		}
 		const snapshot = structuredClone($state.snapshot(practice));
+		window.speechSynthesis?.cancel();
 		starting = true;
 		message = '';
 		onbusy(true);
