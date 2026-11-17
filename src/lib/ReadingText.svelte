@@ -1,22 +1,26 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { ReadingUnit } from '$lib/reading-levels';
 	import ReadingSupport from '$lib/ReadingSupport.svelte';
+	import { createSpeechPlayback } from '$lib/client/speech-playback';
 	import { addVocabulary } from '$lib/client/vocabulary';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
-	import {
-		matchingVoice,
-		readingSelection,
-		selectionLimit,
-	} from '$lib/reading';
+	import { readingSelection, selectionLimit } from '$lib/reading';
 	let {
 		text,
 		language,
+		unit,
 		recording = false,
-	}: { text: string; language: 'ga' | 'es'; recording?: boolean } = $props();
+	}: {
+		text: string;
+		language: 'ga' | 'es';
+		unit?: ReadingUnit;
+		recording?: boolean;
+	} = $props();
 	let script: HTMLDivElement;
 	let keyboardInput = $state<HTMLTextAreaElement>(null!);
 	let selected = $state('');
@@ -25,9 +29,10 @@
 	let message = $state('');
 	let loading = $state(false);
 	let speaking = $state(false);
-	let voice = $state<SpeechSynthesisVoice>();
+	let canPronounce = $state(false);
+	let pronunciationSource = $state('Loading speech settings…');
+	let speechPlayer: ReturnType<typeof createSpeechPlayback> | undefined;
 	let controller: AbortController | undefined;
-	let utterance: SpeechSynthesisUtterance | undefined;
 	let generation = 0;
 	function saveWord() {
 		try {
@@ -45,12 +50,7 @@
 		}
 	}
 	function stop() {
-		if (utterance) {
-			utterance.onend = null;
-			utterance.onerror = null;
-			window.speechSynthesis?.cancel();
-		}
-		utterance = undefined;
+		speechPlayer?.stop();
 		speaking = false;
 	}
 	function capture() {
@@ -70,19 +70,23 @@
 		}
 	}
 	onMount(() => {
-		const synth = window.speechSynthesis;
-		const voices = () => {
-			voice = synth ? matchingVoice(synth.getVoices(), language) : undefined;
-		};
-		voices();
-		synth?.addEventListener('voiceschanged', voices);
+		speechPlayer = createSpeechPlayback(
+			language,
+			(state, error) => {
+				speaking = state !== 'idle';
+				if (error) message = error;
+			},
+			(info) => {
+				canPronounce = info.available;
+				pronunciationSource = info.description;
+			},
+		);
 		document.addEventListener('selectionchange', capture);
 		return () => {
-			synth?.removeEventListener('voiceschanged', voices);
 			document.removeEventListener('selectionchange', capture);
 			controller?.abort();
 			generation++;
-			stop();
+			speechPlayer?.dispose();
 		};
 	});
 	$effect(() => {
@@ -123,41 +127,19 @@
 		}
 	}
 	function pronounce() {
-		if (!voice || recording || !selected || selected.length > selectionLimit)
+		if (
+			!canPronounce ||
+			recording ||
+			!selected ||
+			selected.length > selectionLimit
+		)
 			return;
-		stop();
-		window.speechSynthesis.cancel();
-		window.speechSynthesis.resume();
-		const audio = new SpeechSynthesisUtterance(selected);
-		utterance = audio;
-		audio.voice = voice;
-		audio.lang = voice.lang;
-		audio.rate = 0.85;
-		audio.onend = () => {
-			if (utterance === audio) {
-				speaking = false;
-				utterance = undefined;
-			}
-		};
-		audio.onerror = () => {
-			if (utterance === audio) {
-				speaking = false;
-				utterance = undefined;
-				message = 'Pronunciation could not play. Please try again.';
-			}
-		};
 		message = '';
-		speaking = true;
-		try {
-			window.speechSynthesis.speak(audio);
-		} catch {
-			stop();
-			message = 'Pronunciation could not play. Please try again.';
-		}
+		void speechPlayer?.play(selected, 0.85);
 	}
 </script>
 
-<ReadingSupport {text} {language} {recording}>
+<ReadingSupport {text} {language} {recording} {unit}>
 	<div
 		class="reading-script whitespace-pre-wrap"
 		lang={language}
@@ -244,7 +226,7 @@
 				<Button
 					variant="outline"
 					onclick={pronounce}
-					disabled={!voice || recording || !selected || speaking}
+					disabled={!canPronounce || recording || !selected || speaking}
 					>Pronounce</Button
 				>
 				{#if speaking}<Button variant="outline" onclick={stop}
@@ -263,9 +245,7 @@
 		<p class="text-sm text-muted-foreground">
 			{recording
 				? 'Stop recording before playing pronunciation.'
-				: voice
-					? `Browser pronunciation · ${voice.name} (${voice.lang}). Uses a local device voice, not AI-generated audio.`
-					: `Pronunciation unavailable: no local ${language === 'ga' ? 'Irish' : 'Spanish'} browser voice was found. Install a matching device voice and reload. No substitute language voice will be used.`}
+				: pronunciationSource}
 		</p>
 		<p class="text-sm text-muted-foreground mt-2">
 			Translation sends only the selected text and its language to your
