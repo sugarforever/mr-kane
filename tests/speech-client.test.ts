@@ -123,9 +123,45 @@ it('stops existing playback before another feature begins speaking', async () =>
 });
 
 it('ignores an asynchronous resume completion after playback is stopped', async () => {
- setup(); const changed = vi.fn();
- const player = createSpeechPlayback('es', changed, vi.fn()); disposers.push(player.dispose);
- await player.play('Hola'); player.pause(); player.resume(); player.stop();
- await Promise.resolve();
- expect(changed).toHaveBeenLastCalledWith('idle');
+	setup();
+	const changed = vi.fn();
+	const player = createSpeechPlayback('es', changed, vi.fn());
+	disposers.push(player.dispose);
+	await player.play('Hola');
+	player.pause();
+	player.resume();
+	player.stop();
+	await Promise.resolve();
+	expect(changed).toHaveBeenLastCalledWith('idle');
+});
+
+it('keeps the playback voice when an older settings refresh arrives between segments', async () => {
+	const { instances, fetchMock } = setup();
+	const oldSettings = await (await fetchMock('/api/speech/settings')).json();
+	let resolveRefresh!: (response: Response) => void;
+	fetchMock.mockImplementationOnce(
+		() =>
+			new Promise<Response>((resolve) => {
+				resolveRefresh = resolve;
+			}),
+	);
+	const player = createSpeechPlayback('es', vi.fn(), vi.fn());
+	disposers.push(player.dispose);
+	await player.play('segment-race '.repeat(400), 0.8);
+	oldSettings.settings.tts.voice = 'stale-voice';
+	resolveRefresh(Response.json(oldSettings));
+	await new Promise((resolve) => setTimeout(resolve, 0));
+	instances[0].onended();
+	await vi.waitFor(() => expect(instances).toHaveLength(2));
+	const requests = fetchMock.mock.calls.filter(
+		([url]) => url === '/api/speech/synthesize',
+	);
+	expect(requests).toHaveLength(2);
+	for (const call of requests) {
+		const body = JSON.parse(
+			(call as unknown as [string, RequestInit])[1].body as string,
+		);
+		expect(body.expectedVoice.voice).toBe('Spanish_SereneWoman');
+		expect(body.rate).toBe(0.8);
+	}
 });

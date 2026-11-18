@@ -103,7 +103,11 @@ export function createSpeechPlayback(
 				});
 		}
 	}
-	async function playNext(rate: number, version: number) {
+	async function playNext(
+		rate: number,
+		version: number,
+		choice: PublicSpeechSettings['settings']['tts'],
+	) {
 		const segment = queue.shift();
 		if (!segment || disposed || version !== generation) {
 			if (version === generation) changed('idle');
@@ -116,7 +120,7 @@ export function createSpeechPlayback(
 				text: segment,
 				language,
 				rate,
-				...settings!.settings.tts,
+				...choice,
 			});
 			if (disposed || version !== generation) return;
 			releaseAudio();
@@ -125,7 +129,7 @@ export function createSpeechPlayback(
 			audio.onended = () => {
 				if (version !== generation) return;
 				releaseAudio();
-				void playNext(rate, version);
+				void playNext(rate, version, choice);
 			};
 			audio.onerror = () => {
 				if (version !== generation) return;
@@ -175,7 +179,7 @@ export function createSpeechPlayback(
 						'The selected speech provider does not support Irish in this app.',
 					);
 				queue = remoteSpeechSegments(text);
-				await playNext(rate, version);
+				await playNext(rate, version, choice);
 			}
 		} catch (e) {
 			if (!disposed && version === generation) {

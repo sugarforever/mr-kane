@@ -77,3 +77,28 @@ it('loads persisted browser audio after the module is reloaded without downloadi
 	);
 	expect(fetcher).toHaveBeenCalledTimes(1);
 });
+
+it('reuses each speed separately when switching speeds and returning to the original', async () => {
+	const fetcher = vi.fn(async (_url: string, options: RequestInit) => {
+		const { rate } = JSON.parse(options.body as string);
+		return new Response(`audio at ${rate}`);
+	});
+	vi.stubGlobal('fetch', fetcher);
+	const input = {
+		text: 'speed-dependent-download',
+		language: 'es' as const,
+		rate: 1,
+		provider: 'minimax',
+		model: 'speech-2.8-hd',
+		voice: 'one',
+	};
+	expect(await (await speechAudio(input)).text()).toBe('audio at 1');
+	expect(await (await speechAudio({ ...input, rate: 0.8 })).text()).toBe(
+		'audio at 0.8',
+	);
+	expect(await (await speechAudio(input)).text()).toBe('audio at 1');
+	expect(await (await speechAudio({ ...input, rate: 0.8 })).text()).toBe(
+		'audio at 0.8',
+	);
+	expect(fetcher).toHaveBeenCalledTimes(2);
+});
