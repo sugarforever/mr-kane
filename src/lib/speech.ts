@@ -83,25 +83,7 @@ export const speechCatalog: SpeechProviderInfo[] = [
 			{ id: 'speech-2.8-hd', label: 'Speech 2.8 HD', languages: ['es'] },
 			{ id: 'speech-2.8-turbo', label: 'Speech 2.8 Turbo', languages: ['es'] },
 		],
-		// Curated Spanish voices from MiniMax's official system voice list.
-		voices: [
-			'Spanish_SereneWoman',
-			'Spanish_ThoughtfulMan',
-			'Spanish_Narrator',
-			'Spanish_CaptivatingStoryteller',
-			'Spanish_WiseScholar',
-			'Spanish_MaturePartner',
-			'Spanish_ConfidentWoman',
-		],
-		voiceLabels: {
-			Spanish_SereneWoman: 'Serene Woman · Spanish',
-			Spanish_ThoughtfulMan: 'Thoughtful Man · Spanish',
-			Spanish_Narrator: 'Narrator · Spanish',
-			Spanish_CaptivatingStoryteller: 'Captivating Storyteller · Spanish',
-			Spanish_WiseScholar: 'Wise Scholar · Spanish',
-			Spanish_MaturePartner: 'Mature Partner · Spanish',
-			Spanish_ConfidentWoman: 'Confident Woman · Spanish',
-		},
+		voices: [],
 		note: 'Spanish supported; Irish is not listed. Browser recordings are converted to WAV for recognition.',
 	},
 ];
@@ -129,7 +111,7 @@ export const speechSettingsSchema = z
 				});
 		}
 		const tts = speechCatalog.find((p) => p.id === settings.tts.provider);
-		if (!tts?.voices.includes(settings.tts.voice))
+		if (tts?.id !== 'minimax' && !tts?.voices.includes(settings.tts.voice))
 			ctx.addIssue({
 				code: 'custom',
 				path: ['tts', 'voice'],
