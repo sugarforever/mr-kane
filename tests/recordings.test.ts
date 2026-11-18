@@ -5,7 +5,7 @@ import {
 	patchRecording,
 	listRecordings,
 	deleteRecording,
-} from '../src/lib/client/recordings';
+} from '../src/lib/client/legacy-recordings';
 import { demoPractice } from '../src/lib/demo';
 import { defaultProfile } from '../src/lib/domain';
 it('persists audio bytes, the original script and self-review notes across reads', async () => {

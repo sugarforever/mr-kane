@@ -13,7 +13,14 @@
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 
 	import { onMount, type Component } from 'svelte';
-	import { Compass, PenLine, Mic, BookOpen, Settings } from '@lucide/svelte';
+	import {
+		Compass,
+		PenLine,
+		Mic,
+		BookOpen,
+		Settings,
+		History,
+	} from '@lucide/svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import Recorder from '#lib/Recorder.svelte';
 	import ReadingText from '$lib/ReadingText.svelte';
@@ -37,7 +44,6 @@
 		type Notebook,
 	} from '#lib/domain';
 	import { demoPractice } from '#lib/demo';
-	import '../app.css';
 	let { data } = $props();
 	type Tab =
 		| 'today'
@@ -514,6 +520,13 @@
 							>{remaining}</Badge
 						>{/if}</Button
 				>{/each}
+			<Button
+				variant="ghost"
+				class="history-link"
+				href="/reading-history"
+				disabled={micBusy || busy}
+				><span class="nav-icon"><History class="size-4" /></span>Reading history</Button
+			>
 		</nav>
 		<Separator class="mt-6" />
 		<div class="sidebar-note">
@@ -1090,20 +1103,20 @@
 				<Card.Root class="panel storage-panel">
 					<h3>Your records, your learning</h3>
 					<p>
-						Drafts and recordings stay in this browser and do not sync across
-						devices. Clearing browser data removes them. Writing submitted for
-						AI feedback is sent to the configured model provider. AI requests
-						and responses are also saved privately on this server for recovery.
-						Audio stays local unless you request a reading check, which sends
-						the recording and language to your selected speech provider through
-						this server. Remote reading voices send learning text to your
-						selected TTS provider.
+						Drafts stay in this browser. Clearing browser data removes them.
+						Recordings, practice scripts, notes and reading feedback are saved
+						on this server in Reading history. Writing submitted for AI feedback
+						is sent to the configured model provider. AI requests and responses
+						are also saved privately on this server for recovery. Requesting a
+						reading check sends the recording and language to your selected
+						speech provider through this server. Remote reading voices send
+						learning text to your selected TTS provider.
 					</p>
 					<Button variant="outline" class="secondary" onclick={exportData}
 						>Export text backup ↗</Button
 					>
 					<p class="fineprint">
-						Download audio in the Reading room. This local prototype has no
+						Download audio in Reading history. This local prototype has no
 						accounts and is not ready for public multi-user hosting.
 					</p>
 				</Card.Root>
