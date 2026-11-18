@@ -2,7 +2,7 @@
 	import * as Icons from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { Languages, Volume2, BookPlus } from '@lucide/svelte';
-	import type { ReadingUnit } from '$lib/reading-levels';
+	import { readingItems, type ReadingUnit } from '$lib/reading-levels';
 	import ReadingSupport from '$lib/ReadingSupport.svelte';
 	import { createSpeechPlayback } from '$lib/client/speech-playback';
 	import { addVocabulary } from '$lib/client/vocabulary';
@@ -21,6 +21,14 @@
 		unit?: ReadingUnit;
 		recording?: boolean;
 	} = $props();
+	const items = $derived(
+		unit === 'words' || unit === 'sentences'
+			? readingItems(text)
+			: text
+					.trim()
+					.split(/\n\s*\n/)
+					.filter(Boolean),
+	);
 	let script: HTMLDivElement;
 	let selected = $state('');
 	let open = $state(false);
@@ -146,18 +154,26 @@
 </script>
 
 <ReadingSupport {text} {language} {recording} {unit}>
-	<div
-		class="reading-script whitespace-pre-wrap"
-		lang={language}
-		bind:this={script}
-		tabindex="0"
-		role="textbox"
-		aria-readonly="true"
-		aria-multiline="true"
-		aria-label="Reading script. Select text with touch, a mouse, or Shift and the arrow keys in caret browsing mode."
-	>
-		{text}
-	</div>
+	{#snippet children(listen)}
+		<div
+			class="reading-script"
+			class:reading-inline={unit === 'words' || unit === 'sentences'}
+			lang={language}
+			bind:this={script}
+			tabindex="-1"
+			role="group"
+			aria-label="Reading script. Select text for translation and vocabulary, or use the listening buttons."
+		>
+			{#each items as item, index}
+				{#if unit === 'words' || unit === 'sentences'}
+					<span class="reading-item">{item}{@render listen(item, index)}</span
+					>{' '}
+				{:else}
+					<p class="reading-paragraph">{item}{@render listen(item, index)}</p>
+				{/if}
+			{/each}
+		</div>
+	{/snippet}
 </ReadingSupport>
 <p class="fineprint">
 	Select a word or passage to see translation, pronunciation and vocabulary
@@ -262,3 +278,29 @@
 			>{/if}
 	</Popover.Content>
 </Popover.Root>
+
+<style>
+	.reading-script {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+	.reading-item {
+		display: inline;
+	}
+	.reading-inline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.5rem 1.25rem;
+	}
+	.reading-inline .reading-item {
+		max-width: 100%;
+	}
+	.reading-paragraph {
+		margin: 0 0 1em;
+		white-space: pre-wrap;
+	}
+	.reading-paragraph:last-child {
+		margin-bottom: 0;
+	}
+</style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Icons from '@lucide/svelte';
 	import { onMount, type Snippet } from 'svelte';
-	import { readingItems, type ReadingUnit } from '$lib/reading-levels';
+	import type { ReadingUnit } from '$lib/reading-levels';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
@@ -23,7 +23,7 @@
 		language: 'ga' | 'es';
 		unit?: ReadingUnit;
 		recording: boolean;
-		children: Snippet;
+		children: Snippet<[Snippet<[string, number]>]>;
 	} = $props();
 	let showEnglish = $state(false);
 	let paragraphs = $state<string[]>([]);
@@ -188,34 +188,23 @@
 			? ' Playing the original reading text.'
 			: ''}
 </p>
-{#if unit === 'words' || unit === 'sentences'}
-	<div class="my-4 space-y-2" aria-label="Listen and repeat one item at a time">
-		<p class="fineprint">
-			Listen to one item, repeat it, then move to the next. Use Slow if you need
-			more time.
-		</p>
-		{#each readingItems(text) as item, index}<div
-				class="flex flex-wrap items-center gap-3 rounded-lg border p-3"
-			>
-				<span lang={language} class="flex-1 whitespace-pre-wrap">{item}</span
-				><Button
-					variant="outline"
-					disabled={!speechAvailable || recording}
-					onclick={() => {
-						if (speechAvailable && !recording)
-							void player?.play(item, Number(rate));
-					}}
-					aria-label={`Listen to item ${index + 1}`}
-					size="icon"
-					title="Listen to item"><Icons.Volume2 aria-hidden="true" /></Button
-				>
-			</div>{/each}
-	</div>
-{/if}
+{#snippet listen(item: string, index: number)}
+	<Button
+		variant="ghost"
+		size="icon"
+		class="inline-flex align-middle ml-1 text-muted-foreground"
+		disabled={!speechAvailable || recording}
+		onclick={() => {
+			if (speechAvailable && !recording) void player?.play(item, Number(rate));
+		}}
+		aria-label={`Listen to ${unit === 'words' ? 'word or phrase' : unit === 'sentences' ? 'sentence' : 'paragraph'} ${index + 1}`}
+		title="Listen"><Icons.Volume2 aria-hidden="true" /></Button
+	>
+{/snippet}
 {#if audioError}<Alert.Root role="alert" class="my-2">{audioError}</Alert.Root
 	>{/if}
 <div class={showEnglish ? 'grid gap-6 md:grid-cols-2' : ''}>
-	<div class="min-w-0">{@render children()}</div>
+	<div class="min-w-0">{@render children(listen)}</div>
 	{#if showEnglish}
 		<section
 			id={comparisonId}
