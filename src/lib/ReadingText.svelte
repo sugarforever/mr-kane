@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Languages, Volume2, BookPlus } from '@lucide/svelte';
 	import type { ReadingUnit } from '$lib/reading-levels';
 	import ReadingSupport from '$lib/ReadingSupport.svelte';
 	import { createSpeechPlayback } from '$lib/client/speech-playback';
@@ -25,6 +26,8 @@
 	let keyboardInput = $state<HTMLTextAreaElement>(null!);
 	let selected = $state('');
 	let open = $state(false);
+	let content = $state<HTMLDivElement>(null!);
+	let anchor = $state<{ getBoundingClientRect: () => DOMRect } | null>(null);
 	let english = $state('');
 	let message = $state('');
 	let loading = $state(false);
@@ -54,11 +57,18 @@
 		speaking = false;
 	}
 	function capture() {
-		if (open || document.activeElement === keyboardInput) return; // Keep a snapshot while the action UI owns focus.
-		const selection = window.getSelection();
-		if (!selection?.anchorNode || !script.contains(selection.anchorNode))
+		if (
+			document.activeElement === keyboardInput ||
+			content?.contains(document.activeElement)
+		)
 			return;
+		const selection = window.getSelection();
 		const next = readingSelection(selection, script);
+		if (next && selection) {
+			const range = selection.getRangeAt(0).cloneRange();
+			anchor = { getBoundingClientRect: () => range.getBoundingClientRect() };
+		}
+		if (next !== selected) open = Boolean(next);
 		if (next !== selected) {
 			selected = next;
 			english = '';
@@ -82,8 +92,10 @@
 			},
 		);
 		document.addEventListener('selectionchange', capture);
+		document.addEventListener('pointerup', capture);
 		return () => {
 			document.removeEventListener('selectionchange', capture);
+			document.removeEventListener('pointerup', capture);
 			controller?.abort();
 			generation++;
 			speechPlayer?.dispose();
@@ -154,8 +166,9 @@
 	</div>
 </ReadingSupport>
 <p class="fineprint">
-	Select a word or passage, then open Selection actions. For keyboard selection,
-	enable your browser’s caret browsing and use Shift + arrow keys.
+	Select a word or passage to see translation, pronunciation and vocabulary
+	actions. For keyboard selection, enable your browser’s caret browsing and use
+	Shift + arrow keys.
 </p>
 <Collapsible.Root class="my-2">
 	<Collapsible.Trigger class="text-sm underline"
@@ -173,6 +186,7 @@
 			aria-label="Reading script for keyboard selection"
 			rows={4}
 			onselect={() => {
+				anchor = null;
 				const next = text
 					.slice(keyboardInput.selectionStart, keyboardInput.selectionEnd)
 					.trim();
@@ -196,19 +210,27 @@
 		>Selection actions</Popover.Trigger
 	>
 	<Popover.Content
-		class="w-[min(30rem,calc(100vw-2rem))] max-h-[70vh] overflow-y-auto"
+		bind:ref={content}
+		customAnchor={anchor}
+		trapFocus={false}
+		side="top"
+		sideOffset={8}
+		collisionPadding={12}
+		aria-label="Selection actions"
+		class="w-[min(27rem,calc(100vw-1.5rem))] max-h-[70vh] overflow-y-auto"
+		onOpenAutoFocus={(e) => {
+			if (anchor) e.preventDefault();
+		}}
 		onCloseAutoFocus={(e) => {
 			e.preventDefault();
-			script?.focus();
+			if (!anchor) keyboardInput?.focus();
+			else if (
+				document.activeElement === document.body ||
+				content?.contains(document.activeElement)
+			)
+				script?.focus({ preventScroll: true });
 		}}
 	>
-		<h3 class="font-semibold">Selected reading text</h3>
-		<blockquote
-			lang={language}
-			class="my-3 whitespace-pre-wrap break-words max-h-36 overflow-y-auto"
-		>
-			{selected}
-		</blockquote>
 		{#if selected.length > selectionLimit}
 			<Alert.Root role="status"
 				>Select a shorter passage: up to 4,000 characters. Your selection has {selected.length.toLocaleString(
@@ -216,18 +238,20 @@
 				)}.</Alert.Root
 			>
 		{:else}
-			<div class="flex flex-wrap gap-2 my-3">
-				<Button variant="outline" onclick={saveWord} disabled={!selected}
-					>Add to vocabulary</Button
-				>
+			<div class="flex flex-wrap gap-2">
 				<Button onclick={translate} disabled={loading || !selected}
-					>{loading ? 'Translating…' : 'Translate to English'}</Button
+					><Languages aria-hidden="true" />{loading
+						? 'Translating…'
+						: 'Translate'}</Button
 				>
 				<Button
 					variant="outline"
 					onclick={pronounce}
 					disabled={!canPronounce || recording || !selected || speaking}
-					>Pronounce</Button
+					><Volume2 aria-hidden="true" />Pronounce</Button
+				>
+				<Button variant="outline" onclick={saveWord} disabled={!selected}
+					><BookPlus aria-hidden="true" />Add to vocabulary</Button
 				>
 				{#if speaking}<Button variant="outline" onclick={stop}
 						>Stop pronunciation</Button
@@ -242,16 +266,19 @@
 					>{/if}
 			</div>
 		{/if}
-		<p class="text-sm text-muted-foreground">
-			{recording
-				? 'Stop recording before playing pronunciation.'
-				: pronunciationSource}
-		</p>
-		<p class="text-sm text-muted-foreground mt-2">
-			Translation sends only the selected text and its language to your
-			configured AI model. Requests are saved privately on this server for
-			recovery.
-		</p>
+		<details class="text-xs text-muted-foreground">
+			<summary class="cursor-pointer">Speech and translation details</summary>
+			<p class="text-sm text-muted-foreground">
+				{recording
+					? 'Stop recording before playing pronunciation.'
+					: pronunciationSource}
+			</p>
+			<p class="text-sm text-muted-foreground mt-2">
+				Translation sends only the selected text and its language to your
+				configured AI model. Requests are saved privately on this server for
+				recovery.
+			</p>
+		</details>
 		{#if message}<Alert.Root class="mt-3" role="alert">{message}</Alert.Root
 			>{/if}
 		{#if english}<Alert.Root class="mt-3" role="status"
