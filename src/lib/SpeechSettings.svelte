@@ -19,6 +19,48 @@
 	let configured = $state<PublicSpeechSettings['configured']>({});
 	let keys = $state({ openai: '', minimax: '' });
 	let clearKeys = $state({ openai: false, minimax: false });
+	let miniVoices = $state<{ id: string; label: string }[]>([]);
+	let voicesLoading = $state(false);
+	let voicesMessage = $state('');
+	let voiceRequest = 0;
+	async function loadVoices() {
+		const version = ++voiceRequest;
+		voicesLoading = true;
+		voicesMessage = '';
+		miniVoices = [];
+		try {
+			const enteredKey = clearKeys.minimax ? '' : keys.minimax.trim();
+			const response = await fetch(
+				'/api/speech/voices',
+				enteredKey
+					? {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ key: enteredKey }),
+						}
+					: { cache: 'no-store' },
+			);
+			const value = await response.json();
+			if (!response.ok)
+				throw new Error(value.message || 'Could not load MiniMax voices.');
+			if (version !== voiceRequest) return;
+			miniVoices = value.voices;
+			if (!miniVoices.length)
+				voicesMessage = 'No voices were returned for this account.';
+			if (
+				settings.tts.provider === 'minimax' &&
+				!settings.tts.voice &&
+				miniVoices.length
+			)
+				settings.tts.voice = miniVoices[0].id;
+		} catch (e) {
+			if (version !== voiceRequest) return;
+			voicesMessage =
+				e instanceof Error ? e.message : 'Could not load MiniMax voices.';
+		} finally {
+			if (version === voiceRequest) voicesLoading = false;
+		}
+	}
 	let busy = $state(false);
 	let ready = $state(false);
 	let message = $state('');
@@ -26,7 +68,13 @@
 		const provider = speechCatalog.find((p) => p.id === id)!;
 		const model = provider[capability][0].id;
 		if (capability === 'stt') settings.stt = { provider: id, model };
-		else settings.tts = { provider: id, model, voice: provider.voices[0] };
+		else
+			settings.tts = {
+				provider: id,
+				model,
+				voice:
+					id === 'minimax' ? (miniVoices[0]?.id ?? '') : provider.voices[0],
+			};
 	}
 	async function load() {
 		try {
@@ -34,6 +82,7 @@
 			settings = value.settings;
 			configured = value.configured;
 			ready = true;
+			void loadVoices();
 		} catch (e) {
 			message =
 				e instanceof Error ? e.message : 'Speech settings could not load.';
@@ -64,6 +113,7 @@
 			configured = value.configured;
 			keys = { openai: '', minimax: '' };
 			clearKeys = { openai: false, minimax: false };
+			void loadVoices();
 			message =
 				'Speech settings saved. New playback and reading checks will use these choices.';
 			window.dispatchEvent(new Event('mr-kane-speech-settings'));
@@ -123,19 +173,46 @@
 					></Label
 				>
 				{#if kind === 'tts'}<Label
-						>Voice<NativeSelect bind:value={settings.tts.voice}
-							>{#each provider.voices as voice}<option value={voice}
-									>{provider.voiceLabels?.[voice] ?? voice}</option
-								>{/each}</NativeSelect
+						>Voice<NativeSelect
+							bind:value={settings.tts.voice}
+							disabled={provider.id === 'minimax' && voicesLoading}
+							>{#if provider.id === 'minimax'}
+								{#if !settings.tts.voice}<option value=""
+										>{voicesLoading
+											? 'Loading voices…'
+											: 'Choose a voice'}</option
+									>{/if}
+								{#if settings.tts.voice && !miniVoices.some((v) => v.id === settings.tts.voice)}<option
+										value={settings.tts.voice}
+										>{settings.tts.voice} · saved selection</option
+									>{/if}
+								{#each miniVoices as voice}<option value={voice.id}
+										>{voice.label}</option
+									>{/each}
+							{:else}{#each provider.voices as voice}<option value={voice}
+										>{provider.voiceLabels?.[voice] ?? voice}</option
+									>{/each}{/if}</NativeSelect
 						></Label
 					>{/if}
 				<p class="fineprint">{provider.note}</p>
 				{#if provider.id !== 'browser' && !configured[provider.id]}
 					<p class="fineprint">
 						Add a {provider.label} audio API key below before using this provider.
+						{#if provider.id === 'minimax'}Then refresh voices, choose a voice
+							and save settings.{/if}
 					</p>
 				{/if}
 				{#if kind === 'tts' && provider.id === 'minimax'}
+					<Button
+						type="button"
+						variant="outline"
+						disabled={voicesLoading}
+						onclick={loadVoices}
+						>{voicesLoading ? 'Loading voices…' : 'Refresh voices'}</Button
+					>
+					{#if voicesMessage}<p role="status" class="fineprint">
+							{voicesMessage}
+						</p>{/if}
 					<p class="fineprint">
 						<a
 							href="https://www.minimax.io/audio/text-to-speech"

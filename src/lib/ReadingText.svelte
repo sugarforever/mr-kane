@@ -6,8 +6,6 @@
 	import { createSpeechPlayback } from '$lib/client/speech-playback';
 	import { addVocabulary } from '$lib/client/vocabulary';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { readingSelection, selectionLimit } from '$lib/reading';
@@ -23,7 +21,6 @@
 		recording?: boolean;
 	} = $props();
 	let script: HTMLDivElement;
-	let keyboardInput = $state<HTMLTextAreaElement>(null!);
 	let selected = $state('');
 	let open = $state(false);
 	let content = $state<HTMLDivElement>(null!);
@@ -57,11 +54,7 @@
 		speaking = false;
 	}
 	function capture() {
-		if (
-			document.activeElement === keyboardInput ||
-			content?.contains(document.activeElement)
-		)
-			return;
+		if (content?.contains(document.activeElement)) return;
 		const selection = window.getSelection();
 		const next = readingSelection(selection, script);
 		if (next && selection) {
@@ -170,45 +163,7 @@
 	actions. For keyboard selection, enable your browser’s caret browsing and use
 	Shift + arrow keys.
 </p>
-<Collapsible.Root class="my-2">
-	<Collapsible.Trigger class="text-sm underline"
-		>Keyboard selection field</Collapsible.Trigger
-	>
-	<Collapsible.Content>
-		<p class="fineprint">
-			Use Shift + arrow keys to select words, then Tab to Selection actions.
-		</p>
-		<Textarea
-			bind:ref={keyboardInput}
-			readonly
-			value={text}
-			lang={language}
-			aria-label="Reading script for keyboard selection"
-			rows={4}
-			onselect={() => {
-				anchor = null;
-				const next = text
-					.slice(keyboardInput.selectionStart, keyboardInput.selectionEnd)
-					.trim();
-				if (next !== selected) {
-					selected = next;
-					english = '';
-					message = '';
-					controller?.abort();
-					generation++;
-					loading = false;
-					stop();
-				}
-			}}
-		/>
-	</Collapsible.Content>
-</Collapsible.Root>
 <Popover.Root bind:open>
-	<Popover.Trigger
-		disabled={!selected}
-		class="inline-flex rounded-md border px-3 py-2 text-sm font-medium disabled:opacity-50"
-		>Selection actions</Popover.Trigger
-	>
 	<Popover.Content
 		bind:ref={content}
 		customAnchor={anchor}
@@ -223,8 +178,7 @@
 		}}
 		onCloseAutoFocus={(e) => {
 			e.preventDefault();
-			if (!anchor) keyboardInput?.focus();
-			else if (
+			if (
 				document.activeElement === document.body ||
 				content?.contains(document.activeElement)
 			)
