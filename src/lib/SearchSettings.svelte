@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 
@@ -94,10 +95,10 @@
 		limits can change. Save changes before testing.
 	</p>
 	<Button variant="default" class="primary" onclick={save} disabled={busy}
-		>Save search settings</Button
+		><Icons.Save aria-hidden="true" />Save search settings</Button
 	>
 	<Button variant="outline" class="secondary" onclick={test} disabled={busy}
-		>Test saved connection</Button
+		><Icons.Save aria-hidden="true" />Test saved connection</Button
 	>
 	{#if message}<p role="status">{message}</p>{/if}
 	<p class="fineprint">

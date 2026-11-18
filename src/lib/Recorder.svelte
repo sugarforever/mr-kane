@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import ReadingFeedback from '$lib/ReadingFeedback.svelte';
 	import { transcribeSpeech } from '$lib/client/speech-service';
 	import { readingItems } from '$lib/reading-levels';
@@ -295,17 +296,19 @@
 	{#if recording}<Button
 			variant="destructive"
 			class="record active"
-			onclick={stop}>■ Stop recording <span>{time(seconds)}</span></Button
+			onclick={stop}
+			><Icons.Square aria-hidden="true" />Stop recording
+			<span>{time(seconds)}</span></Button
 		>{:else}<Button
 			variant="default"
 			class="record"
 			onclick={start}
 			disabled={!practice || starting || saving || !!pending || !!checkingId}
-			>{starting
+			><Icons.Mic aria-hidden="true" />{starting
 				? 'Opening microphone…'
 				: autoCheck
-					? '● Record and check reading'
-					: '● Start recording'}</Button
+					? 'Record and check reading'
+					: 'Start recording'}</Button
 		>{/if}
 </div>
 {#if recording}<Progress
@@ -321,11 +324,15 @@
 	>{/if}
 {#if checkingId}<Button
 		variant="outline"
-		onclick={() => checkController?.abort()}>Cancel reading check</Button
+		onclick={() => checkController?.abort()}
+		size="icon"
+		title="Cancel reading check"
+		aria-label="Cancel reading check"><Icons.X aria-hidden="true" /></Button
 	>{/if}
 {#if pending}<Card.Root class="audio-card">
 		<strong>Unsaved recording</strong><audio controls src={pendingUrl}
-		></audio><Button variant="ghost" onclick={persist}>Try saving again</Button
+		></audio><Button variant="ghost" onclick={persist}
+			><Icons.Save aria-hidden="true" />Try saving again</Button
 		><a href={pendingUrl} download="mr-kane-recording">Download backup</a>
 	</Card.Root>{/if}
 <div class="section-heading">
@@ -334,7 +341,7 @@
 		variant="link"
 		href="/reading-history"
 		disabled={recording || starting || saving || !!pending || !!checkingId}
-		>View all reading history →</Button
+		><Icons.History aria-hidden="true" />View all reading history</Button
 	>
 </div>
 {#each recordings.filter((r) => r.practice.profile.language === language) as r (r.id)}
@@ -357,7 +364,7 @@
 			variant="outline"
 			disabled={!!checkingId || recording || starting}
 			onclick={() => checkReading(r)}
-			>{checkingId === r.id
+			><Icons.RefreshCw aria-hidden="true" />{checkingId === r.id
 				? 'Checking reading…'
 				: r.speechCheck
 					? 'Check reading again with speech recognition'
@@ -390,7 +397,11 @@
 			><Button
 				variant="destructive"
 				class="text-button danger"
-				onclick={() => remove(r.id)}>Delete recording</Button
+				onclick={() => remove(r.id)}
+				size="icon"
+				title="Delete recording"
+				aria-label="Delete recording"
+				><Icons.Trash2 aria-hidden="true" /></Button
 			>
 		</div>
 	</Card.Root>

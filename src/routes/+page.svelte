@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
@@ -594,12 +595,16 @@
 						variant="outline"
 						class="secondary"
 						onclick={resumeAI}
-						disabled={busy || storageBroken}>Resume request</Button
+						disabled={busy || storageBroken}
+						><Icons.RefreshCw aria-hidden="true" />Resume request</Button
 					><Button
 						variant="ghost"
 						class="text-button"
 						onclick={clearPending}
-						disabled={busy}>Dismiss</Button
+						disabled={busy}
+						size="icon"
+						title="Dismiss"
+						aria-label="Dismiss"><Icons.X aria-hidden="true" /></Button
 					>
 				</Alert.Root>{/if}
 			{#if notice}<Alert.Root class="notice global-notice" role="status">
@@ -607,7 +612,9 @@
 						variant="ghost"
 						class="text-button"
 						onclick={() => (notice = '')}
-						aria-label="Dismiss message">×</Button
+						aria-label="Dismiss message"
+						size="icon"
+						title="Dismiss message"><Icons.X aria-hidden="true" /></Button
 					>
 				</Alert.Root>{/if}
 			{#if tab === 'providers'}
@@ -670,7 +677,7 @@
 						<div>
 							<h3>Writing studio</h3>
 							<p>Put your thoughts into words. Make them your own.</p>
-							<small>Explore → Write → Reflect → Try again</small>
+							<small>Explore Write Reflect Try again</small>
 						</div>
 						<span>↗</span></Button
 					><Button
@@ -686,7 +693,7 @@
 						<div>
 							<h3>Reading room</h3>
 							<p>Read a little, record it, and hear your progress.</p>
-							<small>Read → Record → Listen → Keep</small>
+							<small>Read Record Listen Keep</small>
 						</div>
 						<span>↗</span></Button
 					>
@@ -702,11 +709,11 @@
 						<span class="small-label">LET'S EXPLORE</span>
 					</div>
 					<div class="source-options">
-						{#each [{ id: 'daily', icon: '☀', label: 'Everyday life' }, { id: 'science', icon: '✳', label: 'Science' }, { id: 'nature', icon: '❋', label: 'Nature' }, { id: 'news', icon: '▤', label: 'In the news' }, { id: 'exam', icon: '▧', label: 'Exam inspiration' }] as s}<Button
+						{#each [{ id: 'daily', icon: Icons.Sun, label: 'Everyday life' }, { id: 'science', icon: Icons.FlaskConical, label: 'Science' }, { id: 'nature', icon: Icons.Leaf, label: 'Nature' }, { id: 'news', icon: Icons.Newspaper, label: 'In the news' }, { id: 'exam', icon: Icons.GraduationCap, label: 'Exam inspiration' }] as s}<Button
 								variant="ghost"
 								data-active={sourceType === s.id}
 								onclick={() => (sourceType = s.id as typeof sourceType)}
-								><span>{s.icon}</span>{s.label}</Button
+								><s.icon aria-hidden="true" />{s.label}</Button
 							>{/each}
 					</div>
 					<Label class=" block"
@@ -774,11 +781,11 @@
 							class="primary"
 							onclick={() => generate()}
 							disabled={!ready || busy || storageBroken}
-							>{busy
+							><Icons.Sparkles aria-hidden="true" />{busy
 								? 'Preparing…'
 								: aiConfigured
-									? 'Make my practice ↗'
-									: 'Explore a sample ↗'}</Button
+									? 'Make my practice'
+									: 'Explore a sample'}</Button
 						>
 					</div>
 					{#if !aiConfigured}<p class="fineprint">
@@ -797,7 +804,8 @@
 					<Button
 						variant="outline"
 						class="secondary"
-						onclick={() => navigate('today')}>＋ New topic</Button
+						onclick={() => navigate('today')}
+						><Icons.Plus aria-hidden="true" />New topic</Button
 					>
 				</div>
 				{#if current}<div class="workspace-grid">
@@ -833,7 +841,7 @@
 										class="secondary"
 										onclick={archive}
 										disabled={busy || !draft.trim() || storageBroken}
-										>Save this version</Button
+										><Icons.Save aria-hidden="true" />Save this version</Button
 									><Button
 										variant="default"
 										class="primary"
@@ -842,7 +850,9 @@
 											!draft.trim() ||
 											!aiConfigured ||
 											storageBroken}
-										>{busy ? 'Reading…' : 'Get feedback ↗'}</Button
+										><Icons.Sparkles aria-hidden="true" />{busy
+											? 'Reading…'
+											: 'Get feedback'}</Button
 									>
 								</div>
 							</div>
@@ -854,7 +864,7 @@
 								class="text-button"
 								onclick={useWriting}
 								disabled={busy || !draft.trim() || storageBroken}
-								>Read my writing aloud →</Button
+								><Icons.Volume2 aria-hidden="true" />Read my writing aloud</Button
 							>
 						</Card.Root>
 						<aside class="feedback-column">
@@ -922,7 +932,8 @@
 						<Button
 							variant="default"
 							class="primary"
-							onclick={() => navigate('today')}>Find a practice ↗</Button
+							onclick={() => navigate('today')}
+							><Icons.Sparkles aria-hidden="true" />Find a practice</Button
 						>
 					</Card.Root>{/if}
 				<div class="section-heading">
@@ -931,7 +942,9 @@
 						variant="ghost"
 						class="text-button"
 						onclick={() => (showHistory = !showHistory)}
-						>{showHistory ? 'Hide versions' : 'View saved versions'} ↗</Button
+						><Icons.History aria-hidden="true" />{showHistory
+							? 'Hide versions'
+							: 'View saved versions'}</Button
 					>
 				</div>
 				{#if showHistory}{#each attempts as a}<Card.Root
@@ -949,7 +962,9 @@
 								onclick={() => {
 									choose(a.practice);
 									edit(a.text);
-								}}>Continue from this version →</Button
+								}}
+								><Icons.ArrowRight aria-hidden="true" />Continue from this
+								version</Button
 							>
 						</Card.Root>{:else}<div class="empty">
 							Save a version of your writing to see it here.
@@ -970,7 +985,8 @@
 							mode = 'speaking';
 							navigate('today');
 						}}
-						disabled={micBusy}>＋ Find a new script</Button
+						disabled={micBusy}
+						><Icons.Plus aria-hidden="true" />Find a new script</Button
 					>
 				</div>
 			{:else if tab === 'vocabulary'}
@@ -1030,7 +1046,7 @@
 								variant="default"
 								class="primary"
 								onclick={() => navigate('writing')}
-								>Try a little writing ↗</Button
+								><Icons.ArrowRight aria-hidden="true" />Try a little writing</Button
 							>
 						</Card.Root>{/each}
 				</div>
@@ -1097,7 +1113,8 @@
 						variant="default"
 						class="primary"
 						type="submit"
-						disabled={!ready || storageBroken}>Save my preferences</Button
+						disabled={!ready || storageBroken}
+						><Icons.Save aria-hidden="true" />Save my preferences</Button
 					>
 				</form>
 				<Card.Root class="panel storage-panel">
@@ -1113,7 +1130,7 @@
 						learning text to your selected TTS provider.
 					</p>
 					<Button variant="outline" class="secondary" onclick={exportData}
-						>Export text backup ↗</Button
+						><Icons.Download aria-hidden="true" />Export text backup</Button
 					>
 					<p class="fineprint">
 						Download audio in Reading history. This local prototype has no
@@ -1194,7 +1211,10 @@
 									data-active={selectedId === p.id}
 									onclick={() => choose(p)}
 									disabled={busy || micBusy}
-									>{p.mode === 'writing' ? '✎' : '◉'} {p.title}</Button
+									>{#if p.mode === 'writing'}<Icons.PenLine
+											aria-hidden="true"
+										/>{:else}<Icons.Mic aria-hidden="true" />{/if}
+									{p.title}</Button
 								>{/each}
 						</div></ScrollArea
 					>
