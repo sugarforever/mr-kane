@@ -133,6 +133,9 @@ export const synthesisInput = z
 		text: z.string().trim().min(1).max(12000),
 		language: z.enum(['ga', 'es']),
 		rate: z.number().min(0.5).max(1.5).default(1),
+		expectedVoice: choice
+			.extend({ voice: z.string().min(1).max(100) })
+			.optional(),
 	})
 	.strict();
 export function speechModel(

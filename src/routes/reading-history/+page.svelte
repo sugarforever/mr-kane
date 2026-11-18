@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { onMount, onDestroy, untrack } from 'svelte';
 	import ReadingFeedback from '$lib/ReadingFeedback.svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -200,7 +201,7 @@
 				variant="outline"
 				onclick={importOld}
 				disabled={busy || !browserRecordings.length}
-				>Import browser recordings</Button
+				><Icons.Mic aria-hidden="true" />Import browser recordings</Button
 			>
 			{#if importMessage}<p role="status">{importMessage}</p>{/if}
 			{#each failures as failure}<p class="text-sm" role="alert">
@@ -222,13 +223,22 @@
 				></NativeSelect
 			></Label
 		>
-		<Button variant="outline" onclick={refresh} disabled={busy || loading}
-			>Reload history</Button
+		<Button
+			variant="outline"
+			onclick={refresh}
+			disabled={busy || loading}
+			size="icon"
+			title="Reload history"
+			aria-label="Reload history"><Icons.RefreshCw aria-hidden="true" /></Button
 		>
 	</div>
 	{#if message}<p role="status">{message}</p>{/if}
-	{#if checking}<Button variant="outline" onclick={() => controller?.abort()}
-			>Cancel reading check</Button
+	{#if checking}<Button
+			variant="outline"
+			onclick={() => controller?.abort()}
+			size="icon"
+			title="Cancel reading check"
+			aria-label="Cancel reading check"><Icons.X aria-hidden="true" /></Button
 		>{/if}
 	<div class="grid gap-6 md:grid-cols-[minmax(16rem,1fr)_minmax(0,2fr)]">
 		<section aria-label="Past reading practices" class="space-y-3">
@@ -319,7 +329,7 @@
 							variant="outline"
 							onclick={() => check(item)}
 							disabled={busy}
-							>{item.speechCheck
+							><Icons.RefreshCw aria-hidden="true" />{item.speechCheck
 								? 'Check reading again'
 								: 'Check reading with speech recognition'}</Button
 						>
@@ -338,7 +348,8 @@
 						>
 						<Button
 							onclick={() => saveNote(item)}
-							disabled={busy || note === item.note}>Save note</Button
+							disabled={busy || note === item.note}
+							><Icons.Save aria-hidden="true" />Save note</Button
 						>
 						<div class="border-t pt-4">
 							{#if deleteReady}<p class="mb-3">
@@ -348,16 +359,22 @@
 								<Button
 									variant="destructive"
 									disabled={busy}
-									onclick={() => remove(item)}>Confirm delete</Button
+									onclick={() => remove(item)}
+									><Icons.Trash2 aria-hidden="true" />Confirm delete</Button
 								>
 								<Button
 									variant="outline"
 									disabled={busy}
-									onclick={() => (deleteReady = false)}>Keep recording</Button
+									onclick={() => (deleteReady = false)}
+									><Icons.Check aria-hidden="true" />Keep recording</Button
 								>{:else}<Button
 									variant="destructive"
 									disabled={busy}
-									onclick={() => (deleteReady = true)}>Delete recording</Button
+									onclick={() => (deleteReady = true)}
+									size="icon"
+									title="Delete recording"
+									aria-label="Delete recording"
+									><Icons.Trash2 aria-hidden="true" /></Button
 								>{/if}
 						</div>
 					{:else}<div>

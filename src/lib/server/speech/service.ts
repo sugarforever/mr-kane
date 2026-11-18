@@ -1,7 +1,10 @@
+import { join } from 'node:path';
+import { dataDir } from '../providers-store';
+import { cachedSpeech } from './cache';
 import { readSpeechSettings, speechKey } from './settings';
 import { sttProviders, ttsProviders } from './providers';
 import { SpeechError } from './contracts';
-import type { SpeechLanguage } from '$lib/speech';
+import type { SpeechLanguage, SpeechSettings } from '$lib/speech';
 export async function recognizeSpeech(
 	audio: Blob,
 	language: SpeechLanguage,
@@ -32,8 +35,19 @@ export async function generateSpeech(
 	language: SpeechLanguage,
 	rate: number,
 	signal?: AbortSignal,
+	expectedVoice?: SpeechSettings['tts'],
 ) {
 	const choice = readSpeechSettings().tts;
+	if (
+		expectedVoice &&
+		(expectedVoice.provider !== choice.provider ||
+			expectedVoice.model !== choice.model ||
+			expectedVoice.voice !== choice.voice)
+	)
+		throw new SpeechError(
+			400,
+			'Speech settings changed. Please retry listening with the current voice.',
+		);
 	if (choice.provider === 'browser')
 		throw new SpeechError(
 			400,
@@ -45,13 +59,20 @@ export async function generateSpeech(
 			503,
 			`Add a ${choice.provider} API key in Speech settings.`,
 		);
-	return ttsProviders[choice.provider].synthesize({
-		text,
-		language,
-		rate,
-		model: choice.model,
-		voice: choice.voice,
-		key,
-		signal,
-	});
+	const provider = ttsProviders[choice.provider];
+	signal?.throwIfAborted();
+	return cachedSpeech(
+		join(dataDir(), 'speech-cache'),
+		{ text, language, rate, ...choice },
+		() =>
+			provider.synthesize({
+				text,
+				language,
+				rate,
+				model: choice.model,
+				voice: choice.voice,
+				key,
+				// Generation survives a cancelled listener so subsequent clicks reuse it.
+			}),
+	);
 }

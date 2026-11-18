@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { onMount, type Snippet } from 'svelte';
 	import { readingItems, type ReadingUnit } from '$lib/reading-levels';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -128,7 +129,9 @@
 		onclick={toggleEnglish}
 		aria-expanded={showEnglish}
 		aria-controls={comparisonId}
-		>{showEnglish ? 'Hide English' : 'Show English'}</Button
+		><Icons.Languages aria-hidden="true" />{showEnglish
+			? 'Hide English'
+			: 'Show English'}</Button
 	>
 	<Button
 		variant="outline"
@@ -136,7 +139,8 @@
 		onclick={() => {
 			if (speechAvailable && !recording) void player?.play(text, Number(rate));
 		}}
-		>{unit === 'words' || unit === 'sentences'
+		><Icons.Volume2 aria-hidden="true" />{unit === 'words' ||
+		unit === 'sentences'
 			? 'Listen to all items'
 			: 'Listen to passage'}</Button
 	>
@@ -152,14 +156,29 @@
 	{#if playback !== 'idle'}
 		<Button
 			variant="outline"
+			size="icon"
+			title={playback === 'paused' ? 'Resume' : 'Pause'}
+			aria-label={playback === 'paused' ? 'Resume' : 'Pause'}
 			disabled={playback === 'loading'}
 			onclick={() =>
 				playback === 'paused' ? player?.resume() : player?.pause()}
-			>{playback === 'paused' ? 'Resume' : 'Pause'}</Button
+			>{#if playback === 'paused'}<Icons.Play
+					aria-hidden="true"
+				/>{:else}<Icons.Pause aria-hidden="true" />{/if}</Button
 		>
-		<Button variant="outline" onclick={() => player?.stop()}>Stop</Button>
+		<Button
+			variant="outline"
+			onclick={() => player?.stop()}
+			size="icon"
+			title="Stop"
+			aria-label="Stop"><Icons.Square aria-hidden="true" /></Button
+		>
 	{/if}
 </div>
+<p class="fineprint">
+	Generated audio is cached for repeat listening. Changing the voice or speed
+	creates a separate version.
+</p>
 <p class="fineprint" role="status">
 	{recording
 		? 'Stop recording before listening to the passage.'
@@ -186,7 +205,9 @@
 						if (speechAvailable && !recording)
 							void player?.play(item, Number(rate));
 					}}
-					aria-label={`Listen to item ${index + 1}`}>Listen to item</Button
+					aria-label={`Listen to item ${index + 1}`}
+					size="icon"
+					title="Listen to item"><Icons.Volume2 aria-hidden="true" /></Button
 				>
 			</div>{/each}
 	</div>
@@ -210,7 +231,10 @@
 						version++;
 						controller?.abort();
 						loading = false;
-					}}>Cancel translation</Button
+					}}
+					size="icon"
+					title="Cancel translation"
+					aria-label="Cancel translation"><Icons.X aria-hidden="true" /></Button
 				>{/if}
 			{#if error}<Alert.Root role="alert" class="my-3">{error}</Alert.Root>{/if}
 			{#if paragraphs.length}<div lang="en" class="space-y-4 my-3">
@@ -222,7 +246,7 @@
 				</div>
 				<p class="fineprint">AI translations may contain mistakes.</p>
 			{:else if !loading}<Button variant="outline" onclick={loadEnglish}
-					>Try translation again</Button
+					><Icons.RefreshCw aria-hidden="true" />Try translation again</Button
 				>{/if}
 			<p class="fineprint mt-3">
 				Opening English sends only this passage and its language to your

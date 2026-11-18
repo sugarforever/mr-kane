@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import {
 		defaultSpeechSettings,
@@ -133,7 +134,7 @@
 		model.
 	</p>
 	{#if !ready}<Button variant="outline" onclick={load}
-			>Reload speech settings</Button
+			><Icons.RefreshCw aria-hidden="true" />Reload speech settings</Button
 		>{/if}
 	<form
 		onsubmit={(event) => {
@@ -208,7 +209,9 @@
 						variant="outline"
 						disabled={voicesLoading}
 						onclick={loadVoices}
-						>{voicesLoading ? 'Loading voices…' : 'Refresh voices'}</Button
+						><Icons.RefreshCw aria-hidden="true" />{voicesLoading
+							? 'Loading voices…'
+							: 'Refresh voices'}</Button
 					>
 					{#if voicesMessage}<p role="status" class="fineprint">
 							{voicesMessage}
@@ -245,7 +248,7 @@
 					variant="ghost"
 					disabled={!ready || busy}
 					onclick={() => (clearKeys[id] = !clearKeys[id])}
-					>{clearKeys[id]
+					><Icons.Trash2 aria-hidden="true" />{clearKeys[id]
 						? 'Keep dedicated key'
 						: 'Remove dedicated key on save'}</Button
 				>
@@ -260,7 +263,9 @@
 			provider. Local browser TTS uploads nothing.
 		</p>
 		<Button type="submit" disabled={!ready || busy}
-			>{busy ? 'Saving…' : 'Save speech settings'}</Button
+			><Icons.Save aria-hidden="true" />{busy
+				? 'Saving…'
+				: 'Save speech settings'}</Button
 		>
 	</form>
 	{#if message}<Alert.Root role="status">{message}</Alert.Root>{/if}

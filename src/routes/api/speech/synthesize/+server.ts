@@ -16,6 +16,7 @@ export async function POST({ request, url }) {
 			input.data.language,
 			input.data.rate,
 			request.signal,
+			input.data.expectedVoice,
 		);
 		return new Response(result.audio, {
 			headers: { 'Content-Type': result.mimeType, 'Cache-Control': 'no-store' },

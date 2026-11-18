@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { Languages, Volume2, BookPlus } from '@lucide/svelte';
 	import type { ReadingUnit } from '$lib/reading-levels';
@@ -200,15 +201,28 @@
 				>
 				<Button
 					variant="outline"
+					size="icon"
+					title="Pronounce selection"
+					aria-label="Pronounce selection"
 					onclick={pronounce}
 					disabled={!canPronounce || recording || !selected || speaking}
-					><Volume2 aria-hidden="true" />Pronounce</Button
+					><Volume2 aria-hidden="true" /></Button
 				>
-				<Button variant="outline" onclick={saveWord} disabled={!selected}
-					><BookPlus aria-hidden="true" />Add to vocabulary</Button
+				<Button
+					variant="outline"
+					size="icon"
+					title="Add to vocabulary"
+					aria-label="Add to vocabulary"
+					onclick={saveWord}
+					disabled={!selected}><BookPlus aria-hidden="true" /></Button
 				>
-				{#if speaking}<Button variant="outline" onclick={stop}
-						>Stop pronunciation</Button
+				{#if speaking}<Button
+						variant="outline"
+						onclick={stop}
+						size="icon"
+						title="Stop pronunciation"
+						aria-label="Stop pronunciation"
+						><Icons.Square aria-hidden="true" /></Button
 					>{/if}
 				{#if loading}<Button
 						variant="outline"
@@ -216,7 +230,11 @@
 							generation++;
 							controller?.abort();
 							loading = false;
-						}}>Cancel translation</Button
+						}}
+						size="icon"
+						title="Cancel translation"
+						aria-label="Cancel translation"
+						><Icons.X aria-hidden="true" /></Button
 					>{/if}
 			</div>
 		{/if}

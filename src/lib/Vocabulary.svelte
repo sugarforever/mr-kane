@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { readingUnits, type ReadingUnit } from '$lib/reading-levels';
 	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
@@ -134,7 +135,9 @@
 		/></Label
 	>
 	<Button variant="outline" onclick={() => (onlyUnreviewed = !onlyUnreviewed)}
-		>{onlyUnreviewed ? 'Show all words' : 'Show words to review'}</Button
+		><Icons.Eye aria-hidden="true" />{onlyUnreviewed
+			? 'Show all words'
+			: 'Show words to review'}</Button
 	>
 	<span class="fineprint">{visible.length} entries</span>
 </div>
@@ -169,7 +172,10 @@
 				ongenerate(
 					chosenEntries.map((e) => e.text),
 					'writing',
-				)}>{busy ? 'Preparing…' : 'Generate writing practice'}</Button
+				)}
+			><Icons.Sparkles aria-hidden="true" />{busy
+				? 'Preparing…'
+				: 'Generate writing practice'}</Button
 		>
 		<Button
 			variant="outline"
@@ -179,12 +185,16 @@
 					chosenEntries.map((e) => e.text),
 					'speaking',
 					readingUnit,
-				)}>Generate reading practice</Button
+				)}
+			><Icons.Sparkles aria-hidden="true" />Generate reading practice</Button
 		>
 		<Button
 			variant="ghost"
 			disabled={busy || !chosen.length}
-			onclick={() => (chosen = [])}>Clear selection</Button
+			onclick={() => (chosen = [])}
+			size="icon"
+			title="Clear selection"
+			aria-label="Clear selection"><Icons.X aria-hidden="true" /></Button
 		>
 	</div>
 	{#if blocked}<p class="fineprint">
@@ -226,15 +236,21 @@
 					(revealed = revealed.includes(entry.id)
 						? revealed.filter((id) => id !== entry.id)
 						: [...revealed, entry.id])}
-				>{revealed.includes(entry.id)
+				><Icons.Eye aria-hidden="true" />{revealed.includes(entry.id)
 					? 'Hide meaning'
 					: 'Reveal / edit meaning'}</Button
 			>
 			<Button variant="outline" onclick={() => update(entry.id, 'review')}
-				>{entry.reviewedAt ? 'Mark for review again' : 'Mark reviewed'}</Button
+				><Icons.RefreshCw aria-hidden="true" />{entry.reviewedAt
+					? 'Mark for review again'
+					: 'Mark reviewed'}</Button
 			>
-			<Button variant="ghost" onclick={() => update(entry.id, 'remove')}
-				>Remove</Button
+			<Button
+				variant="ghost"
+				onclick={() => update(entry.id, 'remove')}
+				size="icon"
+				title="Remove"
+				aria-label="Remove"><Icons.Trash2 aria-hidden="true" /></Button
 			>
 		</div>
 		{#if revealed.includes(entry.id)}<Label

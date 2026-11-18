@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Icons from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 
@@ -340,7 +341,7 @@
 		variant="default"
 		class="primary"
 		onclick={() => edit()}
-		disabled={busy}>＋ Add provider</Button
+		disabled={busy}><Icons.Plus aria-hidden="true" />Add provider</Button
 	>
 </div>
 {#if message}<Alert.Root class="notice" role="status">{message}</Alert.Root
@@ -380,19 +381,26 @@
 						variant="outline"
 						class="secondary"
 						onclick={() => edit(p)}
-						disabled={busy}>Manage</Button
+						disabled={busy}
+						size="icon"
+						title="Manage"
+						aria-label="Manage"><Icons.Settings2 aria-hidden="true" /></Button
 					><Button
 						variant="ghost"
 						class="text-button"
 						onclick={() => select(p)}
 						disabled={busy ||
 							!p.connected ||
-							settings.defaultProviderId === p.id}>Use by default</Button
+							settings.defaultProviderId === p.id}
+						><Icons.Check aria-hidden="true" />Use by default</Button
 					><Button
 						variant="destructive"
 						class="text-button danger"
 						onclick={() => remove(p)}
-						disabled={busy}>Remove</Button
+						disabled={busy}
+						size="icon"
+						title="Remove"
+						aria-label="Remove"><Icons.Trash2 aria-hidden="true" /></Button
 					>
 				</div>
 			</Card.Root>{:else}<Card.Root class="panel empty">
@@ -402,7 +410,7 @@
 					Connect ChatGPT with your account, or add a provider with an API key.
 				</p>
 				<Button variant="default" class="primary" onclick={() => edit()}
-					>Add your first provider ↗</Button
+					><Icons.Plus aria-hidden="true" />Add your first provider</Button
 				>
 			</Card.Root>{/each}
 		<p class="fineprint">
@@ -417,7 +425,10 @@
 					variant="ghost"
 					class="text-button"
 					onclick={() => (editing = false)}
-					disabled={busy}>Close ×</Button
+					disabled={busy}
+					size="icon"
+					title="Close"
+					aria-label="Close"><Icons.X aria-hidden="true" /></Button
 				>
 			</div>
 			<Label class=" block"
@@ -514,7 +525,9 @@
 					class="secondary"
 					onclick={discover}
 					disabled={busy}
-					>{busy ? 'Checking…' : 'Test connection & discover models'}</Button
+					><Icons.PlugZap aria-hidden="true" />{busy
+						? 'Checking…'
+						: 'Test connection & discover models'}</Button
 				>{:else}<p class="fineprint">
 					Sign in directly on the official provider page. Available models and
 					usage limits depend on your account.
@@ -537,13 +550,14 @@
 						!name.trim() ||
 						!modelId ||
 						!verified ||
-						auth?.status === 'pending'}>Save connection</Button
+						auth?.status === 'pending'}
+					><Icons.Save aria-hidden="true" />Save connection</Button
 				>{#if authMode === 'oauth'}<Button
 						variant="outline"
 						class="secondary"
 						onclick={() => login()}
 						disabled={busy || !name.trim() || auth?.status === 'pending'}
-						>{service === 'openai-codex'
+						><Icons.LogIn aria-hidden="true" />{service === 'openai-codex'
 							? 'Sign in with ChatGPT'
 							: 'Connect account'}</Button
 					>{/if}
@@ -596,13 +610,15 @@
 								variant="outline"
 								class="secondary"
 								onclick={() => authAction('answer')}
-								disabled={busy || !answer}>Continue</Button
+								disabled={busy || !answer}
+								><Icons.ArrowRight aria-hidden="true" />Continue</Button
 							>{/if}
 						<Button
 							variant="ghost"
 							class="text-button"
 							onclick={() => authAction('cancel')}
-							disabled={busy}>Cancel sign-in</Button
+							disabled={busy}
+							><Icons.X aria-hidden="true" />Cancel sign-in</Button
 						>
 					{:else if settings.providers.find((p) => p.id === id)?.connected}<p
 							class="connected"
@@ -613,7 +629,8 @@
 							variant="destructive"
 							class="text-button danger"
 							onclick={() => authAction('disconnect')}
-							disabled={busy}>Disconnect account</Button
+							disabled={busy}
+							><Icons.Trash2 aria-hidden="true" />Disconnect account</Button
 						>{:else if auth?.message}<p>{auth.message}</p>{/if}
 					{#if service === 'openai-codex' && auth?.status !== 'pending'}<Collapsible.Root
 						>
@@ -628,7 +645,8 @@
 									variant="outline"
 									class="secondary"
 									onclick={() => login('device_code')}
-									disabled={busy}>Sign in with a device code</Button
+									disabled={busy}
+									><Icons.LogIn aria-hidden="true" />Sign in with a device code</Button
 								>
 							</Collapsible.Content></Collapsible.Root
 						>{/if}

@@ -1,3 +1,4 @@
+import { speechAudio } from './speech-audio';
 import { matchingVoice } from '$lib/reading';
 import {
 	speechModel,
@@ -111,17 +112,12 @@ export function createSpeechPlayback(
 		request = new AbortController();
 		changed('loading');
 		try {
-			const response = await fetch('/api/speech/synthesize', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ text: segment, language, rate }),
-				signal: request.signal,
+			const blob = await speechAudio({
+				text: segment,
+				language,
+				rate,
+				...settings!.settings.tts,
 			});
-			if (!response.ok) {
-				const value = await response.json();
-				throw new Error(value.message || 'Speech generation failed.');
-			}
-			const blob = await response.blob();
 			if (disposed || version !== generation) return;
 			releaseAudio();
 			url = URL.createObjectURL(blob);
