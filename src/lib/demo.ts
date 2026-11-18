@@ -7,7 +7,7 @@ export function demoPractice(
 	if (input.mode === 'speaking' && input.readingUnit) {
 		const samples = spanish
 			? {
-					words: 'hola\n\nadiós\n\ncasa\n\nparque',
+					words: 'por la mañana\n\ncamino\n\ncon mi amiga\n\npor el parque',
 					sentences:
 						'Hola, soy Ana.\n\nVivo cerca de un parque.\n\nMe gusta caminar.',
 					paragraph:
@@ -16,7 +16,7 @@ export function demoPractice(
 						'Vivo cerca de un parque pequeño. Por la mañana camino con mi amiga. Vemos árboles y escuchamos a los pájaros. El parque es un lugar tranquilo.\n\nPor la tarde hay muchas personas. Algunas juegan y otras leen. Me gusta sentarme bajo un árbol con un libro. Siempre encuentro algo interesante.\n\nLos fines de semana vamos juntos al parque. Llevamos agua y algo de comer. Después recogemos todo y volvemos a casa. Es una forma sencilla de disfrutar del día.',
 				}
 			: {
-					words: 'dia duit\n\nslán\n\nteach\n\npáirc',
+					words: 'ar maidin\n\ntéim\n\nle mo chara\n\ngo dtí an pháirc',
 					sentences:
 						'Dia duit.\n\nTá mé sa pháirc.\n\nIs maith liom na crainn.',
 					paragraph:
@@ -27,11 +27,29 @@ export function demoPractice(
 		return {
 			sources: [],
 			title: 'First steps in reading',
-			prompt: 'Listen, then repeat at your own pace.',
+			prompt:
+				input.readingUnit === 'words'
+					? 'A morning walk in the park: listen to each chunk, then say the chunks together.'
+					: 'Listen, then repeat at your own pace.',
 			script: samples[input.readingUnit],
-			vocabulary: spanish
-				? ['hola · hello', 'casa · house', 'parque · park']
-				: ['dia duit · hello', 'teach · house', 'páirc · park'],
+			vocabulary:
+				input.readingUnit === 'words'
+					? spanish
+						? [
+								'por la mañana · in the morning',
+								'camino · I walk',
+								'con mi amiga · with my friend',
+								'por el parque · through the park',
+							]
+						: [
+								'ar maidin · in the morning',
+								'téim · I go',
+								'le mo chara · with my friend',
+								'go dtí an pháirc · to the park',
+							]
+					: spanish
+						? ['hola · hello', 'casa · house', 'parque · park']
+						: ['dia duit · hello', 'teach · house', 'páirc · park'],
 			focus: 'Fixed beginner sample: familiar everyday language.',
 			sourceNote:
 				'A fixed beginner sample for this training unit. It is not personalised to your topic or language level.',

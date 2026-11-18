@@ -115,3 +115,26 @@ it('requires separate sentence items rather than one combined mini passage', () 
 	expect(() => validateReadingScript('Una frase corta.', 'words')).toThrow();
 	expect(() => validateReadingScript('hola', 'words', 1)).not.toThrow();
 });
+
+it.each([
+	['es', 'por la mañana camino con mi amiga por el parque'],
+	['ga', 'ar maidin téim le mo chara go dtí an pháirc'],
+] as const)(
+	'builds the %s word demo from connected chunks with matching glosses',
+	(language, idea) => {
+		const content = demoPractice({
+			profile: { ...defaultProfile, language },
+			mode: 'speaking',
+			sourceType: 'daily',
+			material: '',
+			readingUnit: 'words',
+		});
+		const items = readingItems(content.script);
+		expect(items.join(' ')).toBe(idea);
+		expect(content.vocabulary.map((entry) => entry.split(' · ')[0])).toEqual(
+			items,
+		);
+		expect(content.prompt).toContain('together');
+		expect(() => validateReadingScript(content.script, 'words')).not.toThrow();
+	},
+);
