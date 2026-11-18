@@ -14,7 +14,7 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { Progress } from '$lib/components/ui/progress/index.js';
 
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import type { Practice } from '#lib/domain';
 	import {
 		saveRecording,
@@ -99,19 +99,20 @@
 	let disposed = false;
 	async function refresh() {
 		try {
-			const list = await listRecordings();
-			if (disposed) return;
+			const selectedLanguage = language;
+			const list = await listRecordings(selectedLanguage);
+			if (disposed || language !== selectedLanguage) return;
 			Object.values(urls).forEach(URL.revokeObjectURL);
 			recordings = list;
 			urls = Object.fromEntries(
 				list.map((r) => [r.id, URL.createObjectURL(r.blob)]),
 			);
 		} catch {
-			message =
-				'Could not open recording storage. Check your browser privacy and storage settings.';
+			message = 'Could not load recordings from the server. Please try again.';
 		}
 	}
-	onMount(() => {
+	$effect(() => {
+		void language;
 		void refresh();
 	});
 	onDestroy(() => {
@@ -130,7 +131,7 @@
 			pending = null;
 			if (pendingUrl) URL.revokeObjectURL(pendingUrl);
 			pendingUrl = '';
-			message = 'Recording saved in this browser.';
+			message = 'Recording saved to reading history on this server.';
 			await refresh();
 		} catch {
 			message =
@@ -244,7 +245,10 @@
 	async function note(r: Recording, value: string) {
 		try {
 			const next = await patchRecording(r.id, { note: value });
-			if (next) recordings = recordings.map((x) => (x.id === r.id ? next : x));
+			if (next)
+				recordings = recordings.map((x) =>
+					x.id === r.id ? { ...next, blob: x.blob } : x,
+				);
 		} catch {
 			message = 'Your listening note could not be saved. Please try again.';
 		}
@@ -264,8 +268,8 @@
 	<p class="fineprint">
 		Requires a speech provider and API key in Speech settings; provider audio
 		usage is billed separately from text-model subscription access. Turn this
-		off for local-only recording. Feedback compares recognised words, not
-		pronunciation quality.
+		off to save without sending audio to a speech provider. Feedback compares
+		recognised words, not pronunciation quality.
 	</p>
 	{#if targetItems.length}<Label
 			>What will you read?<NativeSelect
@@ -282,9 +286,10 @@
 	<div>
 		<strong>Read it out loud</strong>
 		<p>
-			Recordings are saved in this browser. When reading feedback is enabled,
-			your audio and language are sent through this server to the selected
-			speech provider for transcription. Up to 5 minutes and 20 MB per check.
+			Recordings and practice details are saved on this server. When reading
+			feedback is enabled, your audio and language are sent through this server
+			to the selected speech provider for transcription. Up to 5 minutes and 20
+			MB per check.
 		</p>
 	</div>
 	{#if recording}<Button
@@ -324,8 +329,13 @@
 		><a href={pendingUrl} download="mr-kane-recording">Download backup</a>
 	</Card.Root>{/if}
 <div class="section-heading">
-	<h3>My recordings</h3>
-	<span>Listen back. Try again.</span>
+	<h3>Recent recordings</h3>
+	<Button
+		variant="link"
+		href="/reading-history"
+		disabled={recording || starting || saving || !!pending || !!checkingId}
+		>View all reading history →</Button
+	>
 </div>
 {#each recordings.filter((r) => r.practice.profile.language === language) as r (r.id)}
 	<Card.Root class="audio-card">

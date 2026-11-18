@@ -199,7 +199,7 @@
 		flex-direction: column;
 		gap: 9px;
 	}
-	nav button {
+	nav :is(button, .history-link) {
 		display: flex;
 		align-items: center;
 		gap: 15px;
@@ -213,7 +213,7 @@
 		background: #e1e8d8;
 		color: var(--green);
 	}
-	nav button:hover {
+	nav :is(button, .history-link):hover {
 		background: #e8ece2;
 	}
 	.nav-icon {
@@ -1154,7 +1154,7 @@
 			flex-direction: row;
 			gap: 5px;
 		}
-		nav button {
+		nav :is(button, .history-link) {
 			flex: 1;
 			justify-content: center;
 			padding: 10px 5px;
@@ -1462,7 +1462,7 @@
 		nav {
 			flex-wrap: wrap;
 		}
-		nav button {
+		nav :is(button, .history-link) {
 			flex-basis: 28%;
 		}
 		.provider-actions {
