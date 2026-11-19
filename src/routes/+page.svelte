@@ -201,6 +201,8 @@
 		reviewPoints.filter((p) => !notebook.reviews[p.key]).length,
 	);
 	onMount(() => {
+		if (new URLSearchParams(location.search).get('tab') === 'providers')
+			tab = 'providers';
 		try {
 			notebook = restoreNotebook(localStorage.getItem('mr-kane-notebook'));
 			const pendingRaw = localStorage.getItem('mr-kane-pending-ai');
@@ -511,6 +513,10 @@
 		>
 		<div class="sidebar-caption">MY LEARNING SPACE</div>
 		<nav aria-label="Main navigation">
+			<Button variant="ghost" href="/math" disabled={micBusy || busy}
+				><span class="nav-icon"><Icons.Calculator class="size-4" /></span
+				>Math</Button
+			>
 			{#each navs as n}<Button
 					variant="ghost"
 					data-active={tab === n.id}

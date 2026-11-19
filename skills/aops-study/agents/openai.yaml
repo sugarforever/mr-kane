@@ -1,0 +1,4 @@
+interface:
+  display_name: "AoPS Study Coach"
+  short_description: "Study both AoPS volumes with chapter-aware tutoring"
+  default_prompt: "Use $aops-study to plan my algebra studies and teach the next suitable module."

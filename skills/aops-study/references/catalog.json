@@ -1,0 +1,4023 @@
+[
+  {
+    "id": "V1-C01",
+    "volume": 1,
+    "chapter": 1,
+    "title": "Exponents and Logarithms",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/01-exponents-and-logarithms.md",
+    "printed_pages": [
+      1,
+      12
+    ],
+    "pdf_pages": [
+      15,
+      26
+    ],
+    "sections": [
+      {
+        "id": "1.1",
+        "title": "Integer Exponents",
+        "printed_page": 1,
+        "line": 15
+      },
+      {
+        "id": "1.2",
+        "title": "Fractional Exponents",
+        "printed_page": 3,
+        "line": 105
+      },
+      {
+        "id": "1.3",
+        "title": "Simplifying Radical Expressions",
+        "printed_page": 5,
+        "line": 200
+      },
+      {
+        "id": "1.4",
+        "title": "Rationalizing Denominators",
+        "printed_page": 7,
+        "line": 287
+      },
+      {
+        "id": "1.5",
+        "title": "Logarithms",
+        "printed_page": 10,
+        "line": 417
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  {
+    "id": "V1-C02",
+    "volume": 1,
+    "chapter": 2,
+    "title": "Complex Numbers",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/02-complex-numbers.md",
+    "printed_pages": [
+      13,
+      16
+    ],
+    "pdf_pages": [
+      27,
+      30
+    ],
+    "sections": [
+      {
+        "id": "2.1",
+        "title": "The Square Root of $-1$",
+        "printed_page": 13,
+        "line": 11
+      },
+      {
+        "id": "2.2",
+        "title": "Complex Number Operations",
+        "printed_page": 13,
+        "line": 31
+      }
+    ],
+    "problems": [
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ]
+  },
+  {
+    "id": "V1-C03",
+    "volume": 1,
+    "chapter": 3,
+    "title": "Linear Equations",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/03-linear-equations.md",
+    "printed_pages": [
+      17,
+      27
+    ],
+    "pdf_pages": [
+      31,
+      41
+    ],
+    "sections": [
+      {
+        "id": "3.1",
+        "title": "What is a Linear Equation?",
+        "printed_page": 17,
+        "line": 11
+      },
+      {
+        "id": "3.2",
+        "title": "One Equation, One Variable",
+        "printed_page": 17,
+        "line": 33
+      },
+      {
+        "id": "3.3",
+        "title": "Two Equations, Two Variables",
+        "printed_page": 19,
+        "line": 99
+      },
+      {
+        "id": "3.4",
+        "title": "Word Problems",
+        "printed_page": 22,
+        "line": 242
+      }
+    ],
+    "problems": [
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ]
+  },
+  {
+    "id": "V1-C04",
+    "volume": 1,
+    "chapter": 4,
+    "title": "Proportions",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/04-proportions.md",
+    "printed_pages": [
+      28,
+      38
+    ],
+    "pdf_pages": [
+      42,
+      52
+    ],
+    "sections": [
+      {
+        "id": "4.1",
+        "title": "Direct and Inverse",
+        "printed_page": 28,
+        "line": 11
+      },
+      {
+        "id": "4.2",
+        "title": "Manipulating Proportions",
+        "printed_page": 30,
+        "line": 109
+      },
+      {
+        "id": "4.3",
+        "title": "Conversion Factors",
+        "printed_page": 31,
+        "line": 146
+      },
+      {
+        "id": "4.4",
+        "title": "Percent",
+        "printed_page": 33,
+        "line": 252
+      }
+    ],
+    "problems": [
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86
+    ]
+  },
+  {
+    "id": "V1-C05",
+    "volume": 1,
+    "chapter": 5,
+    "title": "Using the Integers",
+    "subjects": [
+      "number-theory"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/05-using-the-integers.md",
+    "printed_pages": [
+      39,
+      51
+    ],
+    "pdf_pages": [
+      53,
+      65
+    ],
+    "sections": [
+      {
+        "id": "5.1",
+        "title": "Divisibility",
+        "printed_page": 39,
+        "line": 17
+      },
+      {
+        "id": "5.2",
+        "title": "Number Bases",
+        "printed_page": 39,
+        "line": 33
+      },
+      {
+        "id": "5.3",
+        "title": "The Last Digit",
+        "printed_page": 42,
+        "line": 131
+      },
+      {
+        "id": "5.4",
+        "title": "Modular Arithmetic",
+        "printed_page": 42,
+        "line": 147
+      },
+      {
+        "id": "5.5",
+        "title": "Tricks",
+        "printed_page": 45,
+        "line": 265
+      },
+      {
+        "id": "5.6",
+        "title": "Primes",
+        "printed_page": 47,
+        "line": 344
+      },
+      {
+        "id": "5.7",
+        "title": "Common and Uncommon Factors",
+        "printed_page": 48,
+        "line": 381
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109
+    ]
+  },
+  {
+    "id": "V1-C06",
+    "volume": 1,
+    "chapter": 6,
+    "title": "Quadratic Equations",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/06-quadratic-equations.md",
+    "printed_pages": [
+      52,
+      66
+    ],
+    "pdf_pages": [
+      66,
+      80
+    ],
+    "sections": [
+      {
+        "id": "6.1",
+        "title": "What’s a Quadratic?",
+        "printed_page": 52,
+        "line": 11
+      },
+      {
+        "id": "6.2",
+        "title": "Factoring Quadratics",
+        "printed_page": 52,
+        "line": 17
+      },
+      {
+        "id": "6.3",
+        "title": "The Quadratic Formula",
+        "printed_page": 56,
+        "line": 180
+      },
+      {
+        "id": "6.4",
+        "title": "Variations on a Theme",
+        "printed_page": 59,
+        "line": 317
+      },
+      {
+        "id": "6.4.1",
+        "title": "Rearrangements",
+        "printed_page": 59,
+        "line": 321
+      },
+      {
+        "id": "6.4.2",
+        "title": "Substitutions",
+        "printed_page": 60,
+        "line": 391
+      },
+      {
+        "id": "6.5",
+        "title": "Square Roots of Irrationals and Imaginaries",
+        "printed_page": 61,
+        "line": 418
+      },
+      {
+        "id": "6.6",
+        "title": "Beyond Quadratics",
+        "printed_page": 63,
+        "line": 522
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137
+    ]
+  },
+  {
+    "id": "V1-C07",
+    "volume": 1,
+    "chapter": 7,
+    "title": "Special Factorizations and Clever Manipulations",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/07-special-factorizations-and-clever-manipulations.md",
+    "printed_pages": [
+      67,
+      74
+    ],
+    "pdf_pages": [
+      81,
+      88
+    ],
+    "sections": [
+      {
+        "id": "7.1",
+        "title": "Factorizations",
+        "printed_page": 67,
+        "line": 11
+      },
+      {
+        "id": "7.2",
+        "title": "Manipulations",
+        "printed_page": 70,
+        "line": 146
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161
+    ]
+  },
+  {
+    "id": "V1-C08",
+    "volume": 1,
+    "chapter": 8,
+    "title": "What Numbers Really Are",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/08-what-numbers-really-are.md",
+    "printed_pages": [
+      75,
+      80
+    ],
+    "pdf_pages": [
+      89,
+      94
+    ],
+    "sections": [
+      {
+        "id": "8.1",
+        "title": "Integers and Rationals",
+        "printed_page": 75,
+        "line": 17
+      },
+      {
+        "id": "8.2",
+        "title": "Lowest Terms and Irrationals",
+        "printed_page": 77,
+        "line": 141
+      },
+      {
+        "id": "8.3",
+        "title": "Complex and Beyond",
+        "printed_page": 79,
+        "line": 213
+      }
+    ],
+    "problems": [
+      162,
+      163,
+      164,
+      165,
+      166
+    ]
+  },
+  {
+    "id": "V1-C09",
+    "volume": 1,
+    "chapter": 9,
+    "title": "An Introduction to Circles",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/09-an-introduction-to-circles.md",
+    "printed_pages": [
+      81,
+      83
+    ],
+    "pdf_pages": [
+      95,
+      97
+    ],
+    "sections": [],
+    "problems": []
+  },
+  {
+    "id": "V1-C10",
+    "volume": 1,
+    "chapter": 10,
+    "title": "Angles",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/10-angles.md",
+    "printed_pages": [
+      84,
+      92
+    ],
+    "pdf_pages": [
+      98,
+      106
+    ],
+    "sections": [
+      {
+        "id": "10.1",
+        "title": "Lines, Rays, and Segments",
+        "printed_page": 84,
+        "line": 11
+      },
+      {
+        "id": "10.2",
+        "title": "Classification and Measurement",
+        "printed_page": 84,
+        "line": 19
+      },
+      {
+        "id": "10.3",
+        "title": "Angles and Parallel Lines",
+        "printed_page": 86,
+        "line": 79
+      },
+      {
+        "id": "10.4",
+        "title": "Arcs, Segments, Sectors, and Angles",
+        "printed_page": 87,
+        "line": 114
+      },
+      {
+        "id": "10.5",
+        "title": "Angles Formed By Lines Intersecting a Circle",
+        "printed_page": 87,
+        "line": 132
+      },
+      {
+        "id": "10.6",
+        "title": "The Burden of Proof",
+        "printed_page": 90,
+        "line": 235
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "id": "V1-C11",
+    "volume": 1,
+    "chapter": 11,
+    "title": "Triangles, a.k.a. Geometry",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/11-triangles-a-k-a-geometry.md",
+    "printed_pages": [
+      93,
+      117
+    ],
+    "pdf_pages": [
+      107,
+      131
+    ],
+    "sections": [
+      {
+        "id": "11.1",
+        "title": "Classifying Triangles",
+        "printed_page": 93,
+        "line": 17
+      },
+      {
+        "id": "11.2",
+        "title": "Parts of a Triangle",
+        "printed_page": 94,
+        "line": 36
+      },
+      {
+        "id": "11.3",
+        "title": "The Triangle Inequality",
+        "printed_page": 96,
+        "line": 104
+      },
+      {
+        "id": "11.4",
+        "title": "The Pythagorean Theorem",
+        "printed_page": 97,
+        "line": 129
+      },
+      {
+        "id": "11.5",
+        "title": "Congruent Triangles",
+        "printed_page": 99,
+        "line": 219
+      },
+      {
+        "id": "11.6",
+        "title": "Similar Triangles",
+        "printed_page": 102,
+        "line": 324
+      },
+      {
+        "id": "11.7",
+        "title": "Introduction to Trigonometry",
+        "printed_page": 104,
+        "line": 412
+      },
+      {
+        "id": "11.8",
+        "title": "Area of a Triangle",
+        "printed_page": 109,
+        "line": 601
+      },
+      {
+        "id": "11.9",
+        "title": "A Handful of Helpful Hints",
+        "printed_page": 112,
+        "line": 749
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      1,
+      2,
+      3,
+      1,
+      2,
+      3,
+      1,
+      2,
+      3,
+      1,
+      2,
+      1,
+      2,
+      3,
+      4,
+      1,
+      2,
+      3,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "id": "V1-C12",
+    "volume": 1,
+    "chapter": 12,
+    "title": "Quadrilaterals",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/12-quadrilaterals.md",
+    "printed_pages": [
+      118,
+      126
+    ],
+    "pdf_pages": [
+      132,
+      140
+    ],
+    "sections": [
+      {
+        "id": "12.1",
+        "title": "The Fundamentals",
+        "printed_page": 118,
+        "line": 15
+      },
+      {
+        "id": "12.2",
+        "title": "Trapezoids",
+        "printed_page": 118,
+        "line": 27
+      },
+      {
+        "id": "12.3",
+        "title": "Parallelograms",
+        "printed_page": 120,
+        "line": 109
+      },
+      {
+        "id": "12.4",
+        "title": "Rhombuses (Rhombi?)",
+        "printed_page": 121,
+        "line": 154
+      },
+      {
+        "id": "12.5",
+        "title": "Rectangles and Squares",
+        "printed_page": 122,
+        "line": 186
+      },
+      {
+        "id": "12.6",
+        "title": "Hints and Problems",
+        "printed_page": 123,
+        "line": 235
+      }
+    ],
+    "problems": [
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217
+    ]
+  },
+  {
+    "id": "V1-C13",
+    "volume": 1,
+    "chapter": 13,
+    "title": "Polygons",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/13-polygons.md",
+    "printed_pages": [
+      127,
+      132
+    ],
+    "pdf_pages": [
+      141,
+      146
+    ],
+    "sections": [
+      {
+        "id": "13.1",
+        "title": "Types of Polygons",
+        "printed_page": 127,
+        "line": 11
+      },
+      {
+        "id": "13.2",
+        "title": "Angles in a Polygon",
+        "printed_page": 128,
+        "line": 44
+      },
+      {
+        "id": "13.3",
+        "title": "Regular Polygons",
+        "printed_page": 128,
+        "line": 62
+      },
+      {
+        "id": "13.4",
+        "title": "Regular Hexagons",
+        "printed_page": 130,
+        "line": 139
+      }
+    ],
+    "problems": [
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234,
+      235
+    ]
+  },
+  {
+    "id": "V1-C14",
+    "volume": 1,
+    "chapter": 14,
+    "title": "Angle Chasing",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/14-angle-chasing.md",
+    "printed_pages": [
+      133,
+      135
+    ],
+    "pdf_pages": [
+      147,
+      149
+    ],
+    "sections": [],
+    "problems": [
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      247,
+      248,
+      249,
+      250,
+      251
+    ]
+  },
+  {
+    "id": "V1-C15",
+    "volume": 1,
+    "chapter": 15,
+    "title": "Areas",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/15-areas.md",
+    "printed_pages": [
+      136,
+      142
+    ],
+    "pdf_pages": [
+      150,
+      156
+    ],
+    "sections": [
+      {
+        "id": "15.1",
+        "title": "Similar Figures",
+        "printed_page": 136,
+        "line": 17
+      },
+      {
+        "id": "15.2",
+        "title": "Same Base/Same Altitude",
+        "printed_page": 137,
+        "line": 48
+      },
+      {
+        "id": "15.3",
+        "title": "Complicated Figures",
+        "printed_page": 138,
+        "line": 93
+      }
+    ],
+    "problems": [
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+    ]
+  },
+  {
+    "id": "V1-C16",
+    "volume": 1,
+    "chapter": 16,
+    "title": "The Power of Coordinates",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/16-the-power-of-coordinates.md",
+    "printed_pages": [
+      143,
+      154
+    ],
+    "pdf_pages": [
+      157,
+      168
+    ],
+    "sections": [
+      {
+        "id": "16.1",
+        "title": "Labelling the Plane",
+        "printed_page": 143,
+        "line": 15
+      },
+      {
+        "id": "16.2",
+        "title": "What's it Good For?",
+        "printed_page": 144,
+        "line": 50
+      },
+      {
+        "id": "16.3",
+        "title": "Straight and Narrow",
+        "printed_page": 145,
+        "line": 77
+      },
+      {
+        "id": "16.4",
+        "title": "Plotting a Line",
+        "printed_page": 148,
+        "line": 199
+      },
+      {
+        "id": "16.5",
+        "title": "The Distance Formula and Circles",
+        "printed_page": 149,
+        "line": 230
+      },
+      {
+        "id": "16.6",
+        "title": "Went Down to the Crossroads...",
+        "printed_page": 151,
+        "line": 314
+      },
+      {
+        "id": "16.7",
+        "title": "... Fell Down on My Knees",
+        "printed_page": 152,
+        "line": 347
+      }
+    ],
+    "problems": [
+      278,
+      279,
+      280,
+      281,
+      282,
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293
+    ]
+  },
+  {
+    "id": "V1-C17",
+    "volume": 1,
+    "chapter": 17,
+    "title": "Power of a Point",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/17-power-of-a-point.md",
+    "printed_pages": [
+      155,
+      159
+    ],
+    "pdf_pages": [
+      169,
+      173
+    ],
+    "sections": [
+      {
+        "id": "17.1",
+        "title": "Introduction",
+        "printed_page": 155,
+        "line": 11
+      },
+      {
+        "id": "17.2",
+        "title": "Power of a Point Proofs",
+        "printed_page": 157,
+        "line": 95
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      1,
+      2,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302
+    ]
+  },
+  {
+    "id": "V1-C18",
+    "volume": 1,
+    "chapter": 18,
+    "title": "Three Dimensional Geometry",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/18-three-dimensional-geometry.md",
+    "printed_pages": [
+      160,
+      172
+    ],
+    "pdf_pages": [
+      174,
+      186
+    ],
+    "sections": [
+      {
+        "id": "18.1",
+        "title": "Planes, Surface Area, and Volume",
+        "printed_page": 160,
+        "line": 15
+      },
+      {
+        "id": "18.2",
+        "title": "Spheres",
+        "printed_page": 161,
+        "line": 42
+      },
+      {
+        "id": "18.3",
+        "title": "Cubes and Boxes",
+        "printed_page": 162,
+        "line": 77
+      },
+      {
+        "id": "18.4",
+        "title": "Prisms and Cylinders",
+        "printed_page": 165,
+        "line": 190
+      },
+      {
+        "id": "18.5",
+        "title": "Pyramids and Cones",
+        "printed_page": 166,
+        "line": 239
+      },
+      {
+        "id": "18.6",
+        "title": "Polyhedra",
+        "printed_page": 168,
+        "line": 285
+      },
+      {
+        "id": "18.7",
+        "title": "How to Solve 3D Problems",
+        "printed_page": 169,
+        "line": 344
+      }
+    ],
+    "problems": [
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328
+    ]
+  },
+  {
+    "id": "V1-C19",
+    "volume": 1,
+    "chapter": 19,
+    "title": "Shifts, Turns, Flips, Stretches, and Squeezes",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/19-shifts-turns-flips-stretches-and-squeezes.md",
+    "printed_pages": [
+      173,
+      180
+    ],
+    "pdf_pages": [
+      187,
+      194
+    ],
+    "sections": [
+      {
+        "id": "19.1",
+        "title": "Translation",
+        "printed_page": 173,
+        "line": 17
+      },
+      {
+        "id": "19.2",
+        "title": "Rotation",
+        "printed_page": 174,
+        "line": 42
+      },
+      {
+        "id": "19.3",
+        "title": "Reflection",
+        "printed_page": 175,
+        "line": 75
+      },
+      {
+        "id": "19.4",
+        "title": "Distortion",
+        "printed_page": 176,
+        "line": 110
+      },
+      {
+        "id": "19.5",
+        "title": "Dilation",
+        "printed_page": 177,
+        "line": 133
+      },
+      {
+        "id": "19.6",
+        "title": "The More Things Change...",
+        "printed_page": 178,
+        "line": 162
+      },
+      {
+        "id": "19.7",
+        "title": "Transformation Proofs",
+        "printed_page": 178,
+        "line": 176
+      }
+    ],
+    "problems": [
+      329,
+      330,
+      331,
+      332,
+      333,
+      334,
+      335,
+      336,
+      337,
+      338,
+      339,
+      340,
+      341,
+      342
+    ]
+  },
+  {
+    "id": "V1-C20",
+    "volume": 1,
+    "chapter": 20,
+    "title": "A Potpourri of Geometry",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/20-a-potpourri-of-geometry.md",
+    "printed_pages": [
+      181,
+      186
+    ],
+    "pdf_pages": [
+      195,
+      200
+    ],
+    "sections": [],
+    "problems": [
+      343,
+      344,
+      345,
+      346,
+      347,
+      348,
+      349,
+      350,
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360,
+      361,
+      362,
+      363,
+      364,
+      365,
+      366,
+      367,
+      368,
+      369,
+      370,
+      371,
+      372,
+      373,
+      374,
+      375,
+      376,
+      377,
+      378,
+      379,
+      380,
+      381,
+      382,
+      383,
+      384,
+      385,
+      386,
+      387,
+      388,
+      389,
+      390,
+      391,
+      392,
+      393,
+      394,
+      395,
+      396,
+      397,
+      398,
+      399,
+      400,
+      401
+    ]
+  },
+  {
+    "id": "V1-C21",
+    "volume": 1,
+    "chapter": 21,
+    "title": "Functions",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/21-functions.md",
+    "printed_pages": [
+      187,
+      196
+    ],
+    "pdf_pages": [
+      201,
+      210
+    ],
+    "sections": [
+      {
+        "id": "21.1",
+        "title": "Welcome to the Machine",
+        "printed_page": 187,
+        "line": 11
+      },
+      {
+        "id": "21.2",
+        "title": "Graphing Functions",
+        "printed_page": 188,
+        "line": 59
+      },
+      {
+        "id": "21.3",
+        "title": "Inputs and Outputs",
+        "printed_page": 189,
+        "line": 84
+      },
+      {
+        "id": "21.4",
+        "title": "Even and Odd",
+        "printed_page": 190,
+        "line": 142
+      },
+      {
+        "id": "21.5",
+        "title": "Some Special Functions",
+        "printed_page": 191,
+        "line": 179
+      },
+      {
+        "id": "21.5.1",
+        "title": "Absolute Values",
+        "printed_page": 191,
+        "line": 183
+      },
+      {
+        "id": "21.5.2",
+        "title": "Floored",
+        "printed_page": 192,
+        "line": 210
+      },
+      {
+        "id": "21.5.3",
+        "title": "Split Up",
+        "printed_page": 193,
+        "line": 247
+      },
+      {
+        "id": "21.6",
+        "title": "Transforming a Function",
+        "printed_page": 194,
+        "line": 276
+      }
+    ],
+    "problems": [
+      402,
+      403,
+      404,
+      405,
+      406,
+      407,
+      408,
+      409,
+      410,
+      411,
+      412,
+      413
+    ]
+  },
+  {
+    "id": "V1-C22",
+    "volume": 1,
+    "chapter": 22,
+    "title": "Inequalities",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/22-inequalities.md",
+    "printed_pages": [
+      197,
+      205
+    ],
+    "pdf_pages": [
+      211,
+      219
+    ],
+    "sections": [
+      {
+        "id": "22.1",
+        "title": "What They Do",
+        "printed_page": 197,
+        "line": 15
+      },
+      {
+        "id": "22.2",
+        "title": "Linear Inequalities",
+        "printed_page": 198,
+        "line": 56
+      },
+      {
+        "id": "22.3",
+        "title": "Quadratic Inequalities",
+        "printed_page": 199,
+        "line": 96
+      },
+      {
+        "id": "22.4",
+        "title": "Absolute Value Inequalities",
+        "printed_page": 202,
+        "line": 207
+      },
+      {
+        "id": "22.5",
+        "title": "A Trivial Inequality",
+        "printed_page": 203,
+        "line": 250
+      }
+    ],
+    "problems": [
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423,
+      424,
+      425,
+      426,
+      427,
+      428
+    ]
+  },
+  {
+    "id": "V1-C23",
+    "volume": 1,
+    "chapter": 23,
+    "title": "Operations and Relations",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/23-operations-and-relations.md",
+    "printed_pages": [
+      206,
+      210
+    ],
+    "pdf_pages": [
+      220,
+      224
+    ],
+    "sections": [
+      {
+        "id": "23.1",
+        "title": "What is an Operation?",
+        "printed_page": 206,
+        "line": 11
+      },
+      {
+        "id": "23.2",
+        "title": "Properties of Operations",
+        "printed_page": 207,
+        "line": 40
+      },
+      {
+        "id": "23.3",
+        "title": "Relations",
+        "printed_page": 209,
+        "line": 132
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      1,
+      2,
+      3,
+      429,
+      430,
+      431,
+      432,
+      433
+    ]
+  },
+  {
+    "id": "V1-C24",
+    "volume": 1,
+    "chapter": 24,
+    "title": "Sequences and Series",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/24-sequences-and-series.md",
+    "printed_pages": [
+      211,
+      220
+    ],
+    "pdf_pages": [
+      225,
+      234
+    ],
+    "sections": [
+      {
+        "id": "24.1",
+        "title": "Arithmetic Series",
+        "printed_page": 211,
+        "line": 11
+      },
+      {
+        "id": "24.2",
+        "title": "Geometric Series",
+        "printed_page": 212,
+        "line": 87
+      },
+      {
+        "id": "24.3",
+        "title": "Infinite Series",
+        "printed_page": 213,
+        "line": 133
+      },
+      {
+        "id": "24.5",
+        "title": "Sequences",
+        "printed_page": 216,
+        "line": 267
+      },
+      {
+        "id": "24.6",
+        "title": "Sequences and Means",
+        "printed_page": 217,
+        "line": 311
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      440,
+      441,
+      442,
+      443,
+      444,
+      445,
+      446,
+      447,
+      448,
+      449,
+      450,
+      451,
+      452,
+      453,
+      454,
+      455,
+      456
+    ]
+  },
+  {
+    "id": "V1-C25",
+    "volume": 1,
+    "chapter": 25,
+    "title": "Learning to Count",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/25-learning-to-count.md",
+    "printed_pages": [
+      221,
+      235
+    ],
+    "pdf_pages": [
+      235,
+      249
+    ],
+    "sections": [
+      {
+        "id": "25.1",
+        "title": "What’s to Learn?",
+        "printed_page": 221,
+        "line": 15
+      },
+      {
+        "id": "25.2",
+        "title": "Multiplication",
+        "printed_page": 221,
+        "line": 25
+      },
+      {
+        "id": "25.3",
+        "title": "Example: The Number of Divisors",
+        "printed_page": 223,
+        "line": 83
+      },
+      {
+        "id": "25.4",
+        "title": "Restrictions on Multiplication",
+        "printed_page": 223,
+        "line": 99
+      },
+      {
+        "id": "25.5",
+        "title": "Permutations, Arrangements, and!",
+        "printed_page": 225,
+        "line": 161
+      },
+      {
+        "id": "25.6",
+        "title": "Mixing it Up",
+        "printed_page": 227,
+        "line": 257
+      },
+      {
+        "id": "25.7",
+        "title": "Counting the Wrong Thing, Part I",
+        "printed_page": 228,
+        "line": 302
+      },
+      {
+        "id": "25.8",
+        "title": "Counting the Wrong Thing, Part II",
+        "printed_page": 229,
+        "line": 327
+      },
+      {
+        "id": "25.9",
+        "title": "Doing it Another Way",
+        "printed_page": 232,
+        "line": 452
+      },
+      {
+        "id": "25.10",
+        "title": "The Binomial Theorem",
+        "printed_page": 232,
+        "line": 466
+      }
+    ],
+    "problems": [
+      457,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464,
+      465,
+      466,
+      467,
+      468,
+      469,
+      470,
+      471,
+      472,
+      473,
+      474,
+      475,
+      476,
+      477
+    ]
+  },
+  {
+    "id": "V1-C26",
+    "volume": 1,
+    "chapter": 26,
+    "title": "Statistics and Probability",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/26-statistics-and-probability.md",
+    "printed_pages": [
+      236,
+      245
+    ],
+    "pdf_pages": [
+      250,
+      259
+    ],
+    "sections": [
+      {
+        "id": "26.1",
+        "title": "Statistics",
+        "printed_page": 236,
+        "line": 11
+      },
+      {
+        "id": "26.2",
+        "title": "Probability and Common Sense",
+        "printed_page": 238,
+        "line": 82
+      },
+      {
+        "id": "26.3",
+        "title": "Multiplying Probabilities",
+        "printed_page": 240,
+        "line": 162
+      },
+      {
+        "id": "26.4",
+        "title": "Casework",
+        "printed_page": 241,
+        "line": 203
+      },
+      {
+        "id": "26.5",
+        "title": "Odds",
+        "printed_page": 242,
+        "line": 238
+      },
+      {
+        "id": "26.6",
+        "title": "What Did You Expect?",
+        "printed_page": 242,
+        "line": 254
+      }
+    ],
+    "problems": [
+      478,
+      479,
+      480,
+      481,
+      482,
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      492,
+      493,
+      494,
+      495,
+      496,
+      497,
+      498,
+      499
+    ]
+  },
+  {
+    "id": "V1-C27",
+    "volume": 1,
+    "chapter": 27,
+    "title": "Sets",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/27-sets.md",
+    "printed_pages": [
+      246,
+      251
+    ],
+    "pdf_pages": [
+      260,
+      265
+    ],
+    "sections": [
+      {
+        "id": "27.1",
+        "title": "Some Definitions",
+        "printed_page": 246,
+        "line": 11
+      },
+      {
+        "id": "27.2",
+        "title": "Operating on Sets",
+        "printed_page": 247,
+        "line": 50
+      },
+      {
+        "id": "27.3",
+        "title": "Venn Diagrams",
+        "printed_page": 248,
+        "line": 81
+      },
+      {
+        "id": "27.4",
+        "title": "Subsets",
+        "printed_page": 249,
+        "line": 118
+      }
+    ],
+    "problems": [
+      500,
+      501,
+      502,
+      503,
+      504,
+      505,
+      506,
+      507
+    ]
+  },
+  {
+    "id": "V1-C28",
+    "volume": 1,
+    "chapter": 28,
+    "title": "Prove It",
+    "subjects": [
+      "proof"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/28-prove-it.md",
+    "printed_pages": [
+      252,
+      261
+    ],
+    "pdf_pages": [
+      266,
+      275
+    ],
+    "sections": [
+      {
+        "id": "28.1",
+        "title": "Words, Words, Words",
+        "printed_page": 252,
+        "line": 17
+      },
+      {
+        "id": "28.2",
+        "title": "Contradiction",
+        "printed_page": 254,
+        "line": 88
+      },
+      {
+        "id": "28.3",
+        "title": "Converses Aren’t Necessarily True",
+        "printed_page": 255,
+        "line": 117
+      },
+      {
+        "id": "28.4",
+        "title": "Mathematical Induction",
+        "printed_page": 256,
+        "line": 142
+      },
+      {
+        "id": "28.5",
+        "title": "Shooting Holes in Pigeons",
+        "printed_page": 257,
+        "line": 199
+      },
+      {
+        "id": "28.6",
+        "title": "Convincing But Wrong",
+        "printed_page": 258,
+        "line": 232
+      }
+    ],
+    "problems": [
+      508,
+      509,
+      510,
+      511,
+      512,
+      513,
+      514,
+      515,
+      516,
+      517,
+      518,
+      519,
+      520,
+      521,
+      522,
+      523,
+      524,
+      525
+    ]
+  },
+  {
+    "id": "V1-C29",
+    "volume": 1,
+    "chapter": 29,
+    "title": "Parting Shots",
+    "subjects": [
+      "mixed"
+    ],
+    "path": "references/library/volume-1-the-basics/chapters/29-parting-shots.md",
+    "printed_pages": [
+      262,
+      266
+    ],
+    "pdf_pages": [
+      276,
+      280
+    ],
+    "sections": [],
+    "problems": [
+      526,
+      527,
+      528,
+      529,
+      530,
+      531,
+      532,
+      533,
+      534,
+      535,
+      536,
+      537,
+      538,
+      539,
+      540,
+      541,
+      542,
+      543,
+      544,
+      545,
+      546,
+      547,
+      548,
+      549,
+      550,
+      551,
+      552,
+      553,
+      554,
+      555,
+      556,
+      557,
+      558,
+      559,
+      560,
+      561,
+      562,
+      563,
+      564,
+      565,
+      566,
+      567,
+      568,
+      569,
+      570,
+      571,
+      572,
+      573,
+      574,
+      575,
+      576,
+      577,
+      578,
+      579,
+      580,
+      581,
+      582,
+      583,
+      584,
+      585,
+      586,
+      587,
+      588
+    ]
+  },
+  {
+    "id": "V2-C00",
+    "volume": 2,
+    "chapter": 0,
+    "title": "Prove It!",
+    "subjects": [
+      "proof"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/00-prove-it.md",
+    "printed_pages": [
+      1,
+      2
+    ],
+    "pdf_pages": [
+      23,
+      24
+    ],
+    "sections": [],
+    "problems": []
+  },
+  {
+    "id": "V2-C01",
+    "volume": 2,
+    "chapter": 1,
+    "title": "Logarithms",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/01-logarithms.md",
+    "printed_pages": [
+      3,
+      9
+    ],
+    "pdf_pages": [
+      25,
+      31
+    ],
+    "sections": [],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ]
+  },
+  {
+    "id": "V2-C02",
+    "volume": 2,
+    "chapter": 2,
+    "title": "Not Just For Right Triangles",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/02-not-just-for-right-triangles.md",
+    "printed_pages": [
+      10,
+      23
+    ],
+    "pdf_pages": [
+      32,
+      45
+    ],
+    "sections": [
+      {
+        "id": "2.1",
+        "title": "Trigonometric Functions",
+        "printed_page": 10,
+        "line": 11
+      },
+      {
+        "id": "2.2",
+        "title": "Graphing Trigonometric Functions",
+        "printed_page": 12,
+        "line": 87
+      },
+      {
+        "id": "2.3",
+        "title": "Going Backwards",
+        "printed_page": 14,
+        "line": 149
+      },
+      {
+        "id": "2.4",
+        "title": "Tying It All Together",
+        "printed_page": 15,
+        "line": 180
+      },
+      {
+        "id": "2.5",
+        "title": "Solving Problems Using Trigonometric Identities",
+        "printed_page": 20,
+        "line": 396
+      }
+    ],
+    "problems": [
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+    ]
+  },
+  {
+    "id": "V2-C03",
+    "volume": 2,
+    "chapter": 3,
+    "title": "More Triangles!",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/03-more-triangles.md",
+    "printed_pages": [
+      24,
+      32
+    ],
+    "pdf_pages": [
+      46,
+      54
+    ],
+    "sections": [
+      {
+        "id": "3.1",
+        "title": "Triangle Laws",
+        "printed_page": 24,
+        "line": 13
+      },
+      {
+        "id": "3.2",
+        "title": "Areas, Areas, Areas",
+        "printed_page": 27,
+        "line": 152
+      },
+      {
+        "id": "3.3",
+        "title": "More Important Lines",
+        "printed_page": 29,
+        "line": 232
+      }
+    ],
+    "problems": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+    ]
+  },
+  {
+    "id": "V2-C04",
+    "volume": 2,
+    "chapter": 4,
+    "title": "Cyclic Quadrilaterals",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/04-cyclic-quadrilaterals.md",
+    "printed_pages": [
+      33,
+      37
+    ],
+    "pdf_pages": [
+      55,
+      59
+    ],
+    "sections": [
+      {
+        "id": "4.1",
+        "title": "Properties of Cyclic Quadrilaterals",
+        "printed_page": 33,
+        "line": 11
+      },
+      {
+        "id": "4.2",
+        "title": "Finding Cyclic Quadrilaterals",
+        "printed_page": 33,
+        "line": 31
+      },
+      {
+        "id": "4.3",
+        "title": "Ptolemy's Theorem",
+        "printed_page": 35,
+        "line": 107
+      }
+    ],
+    "problems": [
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69
+    ]
+  },
+  {
+    "id": "V2-C05",
+    "volume": 2,
+    "chapter": 5,
+    "title": "Conics and Polar Coordinates",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/05-conics-and-polar-coordinates.md",
+    "printed_pages": [
+      38,
+      51
+    ],
+    "pdf_pages": [
+      60,
+      73
+    ],
+    "sections": [
+      {
+        "id": "5.1",
+        "title": "Parabolas",
+        "printed_page": 38,
+        "line": 16
+      },
+      {
+        "id": "5.2",
+        "title": "Ellipses",
+        "printed_page": 40,
+        "line": 106
+      },
+      {
+        "id": "5.3",
+        "title": "Hyperbolas",
+        "printed_page": 44,
+        "line": 296
+      },
+      {
+        "id": "5.4",
+        "title": "Polar Coordinates Revisited",
+        "printed_page": 47,
+        "line": 385
+      },
+      {
+        "id": "5.5",
+        "title": "That Pesky $xy$ Term",
+        "printed_page": 49,
+        "line": 479
+      }
+    ],
+    "problems": [
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83
+    ]
+  },
+  {
+    "id": "V2-C06",
+    "volume": 2,
+    "chapter": 6,
+    "title": "Polynomials",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/06-polynomials.md",
+    "printed_pages": [
+      52,
+      68
+    ],
+    "pdf_pages": [
+      74,
+      90
+    ],
+    "sections": [
+      {
+        "id": "6.1",
+        "title": "What is a Polynomial?",
+        "printed_page": 52,
+        "line": 11
+      },
+      {
+        "id": "6.2",
+        "title": "Multiplying and Dividing Polynomials",
+        "printed_page": 52,
+        "line": 27
+      },
+      {
+        "id": "6.3",
+        "title": "Finding Roots of Polynomials",
+        "printed_page": 56,
+        "line": 213
+      },
+      {
+        "id": "6.4",
+        "title": "Coefficients and Roots",
+        "printed_page": 60,
+        "line": 419
+      },
+      {
+        "id": "6.5",
+        "title": "Transforming Polynomials",
+        "printed_page": 62,
+        "line": 489
+      },
+      {
+        "id": "6.6",
+        "title": "Newton's Sums",
+        "printed_page": 65,
+        "line": 630
+      }
+    ],
+    "problems": [
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104
+    ]
+  },
+  {
+    "id": "V2-C07",
+    "volume": 2,
+    "chapter": 7,
+    "title": "Functions",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/07-functions.md",
+    "printed_pages": [
+      69,
+      75
+    ],
+    "pdf_pages": [
+      91,
+      97
+    ],
+    "sections": [
+      {
+        "id": "7.1",
+        "title": "The Inverse of a Function",
+        "printed_page": 69,
+        "line": 11
+      },
+      {
+        "id": "7.2",
+        "title": "Functional Identities",
+        "printed_page": 70,
+        "line": 65
+      },
+      {
+        "id": "7.3",
+        "title": "Solving Functional Identities",
+        "printed_page": 71,
+        "line": 108
+      },
+      {
+        "id": "7.3.1",
+        "title": "Isolation",
+        "printed_page": 71,
+        "line": 112
+      },
+      {
+        "id": "7.3.2",
+        "title": "Substituting in Values",
+        "printed_page": 72,
+        "line": 145
+      },
+      {
+        "id": "7.3.3",
+        "title": "Using Cyclic Functions",
+        "printed_page": 72,
+        "line": 167
+      },
+      {
+        "id": "7.3.4",
+        "title": "Arbitrary Functions",
+        "printed_page": 73,
+        "line": 209
+      }
+    ],
+    "problems": [
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      1,
+      2,
+      3,
+      4,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130
+    ]
+  },
+  {
+    "id": "V2-C08",
+    "volume": 2,
+    "chapter": 8,
+    "title": "Taking it to the Limit",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/08-taking-it-to-the-limit.md",
+    "printed_pages": [
+      76,
+      87
+    ],
+    "pdf_pages": [
+      98,
+      109
+    ],
+    "sections": [
+      {
+        "id": "8.1",
+        "title": "What is a Limit?",
+        "printed_page": 76,
+        "line": 13
+      },
+      {
+        "id": "8.2",
+        "title": "Tricky",
+        "printed_page": 77,
+        "line": 74
+      },
+      {
+        "id": "8.3",
+        "title": "Working with Limits",
+        "printed_page": 78,
+        "line": 111
+      },
+      {
+        "id": "8.4",
+        "title": "Continuity",
+        "printed_page": 80,
+        "line": 197
+      },
+      {
+        "id": "8.5",
+        "title": "Asymptotes",
+        "printed_page": 81,
+        "line": 258
+      },
+      {
+        "id": "8.6",
+        "title": "Trig Limits",
+        "printed_page": 83,
+        "line": 316
+      },
+      {
+        "id": "8.7",
+        "title": "$e$",
+        "printed_page": 84,
+        "line": 380
+      }
+    ],
+    "problems": [
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140
+    ]
+  },
+  {
+    "id": "V2-C09",
+    "volume": 2,
+    "chapter": 9,
+    "title": "Complex Numbers",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/09-complex-numbers.md",
+    "printed_pages": [
+      88,
+      99
+    ],
+    "pdf_pages": [
+      110,
+      121
+    ],
+    "sections": [
+      {
+        "id": "9.1",
+        "title": "Drawing the Complex Numbers",
+        "printed_page": 88,
+        "line": 11
+      },
+      {
+        "id": "9.2",
+        "title": "The Complex Absolute Value",
+        "printed_page": 89,
+        "line": 74
+      },
+      {
+        "id": "9.3",
+        "title": "Complex Multiplication and Coordinates",
+        "printed_page": 91,
+        "line": 149
+      },
+      {
+        "id": "9.4",
+        "title": "Complex Powers and Geometry",
+        "printed_page": 91,
+        "line": 169
+      },
+      {
+        "id": "9.5",
+        "title": "DeMoivre’s Theorem",
+        "printed_page": 92,
+        "line": 202
+      },
+      {
+        "id": "9.6",
+        "title": "Exponential Form",
+        "printed_page": 94,
+        "line": 264
+      },
+      {
+        "id": "9.7",
+        "title": "Two for One",
+        "printed_page": 96,
+        "line": 354
+      },
+      {
+        "id": "9.8",
+        "title": "The Roots of Unity",
+        "printed_page": 96,
+        "line": 381
+      }
+    ],
+    "problems": [
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154
+    ]
+  },
+  {
+    "id": "V2-C10",
+    "volume": 2,
+    "chapter": 10,
+    "title": "Vectors and Matrices",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/10-vectors-and-matrices.md",
+    "printed_pages": [
+      100,
+      111
+    ],
+    "pdf_pages": [
+      122,
+      133
+    ],
+    "sections": [
+      {
+        "id": "10.1",
+        "title": "What is a Vector?",
+        "printed_page": 100,
+        "line": 13
+      },
+      {
+        "id": "10.2",
+        "title": "The Dot Product",
+        "printed_page": 101,
+        "line": 36
+      },
+      {
+        "id": "10.3",
+        "title": "Coordinate Representation of Vectors",
+        "printed_page": 102,
+        "line": 95
+      },
+      {
+        "id": "10.4",
+        "title": "What is a Matrix?",
+        "printed_page": 103,
+        "line": 141
+      },
+      {
+        "id": "10.5",
+        "title": "Matrix Multiplication",
+        "printed_page": 104,
+        "line": 202
+      },
+      {
+        "id": "10.6",
+        "title": "Matrices in Higher Dimensions",
+        "printed_page": 107,
+        "line": 289
+      },
+      {
+        "id": "10.7",
+        "title": "Better Matrix Notation",
+        "printed_page": 108,
+        "line": 366
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      4,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163
+    ]
+  },
+  {
+    "id": "V2-C11",
+    "volume": 2,
+    "chapter": 11,
+    "title": "Cross Products and Determinants",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/11-cross-products-and-determinants.md",
+    "printed_pages": [
+      112,
+      123
+    ],
+    "pdf_pages": [
+      134,
+      145
+    ],
+    "sections": [
+      {
+        "id": "11.1",
+        "title": "The Cross Product",
+        "printed_page": 112,
+        "line": 14
+      },
+      {
+        "id": "11.2",
+        "title": "The Cross Product in Coordinates",
+        "printed_page": 113,
+        "line": 57
+      },
+      {
+        "id": "11.3",
+        "title": "The Determinant",
+        "printed_page": 113,
+        "line": 75
+      },
+      {
+        "id": "11.4",
+        "title": "Determinants in Higher Dimensions",
+        "printed_page": 115,
+        "line": 165
+      },
+      {
+        "id": "11.5",
+        "title": "Minors",
+        "printed_page": 116,
+        "line": 212
+      },
+      {
+        "id": "11.6",
+        "title": "Row and Column Operations",
+        "printed_page": 118,
+        "line": 332
+      },
+      {
+        "id": "11.7",
+        "title": "The Inverse of a Matrix",
+        "printed_page": 120,
+        "line": 441
+      }
+    ],
+    "problems": [
+      1,
+      2,
+      3,
+      1,
+      2,
+      3,
+      4,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172
+    ]
+  },
+  {
+    "id": "V2-C12",
+    "volume": 2,
+    "chapter": 12,
+    "title": "Analytic Geometry",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/12-analytic-geometry.md",
+    "printed_pages": [
+      124,
+      142
+    ],
+    "pdf_pages": [
+      146,
+      164
+    ],
+    "sections": [
+      {
+        "id": "12.1",
+        "title": "Lines, Angles, and Distances",
+        "printed_page": 124,
+        "line": 11
+      },
+      {
+        "id": "12.2",
+        "title": "Parameters",
+        "printed_page": 125,
+        "line": 48
+      },
+      {
+        "id": "12.3",
+        "title": "Vectors",
+        "printed_page": 127,
+        "line": 140
+      },
+      {
+        "id": "12.4",
+        "title": "Points, Lines, and Planes",
+        "printed_page": 130,
+        "line": 287
+      },
+      {
+        "id": "12.5",
+        "title": "Curved Surfaces",
+        "printed_page": 134,
+        "line": 447
+      },
+      {
+        "id": "12.6",
+        "title": "Using Analytic Geometry",
+        "printed_page": 135,
+        "line": 520
+      },
+      {
+        "id": "12.7",
+        "title": "Vectors and Geometry Problems",
+        "printed_page": 136,
+        "line": 571
+      }
+    ],
+    "problems": [
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184
+    ]
+  },
+  {
+    "id": "V2-C13",
+    "volume": 2,
+    "chapter": 13,
+    "title": "Equations and Expressions",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/13-equations-and-expressions.md",
+    "printed_pages": [
+      143,
+      158
+    ],
+    "pdf_pages": [
+      165,
+      180
+    ],
+    "sections": [
+      {
+        "id": "13.1",
+        "title": "Linear Equations",
+        "printed_page": 143,
+        "line": 11
+      },
+      {
+        "id": "13.2",
+        "title": "Convenient Systems",
+        "printed_page": 148,
+        "line": 305
+      },
+      {
+        "id": "13.3",
+        "title": "Symmetric Expressions and Advanced Factorizations",
+        "printed_page": 150,
+        "line": 377
+      },
+      {
+        "id": "13.4",
+        "title": "More Polynomials",
+        "printed_page": 152,
+        "line": 472
+      },
+      {
+        "id": "13.5",
+        "title": "Squares and Cubes",
+        "printed_page": 154,
+        "line": 591
+      },
+      {
+        "id": "13.6",
+        "title": "Using Graphing",
+        "printed_page": 155,
+        "line": 622
+      }
+    ],
+    "problems": [
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209
+    ]
+  },
+  {
+    "id": "V2-C14",
+    "volume": 2,
+    "chapter": 14,
+    "title": "Inequalities",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/14-inequalities.md",
+    "printed_pages": [
+      159,
+      169
+    ],
+    "pdf_pages": [
+      181,
+      191
+    ],
+    "sections": [
+      {
+        "id": "14.1",
+        "title": "Trivial Inequality Revisited",
+        "printed_page": 159,
+        "line": 17
+      },
+      {
+        "id": "14.2",
+        "title": "Arithmetic Mean-Geometric Mean Inequality",
+        "printed_page": 160,
+        "line": 50
+      },
+      {
+        "id": "14.3",
+        "title": "Cauchy’s Inequality",
+        "printed_page": 162,
+        "line": 154
+      },
+      {
+        "id": "14.4",
+        "title": "Maximization and Minimization",
+        "printed_page": 164,
+        "line": 240
+      },
+      {
+        "id": "14.5",
+        "title": "Geometry and Inequalities",
+        "printed_page": 165,
+        "line": 295
+      },
+      {
+        "id": "14.6",
+        "title": "Wrap-Up and Parting Hints",
+        "printed_page": 166,
+        "line": 344
+      }
+    ],
+    "problems": [
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234
+    ]
+  },
+  {
+    "id": "V2-C15",
+    "volume": 2,
+    "chapter": 15,
+    "title": "Combinatorics",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/15-combinatorics.md",
+    "printed_pages": [
+      170,
+      179
+    ],
+    "pdf_pages": [
+      192,
+      201
+    ],
+    "sections": [
+      {
+        "id": "15.1",
+        "title": "Identities",
+        "printed_page": 170,
+        "line": 11
+      },
+      {
+        "id": "15.2",
+        "title": "Pascal’s Identity",
+        "printed_page": 170,
+        "line": 23
+      },
+      {
+        "id": "15.3",
+        "title": "More Identities",
+        "printed_page": 172,
+        "line": 93
+      },
+      {
+        "id": "15.4",
+        "title": "Block Walking",
+        "printed_page": 173,
+        "line": 170
+      },
+      {
+        "id": "15.5",
+        "title": "The Binomial Theorem",
+        "printed_page": 175,
+        "line": 253
+      }
+    ],
+    "problems": [
+      235,
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      247,
+      248,
+      249,
+      250
+    ]
+  },
+  {
+    "id": "V2-C16",
+    "volume": 2,
+    "chapter": 16,
+    "title": "Sequences and Series",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/16-sequences-and-series.md",
+    "printed_pages": [
+      180,
+      195
+    ],
+    "pdf_pages": [
+      202,
+      217
+    ],
+    "sections": [
+      {
+        "id": "16.1",
+        "title": "Fractions in Other Bases",
+        "printed_page": 180,
+        "line": 11
+      },
+      {
+        "id": "16.2",
+        "title": "$\\Sigma$ome $\\Sigma$pecial $\\Sigma$eries",
+        "printed_page": 181,
+        "line": 46
+      },
+      {
+        "id": "16.3",
+        "title": "The Fibonacci Numbers",
+        "printed_page": 182,
+        "line": 113
+      },
+      {
+        "id": "16.4",
+        "title": "Dealing with Recurrences",
+        "printed_page": 184,
+        "line": 212
+      },
+      {
+        "id": "16.5",
+        "title": "Dealing with Sums",
+        "printed_page": 186,
+        "line": 294
+      },
+      {
+        "id": "16.6",
+        "title": "The Binomial Theorem Revisited",
+        "printed_page": 188,
+        "line": 400
+      },
+      {
+        "id": "16.7",
+        "title": "Harmonic Sequences",
+        "printed_page": 191,
+        "line": 537
+      }
+    ],
+    "problems": [
+      251,
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277,
+      278,
+      279,
+      280,
+      281
+    ]
+  },
+  {
+    "id": "V2-C17",
+    "volume": 2,
+    "chapter": 17,
+    "title": "Counting in the Twilight Zone",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/17-counting-in-the-twilight-zone.md",
+    "printed_pages": [
+      196,
+      210
+    ],
+    "pdf_pages": [
+      218,
+      232
+    ],
+    "sections": [
+      {
+        "id": "17.1",
+        "title": "One to One",
+        "printed_page": 196,
+        "line": 17
+      },
+      {
+        "id": "17.2",
+        "title": "Clever Correspondences",
+        "printed_page": 196,
+        "line": 25
+      },
+      {
+        "id": "17.3",
+        "title": "Easy as …",
+        "printed_page": 198,
+        "line": 87
+      },
+      {
+        "id": "17.4",
+        "title": "Generating Functions",
+        "printed_page": 200,
+        "line": 163
+      },
+      {
+        "id": "17.5",
+        "title": "Partitions",
+        "printed_page": 202,
+        "line": 257
+      },
+      {
+        "id": "17.6",
+        "title": "Counting on Graphs",
+        "printed_page": 204,
+        "line": 329
+      },
+      {
+        "id": "17.7",
+        "title": "Counting Infinite Sets",
+        "printed_page": 205,
+        "line": 358
+      }
+    ],
+    "problems": [
+      282,
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299,
+      300
+    ]
+  },
+  {
+    "id": "V2-C18",
+    "volume": 2,
+    "chapter": 18,
+    "title": "Again and Again",
+    "subjects": [
+      "algebra"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/18-again-and-again.md",
+    "printed_pages": [
+      211,
+      215
+    ],
+    "pdf_pages": [
+      233,
+      237
+    ],
+    "sections": [
+      {
+        "id": "18.1",
+        "title": "Repeats",
+        "printed_page": 211,
+        "line": 15
+      },
+      {
+        "id": "18.2",
+        "title": "Off to Infinity",
+        "printed_page": 211,
+        "line": 31
+      },
+      {
+        "id": "18.3",
+        "title": "Rational Continued Fractions",
+        "printed_page": 212,
+        "line": 63
+      },
+      {
+        "id": "18.4",
+        "title": "Real Continued Fractions",
+        "printed_page": 213,
+        "line": 120
+      }
+    ],
+    "problems": [
+      302,
+      303,
+      304,
+      305
+    ]
+  },
+  {
+    "id": "V2-C19",
+    "volume": 2,
+    "chapter": 19,
+    "title": "Probability",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/19-probability.md",
+    "printed_pages": [
+      216,
+      223
+    ],
+    "pdf_pages": [
+      238,
+      245
+    ],
+    "sections": [
+      {
+        "id": "19.1",
+        "title": "Review, Definitions, and Notation",
+        "printed_page": 216,
+        "line": 16
+      },
+      {
+        "id": "19.2",
+        "title": "Going a Step Further",
+        "printed_page": 217,
+        "line": 45
+      },
+      {
+        "id": "19.3",
+        "title": "Geometry and Probability",
+        "printed_page": 217,
+        "line": 63
+      },
+      {
+        "id": "19.4",
+        "title": "Conditional Probability",
+        "printed_page": 219,
+        "line": 115
+      }
+    ],
+    "problems": [
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323
+    ]
+  },
+  {
+    "id": "V2-C20",
+    "volume": 2,
+    "chapter": 20,
+    "title": "Find It and Make It",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/20-find-it-and-make-it.md",
+    "printed_pages": [
+      224,
+      232
+    ],
+    "pdf_pages": [
+      246,
+      254
+    ],
+    "sections": [
+      {
+        "id": "20.1",
+        "title": "Locus",
+        "printed_page": 224,
+        "line": 13
+      },
+      {
+        "id": "20.2",
+        "title": "Construction",
+        "printed_page": 227,
+        "line": 100
+      }
+    ],
+    "problems": [
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332,
+      333,
+      334,
+      335,
+      336,
+      337,
+      338,
+      339,
+      340
+    ]
+  },
+  {
+    "id": "V2-C21",
+    "volume": 2,
+    "chapter": 21,
+    "title": "Collinearity and Concurrency",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/21-collinearity-and-concurrency.md",
+    "printed_pages": [
+      233,
+      240
+    ],
+    "pdf_pages": [
+      255,
+      262
+    ],
+    "sections": [
+      {
+        "id": "21.1",
+        "title": "Three Points and a Line",
+        "printed_page": 233,
+        "line": 11
+      },
+      {
+        "id": "21.2",
+        "title": "Three Lines and a Point",
+        "printed_page": 236,
+        "line": 150
+      }
+    ],
+    "problems": [
+      341,
+      342,
+      343,
+      344,
+      345,
+      346,
+      347,
+      348,
+      349,
+      350
+    ]
+  },
+  {
+    "id": "V2-C22",
+    "volume": 2,
+    "chapter": 22,
+    "title": "Geometry Tidbits",
+    "subjects": [
+      "geometry"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/22-geometry-tidbits.md",
+    "printed_pages": [
+      241,
+      251
+    ],
+    "pdf_pages": [
+      263,
+      273
+    ],
+    "sections": [
+      {
+        "id": "22.1",
+        "title": "Projections",
+        "printed_page": 241,
+        "line": 13
+      },
+      {
+        "id": "22.2",
+        "title": "Inversion",
+        "printed_page": 243,
+        "line": 81
+      },
+      {
+        "id": "22.3",
+        "title": "Homothecy",
+        "printed_page": 245,
+        "line": 135
+      },
+      {
+        "id": "22.4",
+        "title": "Geometric Continuity",
+        "printed_page": 246,
+        "line": 172
+      },
+      {
+        "id": "22.5",
+        "title": "Given a Finite Number of...",
+        "printed_page": 247,
+        "line": 205
+      }
+    ],
+    "problems": [
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360,
+      361,
+      362,
+      363,
+      364,
+      365,
+      366,
+      367,
+      368,
+      369,
+      370,
+      371,
+      372
+    ]
+  },
+  {
+    "id": "V2-C23",
+    "volume": 2,
+    "chapter": 23,
+    "title": "Number Theory",
+    "subjects": [
+      "number-theory"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/23-number-theory.md",
+    "printed_pages": [
+      252,
+      265
+    ],
+    "pdf_pages": [
+      274,
+      287
+    ],
+    "sections": [
+      {
+        "id": "23.1",
+        "title": "Divisibility",
+        "printed_page": 252,
+        "line": 16
+      },
+      {
+        "id": "23.2",
+        "title": "Division in Congruences",
+        "printed_page": 253,
+        "line": 49
+      },
+      {
+        "id": "23.3",
+        "title": "Solving Linear Congruences",
+        "printed_page": 254,
+        "line": 100
+      },
+      {
+        "id": "23.4",
+        "title": "Solving Quadratic Congruences",
+        "printed_page": 256,
+        "line": 169
+      },
+      {
+        "id": "23.5",
+        "title": "The Sum of the Divisors",
+        "printed_page": 257,
+        "line": 222
+      },
+      {
+        "id": "23.6",
+        "title": "Fermat’s Theorem",
+        "printed_page": 258,
+        "line": 281
+      },
+      {
+        "id": "23.7",
+        "title": "The $\\phi$ Function",
+        "printed_page": 260,
+        "line": 349
+      },
+      {
+        "id": "23.8",
+        "title": "Wilson’s Theorem",
+        "printed_page": 262,
+        "line": 452
+      }
+    ],
+    "problems": [
+      373,
+      374,
+      375,
+      376,
+      377,
+      378,
+      379,
+      380,
+      381,
+      382,
+      383,
+      384,
+      385,
+      386,
+      387,
+      388,
+      389,
+      390,
+      391,
+      392,
+      393,
+      394,
+      395,
+      396,
+      397,
+      398,
+      399,
+      400,
+      401,
+      402
+    ]
+  },
+  {
+    "id": "V2-C24",
+    "volume": 2,
+    "chapter": 24,
+    "title": "Diophantine Equations",
+    "subjects": [
+      "number-theory"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/24-diophantine-equations.md",
+    "printed_pages": [
+      266,
+      274
+    ],
+    "pdf_pages": [
+      288,
+      296
+    ],
+    "sections": [
+      {
+        "id": "24.1",
+        "title": "$ax + by = c$",
+        "printed_page": 266,
+        "line": 17
+      },
+      {
+        "id": "24.1.1",
+        "title": "$c = 0$",
+        "printed_page": 266,
+        "line": 25
+      },
+      {
+        "id": "24.1.2",
+        "title": "$c \\neq 0$",
+        "printed_page": 267,
+        "line": 60
+      },
+      {
+        "id": "24.2",
+        "title": "$x^2 + y^2 = z^2$",
+        "printed_page": 269,
+        "line": 134
+      },
+      {
+        "id": "24.3",
+        "title": "$x^4+y^4=z^2$",
+        "printed_page": 270,
+        "line": 181
+      },
+      {
+        "id": "24.4",
+        "title": "The Pell Equation",
+        "printed_page": 271,
+        "line": 246
+      },
+      {
+        "id": "24.5",
+        "title": "General Methods",
+        "printed_page": 272,
+        "line": 295
+      }
+    ],
+    "problems": [
+      403,
+      404,
+      405,
+      406,
+      407,
+      408,
+      409,
+      410,
+      411,
+      412,
+      413,
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423,
+      424,
+      425,
+      426
+    ]
+  },
+  {
+    "id": "V2-C25",
+    "volume": 2,
+    "chapter": 25,
+    "title": "Graph Theory",
+    "subjects": [
+      "counting-probability"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/25-graph-theory.md",
+    "printed_pages": [
+      275,
+      283
+    ],
+    "pdf_pages": [
+      297,
+      305
+    ],
+    "sections": [
+      {
+        "id": "25.1",
+        "title": "Points and Lines",
+        "printed_page": 275,
+        "line": 11
+      },
+      {
+        "id": "25.2",
+        "title": "Planar Graphs",
+        "printed_page": 276,
+        "line": 42
+      },
+      {
+        "id": "25.3",
+        "title": "Example: The Platonic Solids",
+        "printed_page": 277,
+        "line": 97
+      },
+      {
+        "id": "25.4",
+        "title": "Walking Around on Graphs",
+        "printed_page": 278,
+        "line": 138
+      },
+      {
+        "id": "25.5",
+        "title": "Euler Trails",
+        "printed_page": 279,
+        "line": 163
+      },
+      {
+        "id": "25.6",
+        "title": "Colorings",
+        "printed_page": 280,
+        "line": 198
+      }
+    ],
+    "problems": [
+      427,
+      428,
+      429,
+      430,
+      431,
+      432,
+      433,
+      434,
+      435,
+      436
+    ]
+  },
+  {
+    "id": "V2-C26",
+    "volume": 2,
+    "chapter": 26,
+    "title": "Parting Shots",
+    "subjects": [
+      "mixed"
+    ],
+    "path": "references/library/volume-2-and-beyond/chapters/26-parting-shots.md",
+    "printed_pages": [
+      284,
+      290
+    ],
+    "pdf_pages": [
+      306,
+      312
+    ],
+    "sections": [],
+    "problems": [
+      437,
+      438,
+      439,
+      440,
+      441,
+      442,
+      443,
+      444,
+      445,
+      446,
+      447,
+      448,
+      449,
+      450,
+      451,
+      452,
+      453,
+      454,
+      455,
+      456,
+      457,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464,
+      465,
+      466,
+      467,
+      468,
+      469,
+      470,
+      471,
+      472,
+      473,
+      474,
+      475,
+      476,
+      477,
+      478,
+      479,
+      480,
+      481,
+      482,
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      492,
+      493,
+      494,
+      495,
+      496,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      504,
+      505,
+      506,
+      507,
+      508,
+      509
+    ]
+  }
+]

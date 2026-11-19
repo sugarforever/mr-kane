@@ -19,9 +19,10 @@ import {
 	publicConnection,
 	locked,
 } from './providers-store';
-import { modelsFor } from './providers-models';
+import { modelsFor, modelFor } from './providers-models';
 import { research } from './research';
 import { createSpeechTools } from './speech/tools';
+import { mathSystemPrompt, createMathTools } from './math/library';
 import { requestSchema } from '#lib/domain';
 import type { Connection } from '#lib/ai-types';
 export const configured = () => {
@@ -34,6 +35,7 @@ type Snapshot = {
 	content: string;
 	research?: Awaited<ReturnType<typeof research>>;
 	speechTools?: boolean;
+	coach?: 'math';
 };
 const state = globalThis as typeof globalThis & {
 	__kaneJobs?: Map<string, Promise<string>>;
@@ -44,14 +46,16 @@ export async function runCoach(
 	data: unknown,
 	schema: unknown,
 	requestId: string = randomUUID(),
-	options: { speechTools?: boolean } = {},
+	options: { speechTools?: boolean; coach?: 'math' } = {},
 ): Promise<string> {
 	if (!/^[a-zA-Z0-9-]{1,80}$/.test(requestId))
 		throw new Error('Invalid request ID.');
 	const content = JSON.stringify({ operation, data, outputSchema: schema });
+	const coachContent =
+		options.coach === 'math' ? content + '\nmath-coach' : content;
 	const hashContent = options.speechTools
-		? content + '\nspeech-tools-enabled'
-		: content;
+		? coachContent + '\nspeech-tools-enabled'
+		: coachContent;
 	const hash = createHash('sha256').update(hashContent).digest('hex');
 	const connection = defaultConnection();
 	const db = database();
@@ -69,11 +73,12 @@ export async function runCoach(
 				throw new Error('Connect an AI provider in Settings first.');
 			snapshot = {
 				connection,
+				coach: options.coach,
 				speechTools: options.speechTools === true,
-				skill: await readFile(
-					resolve('skills/language-coach/SKILL.md'),
-					'utf8',
-				),
+				skill:
+					options.coach === 'math'
+						? await mathSystemPrompt()
+						: await readFile(resolve('skills/language-coach/SKILL.md'), 'utf8'),
 				content,
 			};
 			db.prepare('INSERT OR IGNORE INTO jobs VALUES (?,?,?)').run(
@@ -152,9 +157,15 @@ async function execute(snapshot: Snapshot, id: string) {
 	chmodSync(file, 0o600);
 	const registry = createRegistry();
 	const speechTools = createSpeechTools(id);
+	const activeTools =
+		snapshot.coach === 'math'
+			? createMathTools(modelFor(snapshot.connection).input.includes('image'))
+			: snapshot.speechTools
+				? speechTools
+				: [];
 	registry.install({
-		name: 'language-coach',
-		tools: speechTools,
+		name: snapshot.coach === 'math' ? 'aops-study' : 'language-coach',
+		tools: snapshot.coach === 'math' ? activeTools : speechTools,
 		sections: [{ key: 'teaching', tag: false, render: () => snapshot.skill }],
 	});
 	const storage = await openNodeSqliteStorage(file);
@@ -184,9 +195,9 @@ async function execute(snapshot: Snapshot, id: string) {
 					provider: snapshot.connection.service,
 					modelId: snapshot.connection.modelId,
 				},
-				tools: snapshot.speechTools ? speechTools : [],
+				tools: activeTools,
 				thinkingLevel: 'off',
-				maxTurns: snapshot.speechTools ? 4 : 1,
+				maxTurns: snapshot.coach === 'math' ? 6 : snapshot.speechTools ? 4 : 1,
 			},
 		});
 		const submission = await root.submit(
