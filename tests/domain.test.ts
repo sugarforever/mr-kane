@@ -31,7 +31,7 @@ describe('learning contracts', () => {
 	it('rejects unsupported languages and oversized supplied material', () => {
 		expect(
 			requestSchema.safeParse({
-				profile: { ...profile, language: 'en' },
+				profile: { ...profile, language: 'xx' },
 				mode: 'writing',
 				sourceType: 'daily',
 				material: '',

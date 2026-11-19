@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Language } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { readingUnits, type ReadingUnit } from '$lib/reading-levels';
@@ -22,7 +23,7 @@
 		blocked = false,
 		ongenerate,
 	}: {
-		language: 'ga' | 'es';
+		language: Language;
 		busy?: boolean;
 		canGenerate?: boolean;
 		blocked?: boolean;
@@ -123,8 +124,8 @@
 	</div>
 </div>
 <p class="fineprint">
-	Saved in this browser, separately for Irish and Spanish. Clearing browser data
-	removes your vocabulary. Export a text backup in My learning profile.
+	Saved in this browser, separately for each learning language. Clearing browser
+	data removes your vocabulary. Export a text backup in My learning profile.
 </p>
 <div class="flex flex-wrap items-end gap-3 my-4">
 	<Label

@@ -1,3 +1,4 @@
+import { languageNames } from '$lib/languages';
 import { speechAudio } from './speech-audio';
 import { matchingVoice } from '$lib/reading';
 import {
@@ -70,7 +71,7 @@ export function createSpeechPlayback(
 				available: !!voice,
 				description: voice
 					? `Local browser voice: ${voice.name} (${voice.lang}). No text is uploaded.`
-					: `No matching local ${language === 'ga' ? 'Irish' : 'Spanish'} voice is available. Choose a compatible voice provider in Speech settings.`,
+					: `No matching local ${languageNames[language]} voice is available. Choose a compatible voice provider in Speech settings.`,
 			});
 		} else {
 			const supported = speechModel(

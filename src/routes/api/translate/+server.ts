@@ -12,7 +12,7 @@ export async function POST({ request, url }) {
 	if (!parsed.success)
 		error(
 			400,
-			'Select between 1 and 4,000 characters of Irish or Spanish reading text.',
+			'Select between 1 and 4,000 characters of the selected learning language reading text.',
 		);
 	const id = request.headers.get('x-request-id') ?? undefined;
 	if (!configured() && !hasCoachRequest(id ?? null))

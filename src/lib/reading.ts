@@ -1,8 +1,10 @@
+import { languageSchema } from '$lib/languages';
+import type { Language } from '$lib/languages';
 import { z } from 'zod';
 export const selectionLimit = 4000;
 export const translationInput = z
 	.object({
-		language: z.enum(['ga', 'es']),
+		language: languageSchema,
 		text: z.string().trim().min(1).max(selectionLimit),
 	})
 	.strict();
@@ -12,7 +14,7 @@ export const translationOutput = z.object({
 // Never fall back to another language or a network voice.
 export function matchingVoice<
 	T extends { lang: string; localService: boolean },
->(voices: T[], language: 'ga' | 'es'): T | undefined {
+>(voices: T[], language: Language): T | undefined {
 	return voices.find(
 		(v) =>
 			v.localService &&
@@ -36,7 +38,7 @@ export function readingSelection(
 
 export const passageInput = z
 	.object({
-		language: z.enum(['ga', 'es']),
+		language: languageSchema,
 		text: z.string().trim().min(1).max(12000),
 	})
 	.strict()

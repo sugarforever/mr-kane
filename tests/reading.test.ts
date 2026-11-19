@@ -40,7 +40,7 @@ it('bounds selections and accepts only necessary text and language fields', () =
 			false,
 		);
 	expect(
-		translationInput.safeParse({ text: 'Hola', language: 'en' }).success,
+		translationInput.safeParse({ text: 'Hola', language: 'xx' }).success,
 	).toBe(false);
 	expect(
 		translationInput.safeParse({ text: 'Hola', language: 'es', profile: {} })

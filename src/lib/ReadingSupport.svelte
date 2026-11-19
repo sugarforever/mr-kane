@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Language } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
 	import { onMount, type Snippet } from 'svelte';
 	import type { ReadingUnit } from '$lib/reading-levels';
@@ -20,7 +21,7 @@
 		children,
 	}: {
 		text: string;
-		language: 'ga' | 'es';
+		language: Language;
 		unit?: ReadingUnit;
 		recording: boolean;
 		children: Snippet<[Snippet<[string, number]>]>;
@@ -124,15 +125,15 @@
 </script>
 
 <div class="flex flex-wrap items-end gap-2 my-4">
-	<Button
-		variant="outline"
-		onclick={toggleEnglish}
-		aria-expanded={showEnglish}
-		aria-controls={comparisonId}
-		><Icons.Languages aria-hidden="true" />{showEnglish
-			? 'Hide English'
-			: 'Show English'}</Button
-	>
+	{#if language !== 'en'}<Button
+			variant="outline"
+			onclick={toggleEnglish}
+			aria-expanded={showEnglish}
+			aria-controls={comparisonId}
+			><Icons.Languages aria-hidden="true" />{showEnglish
+				? 'Hide English'
+				: 'Show English'}</Button
+		>{/if}
 	<Button
 		variant="outline"
 		disabled={!speechAvailable || recording || playback !== 'idle'}

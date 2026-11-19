@@ -1,3 +1,4 @@
+import { languageSchema } from '$lib/languages';
 import { defineTool } from '@earendil-works/pi-durable';
 import { z } from 'zod';
 import { recognizeSpeech, generateSpeech } from './service';
@@ -5,7 +6,7 @@ import { putAudioArtifact, readAudioArtifact } from './artifacts';
 import { SpeechError } from './contracts';
 import { speechCheckSchema } from '$lib/client/speech-recognition';
 import { assertSpeechAudioFormat } from './input';
-const language = z.enum(['ga', 'es']);
+const language = languageSchema;
 const recognition = z
 	.object({ artifactId: z.string().uuid(), language })
 	.strict();
@@ -41,7 +42,7 @@ export function createSpeechTools(scope: string) {
 		defineTool({
 			name: 'speech_to_text',
 			description:
-				'Transcribe an uploaded audio artifact for this request in Irish (ga) or Spanish (es), using the speech recognition model in Settings. Returns a transcript, not pronunciation grading. Audio must already match the selected model input format; WAV-only models require WAV rather than WebM/MP4.',
+				'Transcribe an uploaded audio artifact for this request in Irish (ga), Spanish (es), English (en) or Japanese (ja), using the speech recognition model in Settings. Returns a transcript, not pronunciation grading. Audio must already match the selected model input format; WAV-only models require WAV rather than WebM/MP4.',
 			parameters: z.toJSONSchema(recognition),
 			structuredOutputSchema: z.toJSONSchema(speechCheckSchema),
 			replay: 'unsafe',
@@ -65,7 +66,7 @@ export function createSpeechTools(scope: string) {
 		defineTool({
 			name: 'text_to_speech',
 			description:
-				'Generate AI speech for up to 4,000 characters of Irish (ga) or Spanish (es) with the remote model and voice selected in Speech settings. Returns a private audio artifact reference. Local browser voices require UI playback and cannot generate server audio.',
+				'Generate AI speech for up to 4,000 characters of Irish (ga), Spanish (es), English (en) or Japanese (ja) with the remote model and voice selected in Speech settings. Returns a private audio artifact reference. Local browser voices require UI playback and cannot generate server audio.',
 			parameters: z.toJSONSchema(synthesis, { io: 'input' }),
 			structuredOutputSchema: {
 				type: 'object',

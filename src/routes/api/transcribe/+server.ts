@@ -1,3 +1,4 @@
+import { languageSchema } from '$lib/languages';
 import { json, error } from '@sveltejs/kit';
 import { recognizeSpeech } from '$lib/server/speech/service';
 import { SpeechError } from '$lib/server/speech/contracts';
@@ -5,9 +6,12 @@ const audioLimit = 20 * 1024 * 1024;
 export async function POST({ request, url }) {
 	if (request.headers.get('origin') !== url.origin)
 		error(403, 'Please make requests from the app.');
-	const language = request.headers.get('x-reading-language');
-	if (language !== 'ga' && language !== 'es')
-		error(400, 'Choose Irish or Spanish for speech recognition.');
+	const parsed = languageSchema.safeParse(
+		request.headers.get('x-reading-language'),
+	);
+	if (!parsed.success)
+		error(400, 'Choose a supported learning language for speech recognition.');
+	const language = parsed.data;
 	const type = request.headers.get('content-type') ?? '';
 	if (
 		!['audio/webm', 'audio/mp4', 'audio/wav', 'audio/x-wav'].includes(
