@@ -378,3 +378,71 @@ it.each(['en', 'ja'] as const)(
 		);
 	},
 );
+
+it('keeps MiniMax region credentials isolated and preserves international credentials', () => {
+	setup();
+	saveSpeechSettings(defaultSpeechSettings, { minimax: 'international-key' });
+	const china = { ...defaultSpeechSettings, minimaxRegion: 'china' };
+	saveSpeechSettings(china, { minimax: 'china-key' });
+	expect(readSpeechSettings().minimaxRegion).toBe('china');
+	expect(speechKey('minimax')).toBe('china-key');
+	saveSpeechSettings(defaultSpeechSettings);
+	expect(speechKey('minimax')).toBe('international-key');
+	saveSpeechSettings(china);
+	expect(speechKey('minimax')).toBe('china-key');
+});
+
+it('routes mainland recognition and synthesis to mainland endpoints', async () => {
+	setup();
+	saveSpeechSettings({ ...defaultSpeechSettings, minimaxRegion: 'china' });
+	const urls: string[] = [];
+	vi.stubGlobal('fetch', async (url: string) => {
+		urls.push(url);
+		return Response.json(
+			url.endsWith('speech_to_text')
+				? { text: 'hello', base_resp: { status_code: 0 } }
+				: { data: { audio: 'abcd' }, base_resp: { status_code: 0 } },
+		);
+	});
+	await sttProviders.minimax.transcribe({
+		audio: new Blob(['wav'], { type: 'audio/wav' }),
+		language: 'en',
+		model: 'asr-1.0',
+		key: 'cn',
+		minimaxRegion: 'china',
+	});
+	await ttsProviders.minimax.synthesize({
+		text: 'hello',
+		language: 'en',
+		model: 'speech-2.8-hd',
+		voice: 'voice',
+		rate: 1,
+		key: 'cn',
+		minimaxRegion: 'china',
+	});
+	expect(urls).toEqual([
+		'https://api.minimaxi.com/v1/speech_to_text',
+		'https://api.minimaxi.com/v1/t2a_v2',
+	]);
+});
+
+it('rejects stale MiniMax region before generating or caching speech', async () => {
+	setup();
+	saveSpeechSettings(
+		{
+			minimaxRegion: 'china',
+			stt: defaultSpeechSettings.stt,
+			tts: { provider: 'minimax', model: 'speech-2.8-hd', voice: 'same-voice' },
+		},
+		{ minimax: 'cn-key' },
+	);
+	const { generateSpeech } = await import('../src/lib/server/speech/service');
+	await expect(
+		generateSpeech('hello', 'en', 1, undefined, {
+			provider: 'minimax',
+			model: 'speech-2.8-hd',
+			voice: 'same-voice',
+			minimaxRegion: 'international',
+		}),
+	).rejects.toThrow('Speech settings changed');
+});

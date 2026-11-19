@@ -3,6 +3,8 @@ import { database, connections, readCredential } from '../providers-store';
 import { transcriptionKey } from '../transcription';
 import {
 	speechCatalog,
+	miniMaxBaseUrl,
+	type MiniMaxRegion,
 	defaultSpeechSettings,
 	speechSettingsSchema,
 	type SpeechSettings,
@@ -21,19 +23,31 @@ export function readSpeechSettings(): SpeechSettings {
 		db.close();
 	}
 }
-export function speechKey(provider: 'openai' | 'minimax') {
-	const saved = readCredential(`speech:${provider}`);
+export function speechKey(
+	provider: 'openai' | 'minimax',
+	region: MiniMaxRegion = readSpeechSettings().minimaxRegion ?? 'international',
+) {
+	const slot =
+		provider === 'minimax' && region === 'china'
+			? 'speech:minimax:china'
+			: `speech:${provider}`;
+	const saved = readCredential(slot);
 	if (saved?.type === 'api_key' && saved.key) return saved.key;
 	if (provider === 'openai') return transcriptionKey();
 	const connection = connections().find(
 		(p) =>
 			p.service === 'minimax' &&
 			p.authMode === 'api_key' &&
-			p.baseUrl.replace(/\/$/, '') === 'https://api.minimax.io/v1',
+			p.baseUrl.replace(/\/$/, '') === miniMaxBaseUrl(region),
 	);
 	const key = connection && readCredential(connection.credentialSlot);
 	if (key?.type === 'api_key' && key.key) return key.key;
-	return process.env.MINIMAX_API_KEY?.trim() || undefined;
+	return (
+		(region === 'china'
+			? process.env.MINIMAX_CN_API_KEY
+			: process.env.MINIMAX_API_KEY
+		)?.trim() || undefined
+	);
 }
 export function saveSpeechSettings(value: unknown, apiKeys: unknown = {}) {
 	const settings = speechSettingsSchema.parse(value);
@@ -52,13 +66,15 @@ export function saveSpeechSettings(value: unknown, apiKeys: unknown = {}) {
 		).run(JSON.stringify(settings));
 		for (const provider of ['openai', 'minimax'] as const) {
 			const key = keys[provider];
+			const slot =
+				provider === 'minimax' && settings.minimaxRegion === 'china'
+					? 'speech:minimax:china'
+					: `speech:${provider}`;
 			if (key === null)
-				db.prepare('DELETE FROM credentials WHERE slot=?').run(
-					`speech:${provider}`,
-				);
+				db.prepare('DELETE FROM credentials WHERE slot=?').run(slot);
 			else if (key)
 				db.prepare('INSERT OR REPLACE INTO credentials VALUES (?,?)').run(
-					`speech:${provider}`,
+					slot,
 					JSON.stringify({ type: 'api_key', key }),
 				);
 		}
@@ -78,6 +94,8 @@ export function publicSpeechSettings(): PublicSpeechSettings {
 			browser: true,
 			openai: !!speechKey('openai'),
 			minimax: !!speechKey('minimax'),
+			minimaxInternational: !!speechKey('minimax', 'international'),
+			minimaxChina: !!speechKey('minimax', 'china'),
 		},
 	};
 }

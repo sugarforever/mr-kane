@@ -121,6 +121,7 @@ export function createSpeechPlayback(
 				text: segment,
 				language,
 				rate,
+				minimaxRegion: settings?.settings.minimaxRegion,
 				...choice,
 			});
 			if (disposed || version !== generation) return;

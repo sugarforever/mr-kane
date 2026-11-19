@@ -1,6 +1,6 @@
 import { languageNames } from '$lib/languages';
 import { z } from 'zod';
-import { speechModel } from '$lib/speech';
+import { miniMaxBaseUrl, speechModel } from '$lib/speech';
 import {
 	SpeechError,
 	boundedBytes,
@@ -139,7 +139,7 @@ export const sttProviders: Record<'openai' | 'minimax', SpeechToTextProvider> =
 					await providerJSON(
 						await providerFetch(
 							'MiniMax',
-							'https://api.minimax.io/v1/speech_to_text',
+							miniMaxBaseUrl(input.minimaxRegion) + '/speech_to_text',
 							input.key,
 							{ method: 'POST', headers: { language: input.language }, body },
 							input.signal,
@@ -192,7 +192,7 @@ export const ttsProviders: Record<'openai' | 'minimax', TextToSpeechProvider> =
 					);
 				const response = await providerFetch(
 					'MiniMax',
-					'https://api.minimax.io/v1/t2a_v2',
+					miniMaxBaseUrl(input.minimaxRegion) + '/t2a_v2',
 					input.key,
 					{
 						method: 'POST',

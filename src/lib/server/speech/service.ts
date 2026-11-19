@@ -4,19 +4,24 @@ import { cachedSpeech } from './cache';
 import { readSpeechSettings, speechKey } from './settings';
 import { sttProviders, ttsProviders } from './providers';
 import { SpeechError } from './contracts';
-import type { SpeechLanguage, SpeechSettings } from '$lib/speech';
+import type {
+	MiniMaxRegion,
+	SpeechLanguage,
+	SpeechSettings,
+} from '$lib/speech';
 export async function recognizeSpeech(
 	audio: Blob,
 	language: SpeechLanguage,
 	signal?: AbortSignal,
 ) {
-	const choice = readSpeechSettings().stt;
+	const settings = readSpeechSettings();
+	const choice = settings.stt;
 	if (choice.provider === 'browser')
 		throw new SpeechError(
 			400,
 			'Choose a speech recognition provider in Speech settings.',
 		);
-	const key = speechKey(choice.provider);
+	const key = speechKey(choice.provider, settings.minimaxRegion);
 	if (!key)
 		throw new SpeechError(
 			503,
@@ -26,6 +31,7 @@ export async function recognizeSpeech(
 		audio,
 		language,
 		model: choice.model,
+		minimaxRegion: settings.minimaxRegion,
 		key,
 		signal,
 	});
@@ -35,14 +41,18 @@ export async function generateSpeech(
 	language: SpeechLanguage,
 	rate: number,
 	signal?: AbortSignal,
-	expectedVoice?: SpeechSettings['tts'],
+	expectedVoice?: SpeechSettings['tts'] & { minimaxRegion?: MiniMaxRegion },
 ) {
-	const choice = readSpeechSettings().tts;
+	const settings = readSpeechSettings();
+	const choice = settings.tts;
 	if (
 		expectedVoice &&
 		(expectedVoice.provider !== choice.provider ||
 			expectedVoice.model !== choice.model ||
-			expectedVoice.voice !== choice.voice)
+			expectedVoice.voice !== choice.voice ||
+			(choice.provider === 'minimax' &&
+				(expectedVoice.minimaxRegion ?? 'international') !==
+					(settings.minimaxRegion ?? 'international')))
 	)
 		throw new SpeechError(
 			400,
@@ -53,7 +63,7 @@ export async function generateSpeech(
 			400,
 			'The selected local voice must play in your browser.',
 		);
-	const key = speechKey(choice.provider);
+	const key = speechKey(choice.provider, settings.minimaxRegion);
 	if (!key)
 		throw new SpeechError(
 			503,
@@ -63,13 +73,14 @@ export async function generateSpeech(
 	signal?.throwIfAborted();
 	return cachedSpeech(
 		join(dataDir(), 'speech-cache'),
-		{ text, language, rate, ...choice },
+		{ text, language, rate, ...choice, minimaxRegion: settings.minimaxRegion },
 		() =>
 			provider.synthesize({
 				text,
 				language,
 				rate,
 				model: choice.model,
+				minimaxRegion: settings.minimaxRegion,
 				voice: choice.voice,
 				key,
 				// Generation survives a cancelled listener so subsequent clicks reuse it.

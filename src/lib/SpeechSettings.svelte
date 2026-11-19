@@ -32,12 +32,16 @@
 		try {
 			const enteredKey = clearKeys.minimax ? '' : keys.minimax.trim();
 			const response = await fetch(
-				'/api/speech/voices',
+				'/api/speech/voices?region=' +
+					(settings.minimaxRegion ?? 'international'),
 				enteredKey
 					? {
 							method: 'POST',
 							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({ key: enteredKey }),
+							body: JSON.stringify({
+								key: enteredKey,
+								region: settings.minimaxRegion ?? 'international',
+							}),
 						}
 					: { cache: 'no-store' },
 			);
@@ -76,6 +80,18 @@
 				voice:
 					id === 'minimax' ? (miniVoices[0]?.id ?? '') : provider.voices[0],
 			};
+	}
+	function changeRegion(region: 'china' | 'international') {
+		settings.minimaxRegion = region;
+		keys.minimax = '';
+		clearKeys.minimax = false;
+		settings.tts.voice =
+			settings.tts.provider === 'minimax' ? '' : settings.tts.voice;
+		configured.minimax =
+			!!configured[
+				region === 'china' ? 'minimaxChina' : 'minimaxInternational'
+			];
+		void loadVoices();
 	}
 	async function load() {
 		try {
@@ -143,6 +159,20 @@
 		}}
 		class="space-y-4 my-4"
 	>
+		<Label
+			>MiniMax region<NativeSelect
+				value={settings.minimaxRegion ?? 'international'}
+				disabled={!ready || busy}
+				onchange={(event) =>
+					changeRegion(event.currentTarget.value as 'china' | 'international')}
+				><option value="international">International · api.minimax.io</option>
+				<option value="china">Mainland China · api.minimaxi.com</option>
+			</NativeSelect></Label
+		>
+		<p class="fineprint">
+			Applies to MiniMax recognition, synthesis and voices. Each region uses its
+			own API key and account.
+		</p>
 		{#each ['stt', 'tts'] as capability}{@const kind =
 				capability as SpeechCapability}{@const provider = speechCatalog.find(
 				(p) => p.id === settings[kind].provider,
@@ -218,7 +248,9 @@
 						</p>{/if}
 					<p class="fineprint">
 						<a
-							href="https://www.minimax.io/audio/text-to-speech"
+							href={settings.minimaxRegion === 'china'
+								? 'https://platform.minimaxi.com'
+								: 'https://www.minimax.io/audio/text-to-speech'}
 							target="_blank"
 							rel="noreferrer">Explore MiniMax voices</a
 						>. The selected voice applies to new playback in supported languages
