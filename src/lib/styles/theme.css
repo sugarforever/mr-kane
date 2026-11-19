@@ -396,7 +396,7 @@
 	--library-surface: var(--palette-pale);
 	--library-foreground: var(--palette-ink);
 	--math-sidebar: var(--palette-pale);
-	--math-selected: var(--palette-pale);
+	--math-selected: var(--palette-paper);
 	--math-label: var(--palette-ink);
 	--math-conversations-button-foreground: var(--palette-ink);
 	--math-muted-foreground: var(--palette-muted);

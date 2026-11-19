@@ -574,6 +574,7 @@
 		align-items: center;
 		gap: 10px;
 		background: var(--math-selected);
+		box-shadow: inset 0 0 0 2px var(--border);
 		border-radius: 8px;
 		padding: 12px;
 		font-weight: 600;
@@ -620,6 +621,7 @@
 	}
 	.math-conversations button.chosen {
 		background: var(--math-selected);
+		box-shadow: inset 0 0 0 2px var(--border);
 		color: var(--primary);
 	}
 	.empty-conversations {
