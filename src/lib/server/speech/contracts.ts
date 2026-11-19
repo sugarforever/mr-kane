@@ -1,6 +1,7 @@
-import type { SpeechLanguage } from '$lib/speech';
+import type { MiniMaxRegion, SpeechLanguage } from '$lib/speech';
 import type { SpeechCheck } from '$lib/client/speech-recognition';
 export type SpeechRequest = {
+	minimaxRegion?: MiniMaxRegion;
 	model: string;
 	key: string;
 	language: SpeechLanguage;

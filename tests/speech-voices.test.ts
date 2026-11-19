@@ -64,3 +64,11 @@ it('loads voices with an entered key before settings are saved', async () => {
 		voices: [{ id: 'new-voice', label: 'new-voice' }],
 	});
 });
+
+it('loads mainland China voices from the mainland endpoint', async () => {
+	vi.stubGlobal('fetch', async (url: string) => {
+		expect(url).toBe('https://api.minimaxi.com/v1/get_voice');
+		return Response.json({ system_voice: [], base_resp: { status_code: 0 } });
+	});
+	expect(await miniMaxVoices('china-key', 'china')).toEqual([]);
+});

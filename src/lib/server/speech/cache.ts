@@ -9,6 +9,7 @@ type Identity = {
 	provider: string;
 	model: string;
 	voice: string;
+	minimaxRegion?: string;
 };
 const pending = new Map<string, Promise<Audio>>();
 // Version the key when provider output options change. Credentials never enter the cache.
@@ -27,6 +28,9 @@ export async function cachedSpeech(
 				input.provider,
 				input.model,
 				input.voice,
+				input.provider === 'minimax'
+					? (input.minimaxRegion ?? 'international')
+					: undefined,
 			]),
 		)
 		.digest('hex');

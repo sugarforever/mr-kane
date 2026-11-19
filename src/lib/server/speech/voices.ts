@@ -1,3 +1,4 @@
+import { miniMaxBaseUrl, type MiniMaxRegion } from '$lib/speech';
 import { z } from 'zod';
 import { providerFetch, providerJSON } from './contracts';
 const voice = z.object({
@@ -10,10 +11,13 @@ const catalog = z.object({
 	voice_generation: z.array(voice).nullish(),
 	base_resp: z.object({ status_code: z.number() }),
 });
-export async function miniMaxVoices(key: string) {
+export async function miniMaxVoices(
+	key: string,
+	region: MiniMaxRegion = 'international',
+) {
 	const response = await providerFetch(
 		'MiniMax',
-		'https://api.minimax.io/v1/get_voice',
+		miniMaxBaseUrl(region) + '/get_voice',
 		key,
 		{
 			method: 'POST',

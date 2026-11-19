@@ -6,6 +6,7 @@ type Input = {
 	provider: string;
 	model: string;
 	voice: string;
+	minimaxRegion?: string;
 };
 const pending = new Map<string, Promise<Blob>>();
 const memory = new Map<string, Blob>();
@@ -18,6 +19,9 @@ export async function speechAudio(input: Input): Promise<Blob> {
 		input.provider,
 		input.model,
 		input.voice,
+		input.provider === 'minimax'
+			? (input.minimaxRegion ?? 'international')
+			: undefined,
 	]);
 	const saved = memory.get(identity);
 	if (saved) return saved;
@@ -51,6 +55,9 @@ export async function speechAudio(input: Input): Promise<Blob> {
 					provider: input.provider,
 					model: input.model,
 					voice: input.voice,
+					...(input.provider === 'minimax'
+						? { minimaxRegion: input.minimaxRegion ?? 'international' }
+						: {}),
 				},
 			}),
 		});

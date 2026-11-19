@@ -1,6 +1,13 @@
 import { languageSchema } from '$lib/languages';
 import type { Language } from '$lib/languages';
 import { z } from 'zod';
+export const miniMaxRegionSchema = z.enum(['international', 'china']);
+export type MiniMaxRegion = z.infer<typeof miniMaxRegionSchema>;
+export function miniMaxBaseUrl(region: MiniMaxRegion = 'international') {
+	return region === 'china'
+		? 'https://api.minimaxi.com/v1'
+		: 'https://api.minimax.io/v1';
+}
 export type SpeechLanguage = Language;
 export type SpeechProviderId = 'openai' | 'minimax' | 'browser';
 export type SpeechCapability = 'stt' | 'tts';
@@ -109,6 +116,7 @@ const choice = z
 	.strict();
 export const speechSettingsSchema = z
 	.object({
+		minimaxRegion: miniMaxRegionSchema.optional(),
 		stt: choice,
 		tts: choice.extend({ voice: z.string().min(1).max(100) }),
 	})
@@ -148,7 +156,10 @@ export const synthesisInput = z
 		language: languageSchema,
 		rate: z.number().min(0.5).max(1.5).default(1),
 		expectedVoice: choice
-			.extend({ voice: z.string().min(1).max(100) })
+			.extend({
+				voice: z.string().min(1).max(100),
+				minimaxRegion: miniMaxRegionSchema.optional(),
+			})
 			.optional(),
 	})
 	.strict();
