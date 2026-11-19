@@ -1,103 +1,42 @@
-# Theme colors
+# Ink & Spark theme
 
-Edit `src/lib/styles/theme.css` to change the application palette. It is imported
-once by `src/app.css`; Svelte component styles inherit the same custom properties.
-No runtime theme provider is needed.
+The light theme follows the [Claude Design proposal](https://claude.ai/artifact/BZtERFLqBT8tjbZvPtAxhc). White surfaces, ink text and outlines, and restrained yellow branding keep learning content central. Primary actions are black with white text. Yellow is decorative branding, never the sole signal for status or warnings.
 
-The file has three sections:
+## Source of truth
 
-1. **Palette values** hold every literal color, grouped into neutral, sage, olive,
-   warm, and translucent shadow families. Numbers are stable identifiers ordered
-   from dark to light in the initial palette, not standardized contrast steps.
-   Keep their identifiers stable when changing values.
-2. **Semantic roles** map colors to their use. The existing shared roles
-   (`--background`, `--foreground`, `--primary`, `--card`, `--border`, etc.) remain
-   the public interface for shared UI components. Custom roles describe sidebar,
-   learning, recording, settings, math, library, and illustration colors.
-3. **Tailwind mappings** expose shared roles as `bg-primary`, `text-foreground`,
-   `border-border`, and similar utilities. Add a mapping only when a new role
-   needs a reusable utility; plain CSS can use `var(--role)` directly.
+- `src/lib/styles/theme.css`: every authored color, semantic aliases, font and shape tokens, and Tailwind role mappings. Original numbered palette identifiers remain available for compatibility, but all active semantic aliases use the Ink & Spark primitives.
+- `src/app.css`: existing application layout and shared styles.
+- `src/lib/styles/ink-and-spark.css`: theme typography, responsive layout, controls, selected states and settings. Imported after app.css by the root layout so the theme overrides existing styles without changing shared utility definitions.
+- `src/lib/styles/fonts.css` and `static/fonts/`: self-hosted Bricolage Grotesque (headings, 600–800) and Inter (UI, 400–700), Latin and extended Latin subsets. Other scripts use the system sans-serif fallback. Both fonts are SIL Open Font License; licenses ship alongside the font files. No runtime font CDN requests.
+- `src/lib/Brand.svelte`: shared brand mark and wordmark for learning and math.
+- `src/lib/KaneSticker.svelte`: decorative SVG family, hidden from assistive technology, with no animation. Used for the Today hero, writing/reading paths, and learning empty states. Keep dense settings rows free of stickers. Every meaning and action must also be present in text.
 
-For a whole-theme recolor, update the palette families, including warm illustration
-colors and shadows. Changing `--primary` alone changes shared primary controls;
-custom components deliberately retain distinct shades through their own roles.
-For a targeted change, repoint a semantic alias. For example, point
-`--settings-primary` at `var(--primary)` to make settings selection match shared
-primary controls, or change `--surface-paper` to recolor the warm panels.
+## Palette and roles
 
-## Example: apply an ocean theme
+| Primitive         | Value     | Use                                        |
+| ----------------- | --------- | ------------------------------------------ |
+| `--palette-paper` | `#FFFFFF` | Background, card, popover, input           |
+| `--palette-ink`   | `#161616` | Text, primary actions, key outlines, focus |
+| `--palette-muted` | `#595959` | Secondary text, 7:1 on white               |
+| `--palette-pale`  | `#F5F5F3` | Quiet surfaces, hover, selected options    |
+| `--palette-line`  | `#E4E4E0` | Row separators; never reading text         |
+| `--palette-spark` | `#FFD84D` | `--brand-accent`, sticker details          |
+| `--palette-alert` | `#B42318` | Error/destructive and active recording     |
 
-From the repository root, run the following script. It changes the green and
-olive palette families to blue, cools the neutral text and shadows, and keeps the
-warm illustration accents. Every semantic alias continues to work, so settings,
-math, library, and learning styles all inherit the new palette. The default theme
-in this PR stays unchanged until you run the example.
+All 187 existing color roles have been repointed, including learning, history, library, math, settings, illustrations, focus, and shadows. Changing `--primary` alone is still not a whole-theme recolor: every custom role is deliberately independent. For a future theme, edit the active primitives or repoint existing semantic roles, preserving their names.
 
-```bash
-python3 - <<'PYTHON'
-import colorsys
-import re
-from pathlib import Path
+`--brand-accent` is separate from `--primary` and `--accent` (hover). Put ink text on yellow. Connected states use text, and the learning header adds a check icon. Error and recording states retain explicit labels. `--separator` is for low-emphasis dividers; `--border` outlines controls and cards. New styles consume semantic roles, not palette literals.
 
-path = Path("src/lib/styles/theme.css")
-source = path.read_text()
-ocean_hue = 215 / 360
+Control borders are 1px, key selection/hero/drawer emphasis is 2px. Focus uses an ink 2px outline with 3px offset. Controls have 44px minimum targets. Mobile uses a five-item bottom navigation, a More menu for secondary sections, and a bottom-sheet provider editor. Selected controls have a border or icon in addition to a surface change. Respect safe-area insets and reduced-motion preferences.
 
+The existing `.dark` utility variant does not implement a dark theme. This change adds no dark-mode switch or dark palette.
 
-def recolor(match):
-    token, hex_color = match.groups()
-    rgb = tuple(int(hex_color[i:i + 2], 16) / 255 for i in (0, 2, 4))
-    _, lightness, saturation = colorsys.rgb_to_hls(*rgb)
-    blue = colorsys.hls_to_rgb(ocean_hue, lightness, saturation)
-    # Keep white white and preserve existing translucent shadow/backdrop alpha.
-    rgb_hex = "".join(f"{round(channel * 255):02x}" for channel in blue)
-    return f"{token}: #{rgb_hex}{hex_color[6:]};"
+## Verification
 
+`npm run check:theme` rejects authored color literals and fixed Tailwind colors outside theme.css. It is included in `npm run check`. System colors, transparent/currentColor, opacity modifiers and semantic color-mix remain available.
 
-source, count = re.subn(
-    r"(--palette-(?:sage|olive|neutral|shadow)-\d+): #([0-9a-f]{6}(?:[0-9a-f]{2})?);",
-    recolor,
-    source,
-)
-path.write_text(source)
-print(f"Applied ocean theme to {count} palette entries in {path}")
-PYTHON
-```
+Before shipping a theme change, run `npm run check`, `npm run build`, and `npm test`. Inspect desktop and mobile Today, writing/reading, vocabulary, review/history, math/library, all three settings sections and provider dialogs. Check selected, hover, keyboard focus, disabled, loading, error and recording states, long provider/model names, and mobile overflow. Never use real provider credentials for a visual smoke check or generate paid AI practice solely to validate styling.
 
-Run `npm run dev` and open the URL printed by Vite. You should see blue navigation
-and actions, cool pale backgrounds, and blue settings/math selections, while the
-pencil and other warm accents keep their original colors. `git diff --
-src/lib/styles/theme.css` shows the palette edits; the semantic roles and component
-files should have no changes. To try another hue, change `ocean_hue` and rerun the
-script. Undo the palette edits in your editor to return to the original theme.
+## Chat avatars
 
-This is an example palette, not a contrast-certified theme. The script preserves
-HSL lightness and saturation, which does not guarantee equal perceived contrast
-across hues. Review the foreground/background pairs and interactive states listed
-below before shipping it.
-
-The initial extraction preserves every effective color. It intentionally does not
-collapse nearby shades: white shared cards and warm paper panels remain distinct,
-as do shared muted text and legacy fine print. `--border` retains the effective
-unlayered value; the shadowed base-layer definition has been removed. The unused
-legacy cream/coral variables and the old green alias have also been removed.
-Illustration pencil stops, recording-active colors, focus outlines, native control
-accents, and translucent shadows/backdrops are included in the theme.
-
-When adding styles, consume an existing semantic role first. If the role is new,
-add an alias here and reuse an appropriate palette value. Add a palette literal
-only for a deliberately different shade. Do not put color literals in page or
-component CSS. `npm run check:theme` (also included in `npm run check`) rejects hex,
-CSS color functions, named white/black values, and fixed Tailwind palette utilities
-outside the theme file. System colors `Canvas`/`CanvasText`, `transparent`,
-`currentColor`, opacity modifiers, and semantic `color-mix()` remain available.
-
-The existing `.dark` utility variant does not constitute a dark theme. Add a
-complete semantic override separately if dark mode is introduced; this extraction
-does not add a dark-mode switch or change the cascade layers of component styles.
-
-Before shipping a palette change, run `npm run check`, `npm run build`, and
-`npm test`. Review reading, history, math, library, settings sections, dialogs,
-and popovers at desktop and mobile widths, including hover, keyboard focus,
-selected, disabled, error, and recording states. Recheck contrast for foreground /
-background pairs; palette step numbers do not imply contrast guarantees.
+`src/lib/ChatAvatar.svelte` renders the approved Claude Design pair on a 32-unit SVG grid at 30px: Kane uses a sprout speech bubble on a pale disc; the learner is a smiling child with a fringe and yellow top on a white disc. The SVG owns its disc and ring, uses theme roles, and has no IDs or external resources. Math history, pending messages and streamed replies share this component. Adjacent author labels remain visible; avatars are decorative and hidden from assistive technology.

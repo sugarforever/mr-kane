@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Brand from '$lib/Brand.svelte';
+	import KaneSticker from '$lib/KaneSticker.svelte';
 	import { languages } from '$lib/languages';
 	import type { Language } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
@@ -509,10 +511,30 @@
 >
 <div class="app-shell">
 	<aside class="sidebar">
-		<a class="brand" href="/" aria-label="Mr. Kane home"
-			><span class="brand-mark">k<span>·</span></span>
-			<div>mr. kane<small>YOUR LANGUAGE COMPANION</small></div></a
-		>
+		<Brand />
+		<details class="mobile-more">
+			<summary aria-label="More learning sections"
+				><Icons.Menu size={22} /></summary
+			>
+			<div>
+				<Button variant="ghost" href="/math" disabled={busy || micBusy}
+					><Icons.Calculator />Math</Button
+				>
+				<Button
+					variant="ghost"
+					disabled={busy || micBusy}
+					onclick={(event) => {
+						navigate('review');
+						event.currentTarget.closest('details')?.removeAttribute('open');
+					}}><Icons.BookOpen />Review notes</Button
+				>
+				<Button
+					variant="ghost"
+					href="/reading-history"
+					disabled={busy || micBusy}><Icons.History />Reading history</Button
+				>
+			</div>
+		</details>
 		<div class="sidebar-caption">MY LEARNING SPACE</div>
 		<nav aria-label="Main navigation">
 			<Button variant="ghost" href="/math" disabled={micBusy || busy}
@@ -522,6 +544,7 @@
 			{#each navs as n}<Button
 					variant="ghost"
 					data-active={tab === n.id}
+					aria-current={tab === n.id ? 'page' : undefined}
 					onclick={() => navigate(n.id)}
 					disabled={micBusy || busy}
 					><span class="nav-icon"><n.icon class="size-4" /></span
@@ -545,6 +568,7 @@
 		</div>
 		<Button
 			variant="ghost"
+			aria-label="My learning profile"
 			class="profile-link h-auto whitespace-normal text-left justify-start gap-2"
 			data-active={tab === 'profile'}
 			onclick={() => navigate('profile')}
@@ -561,7 +585,8 @@
 			<span>A little curiosity goes a long way</span>
 			<div class="header-actions">
 				<span class="connection" class:live={aiConfigured}
-					><i></i>{aiConfigured ? 'AI configured' : 'Demo mode'}</span
+					><span aria-hidden="true">{aiConfigured ? '✓' : '○'}</span
+					>{aiConfigured ? 'AI configured' : 'Demo mode'}</span
 				><Label class="ai-selector block"
 					><span class="sr-only">AI connection</span><NativeSelect
 						class="w-full"
@@ -581,6 +606,7 @@
 				><Label class="language-select block"
 					><span>Learning language</span><NativeSelect
 						class="w-full"
+						aria-label="Learning language"
 						value={profile.language}
 						onchange={(e) => changeLanguage(e.currentTarget.value as Language)}
 						disabled={!ready || busy || micBusy}
@@ -630,7 +656,7 @@
 				<div class="eyebrow">A SMALL STEP, A NEW DISCOVERY</div>
 				<div class="page-heading">
 					<div>
-						<h1>What caught your eye?<span class="sun">✳</span></h1>
+						<h1>What caught your eye?</h1>
 						<p>
 							Start with what interests you. Make {languageNames[
 								profile.language
@@ -649,22 +675,7 @@
 						</p>
 						<a href="#topic-builder">Find your next topic <span>↘</span></a>
 					</div>
-					<div class="illustration" aria-hidden="true">
-						<div class="orbit orbit-one"></div>
-						<div class="orbit orbit-two"></div>
-						<span class="illus-star">✳</span>
-						<div class="paper paper-back"></div>
-						<div class="paper">
-							<div class="paper-label">MY LITTLE WORLD</div>
-							<div class="paper-line"></div>
-							<div class="paper-line short"></div>
-							<div class="paper-line"></div>
-							<div class="paper-line short"></div>
-							<div class="paper-doodle">hola<span>!</span></div>
-						</div>
-						<div class="speech-bubble">dia dhuit!</div>
-						<div class="pencil"></div>
-					</div>
+					<div class="illustration" aria-hidden="true"><KaneSticker /></div>
 				</section>
 				<div class="section-heading">
 					<h2>A little writing. A little speaking.</h2>
@@ -680,7 +691,7 @@
 								.getElementById('topic-builder')
 								?.scrollIntoView({ behavior: 'smooth' });
 						}}
-						><span class="path-icon coral">✎</span>
+						><span class="path-sticker"><KaneSticker variant="writing" /></span>
 						<div>
 							<h3>Writing studio</h3>
 							<p>Put your thoughts into words. Make them your own.</p>
@@ -696,7 +707,7 @@
 								.getElementById('topic-builder')
 								?.scrollIntoView({ behavior: 'smooth' });
 						}}
-						><span class="path-icon green">◉</span>
+						><span class="path-sticker"><KaneSticker variant="reading" /></span>
 						<div>
 							<h3>Reading room</h3>
 							<p>Read a little, record it, and hear your progress.</p>
@@ -940,6 +951,7 @@
 							</Card.Root>
 						</aside>
 					</div>{:else}<Card.Root class="empty panel">
+						<div class="empty-sticker"><KaneSticker variant="empty" /></div>
 						<h2>Your first page starts with curiosity</h2>
 						<p>
 							Choose an everyday topic, or bring something you would like to
@@ -1052,7 +1064,7 @@
 								/>I have revisited this point</Label
 							>
 						</Card.Root>{:else}<Card.Root class="empty panel">
-							<span class="empty-symbol">↺</span>
+							<div class="empty-sticker"><KaneSticker variant="empty" /></div>
 							<h2>Keep the little things you learn</h2>
 							<p>
 								Your writing feedback is collected here. Mark a point when you
@@ -1242,4 +1254,25 @@
 			</footer>
 		</div>
 	</main>
+	<nav class="mobile-tabs" aria-label="Mobile navigation">
+		{#each navs.filter((n) => n.id !== 'review') as n}
+			<Button
+				variant="ghost"
+				data-active={tab === n.id}
+				aria-current={tab === n.id ? 'page' : undefined}
+				disabled={busy || micBusy}
+				onclick={() => navigate(n.id)}
+			>
+				<n.icon size={20} /><span
+					>{n.id === 'writing'
+						? 'Write'
+						: n.id === 'speaking'
+							? 'Read'
+							: n.id === 'vocabulary'
+								? 'Words'
+								: n.label}</span
+				>
+			</Button>
+		{/each}
+	</nav>
 </div>
