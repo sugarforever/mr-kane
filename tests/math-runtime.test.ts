@@ -8,6 +8,8 @@ import {
 	saveConnection,
 	selectConnection,
 } from '../src/lib/server/providers-store';
+import { runCoach } from '../src/lib/server/agent';
+import type { MathProgress } from '../src/lib/math-stream';
 import { createMathSession, runMathTurn } from '../src/lib/server/math/study';
 let server: Server | undefined;
 let dir = '';
@@ -113,7 +115,16 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 	selectConnection(connection.id);
 	const session = createMathSession();
 	const id = randomUUID();
-	const first = await runMathTurn(session.id, id, 'I am in Grade 10');
+	const progress: MathProgress[] = [];
+	const first = await runMathTurn(
+		session.id,
+		id,
+		'I am in Grade 10',
+		runCoach,
+		(event) => progress.push(event),
+	);
+	expect(progress.some((event) => event.status === 'reading')).toBe(true);
+	expect(progress.every((event) => !event.reply.includes('read-1'))).toBe(true);
 	expect(first.learner.background).toBe('Grade 10');
 	expect(first.messages.at(-1)?.content).toContain('remainder');
 	await runMathTurn(session.id, id, 'I am in Grade 10');

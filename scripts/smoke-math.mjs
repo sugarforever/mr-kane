@@ -9,6 +9,7 @@ const dir = mkdtempSync(join(tmpdir(), 'kane-math-production-'));
 const root = 'http://127.0.0.1:4182';
 let app;
 let calls = 0;
+let releaseReply;
 const learner = {
 	background: 'Grade 10',
 	goal: 'Build confidence in algebra and number theory',
@@ -94,6 +95,20 @@ const model = createServer(async (req, res) => {
 		model: 'fixture',
 		choices: [{ index: 0, delta, finish_reason }],
 	});
+	if (calls === 2) {
+		const gate = new Promise((resolve) => {
+			releaseReply = resolve;
+		});
+		const text = JSON.stringify(answer);
+		res.write(
+			`data: ${JSON.stringify(chunk({ role: 'assistant', content: text.slice(0, 60) }, null))}\n\n`,
+		);
+		await gate;
+		res.end(
+			`data: ${JSON.stringify(chunk({ content: text.slice(60) }, null))}\n\ndata: ${JSON.stringify(chunk({}, 'stop'))}\n\ndata: [DONE]\n\n`,
+		);
+		return;
+	}
 	res.end(
 		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 || needIrmo || needAops ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
 	);
@@ -146,6 +161,52 @@ async function post(path, body) {
 	assert.ok(response.ok, JSON.stringify(value));
 	return value;
 }
+async function streamPost(path, body) {
+	const response = await fetch(root + path, {
+		method: 'POST',
+		headers: {
+			origin: root,
+			'Content-Type': 'application/json',
+			Accept: 'application/x-ndjson',
+		},
+		body: JSON.stringify(body),
+	});
+	assert.ok(response.ok);
+	assert.ok(
+		response.headers.get('Content-Type').includes('application/x-ndjson'),
+	);
+	const reader = response.body.getReader();
+	const decoder = new TextDecoder();
+	let pending = '',
+		sawPartial = false;
+	try {
+		for (;;) {
+			const { value, done } = await reader.read();
+			assert.ok(!done, 'Expected a complete event');
+			pending += decoder.decode(value, { stream: true });
+			let newline;
+			while ((newline = pending.indexOf('\n')) >= 0) {
+				const line = pending.slice(0, newline);
+				pending = pending.slice(newline + 1);
+				if (!line.trim()) continue;
+				const event = JSON.parse(line);
+				if (event.type === 'error') throw new Error(event.message);
+				if (event.type === 'progress' && event.reply) {
+					assert.equal(event.learner, undefined);
+					sawPartial = true;
+					releaseReply();
+				}
+				if (event.type === 'complete') {
+					assert.ok(sawPartial, 'Reply must stream before completion');
+					return event.session;
+				}
+			}
+		}
+	} finally {
+		releaseReply?.();
+		await reader.cancel();
+	}
+}
 try {
 	await launch();
 	await post('/api/ai/settings', {
@@ -167,7 +228,7 @@ try {
 		message:
 			'I am in Grade 10. I know linear equations and want a plan for algebra and number theory. I can study 3 hours a week.',
 	};
-	const first = await post(`/api/math/chat/${session.id}`, turn);
+	const first = await streamPost(`/api/math/chat/${session.id}`, turn);
 	assert.equal(first.learner.background, 'Grade 10');
 	assert.equal(first.messages.length, 2);
 	assert.equal(calls, 2);
@@ -213,7 +274,7 @@ try {
 	});
 	assert.equal(blocked.status, 403);
 	console.log(
-		'Math production smoke: AoPS and IrMO tools, question browsing, profile, restart, replay, source images and access checks passed.',
+		'Math production smoke: incremental HTTP streaming, AoPS and IrMO tools, question browsing, profile, restart, replay, source images and access checks passed.',
 	);
 	if (process.argv.includes('--serve')) {
 		console.log(`Local UI fixture: ${root}/math?session=${session.id}`);

@@ -10,6 +10,9 @@ import {
 	Harness,
 	createRegistry,
 	AssistantEntry,
+	type ConversationView,
+	type ConversationWatch,
+	type LiveState,
 } from '@earendil-works/pi-durable';
 import { openNodeSqliteStorage } from '@earendil-works/pi-durable/storage/sqlite/node';
 import {
@@ -41,12 +44,18 @@ const state = globalThis as typeof globalThis & {
 	__kaneJobs?: Map<string, Promise<string>>;
 };
 const jobs = (state.__kaneJobs ??= new Map<string, Promise<string>>());
+export type CoachProgress = { text: string; reading: boolean };
+export type CoachOptions = {
+	speechTools?: boolean;
+	coach?: 'math';
+	onProgress?: (progress: CoachProgress) => void;
+};
 export async function runCoach(
 	operation: string,
 	data: unknown,
 	schema: unknown,
 	requestId: string = randomUUID(),
-	options: { speechTools?: boolean; coach?: 'math' } = {},
+	options: CoachOptions = {},
 ): Promise<string> {
 	if (!/^[a-zA-Z0-9-]{1,80}$/.test(requestId))
 		throw new Error('Invalid request ID.');
@@ -103,7 +112,9 @@ export async function runCoach(
 		throw new Error(
 			'Other practices are being prepared. Please retry shortly.',
 		);
-	const promise = locked(`job:${key}`, () => execute(snapshot, requestId));
+	const promise = locked(`job:${key}`, () =>
+		execute(snapshot, requestId, options.onProgress),
+	);
 	jobs.set(key, promise);
 	try {
 		return await promise;
@@ -111,7 +122,11 @@ export async function runCoach(
 		jobs.delete(key);
 	}
 }
-async function execute(snapshot: Snapshot, id: string) {
+async function execute(
+	snapshot: Snapshot,
+	id: string,
+	onProgress?: CoachOptions['onProgress'],
+) {
 	// A different process may have completed research while this worker waited for the lease.
 	const currentDb = database();
 	try {
@@ -192,6 +207,7 @@ async function execute(snapshot: Snapshot, id: string) {
 		await storage.close(context);
 		throw e;
 	}
+	let watch: ConversationWatch | undefined;
 	try {
 		const root = await harness.root(context, {
 			agent: {
@@ -204,6 +220,25 @@ async function execute(snapshot: Snapshot, id: string) {
 				maxTurns: snapshot.coach === 'math' ? 6 : snapshot.speechTools ? 4 : 1,
 			},
 		});
+		if (onProgress) {
+			const publish = (view: ConversationView) => {
+				const live = view.docs['pi.live'] as LiveState | undefined;
+				const message = live?.generation?.message;
+				const reading =
+					live?.tools?.some((tool) => tool.status !== 'done') ?? false;
+				if (!message && !reading) return;
+				const text =
+					message?.content
+						.flatMap((c) => (c.type === 'text' ? [c.text] : []))
+						.join('') ?? '';
+				onProgress({ text, reading });
+			};
+			watch = await root.watch(context);
+			publish(watch.value);
+			watch.start(async (call) => {
+				if (call.kind === 'value') publish(call.value);
+			});
+		}
 		const submission = await root.submit(
 			{ type: 'input', requestId: id, content: snapshot.content },
 			context,
@@ -232,6 +267,7 @@ async function execute(snapshot: Snapshot, id: string) {
 		if (!text) throw new Error('The model returned no text.');
 		return text;
 	} finally {
+		await watch?.stop();
 		await harness.close(context);
 	}
 }

@@ -159,3 +159,40 @@ it('allows editing a failed turn without replaying its invalid cached answer', a
 		getMathSession(session.id).messages.filter((m) => m.role === 'user'),
 	).toHaveLength(1);
 });
+
+it('streams only the top-level reply across partial JSON, escapes and source lookup rounds', async () => {
+	setup();
+	const session = createMathSession();
+	const progress: unknown[] = [];
+	await runMathTurn(
+		session.id,
+		randomUUID(),
+		'Help me',
+		async (_op, _data, _schema, _id, options) => {
+			options.onProgress?.({
+				text: '{"learner":{"reply":"private nested value"}',
+				reading: false,
+			});
+			options.onProgress?.({
+				text: '```json\n{"reply":"Try $x',
+				reading: false,
+			});
+			options.onProgress?.({ text: '', reading: true });
+			options.onProgress?.({
+				text: '{"reply":"Line 1\\n\\"Hi\\" \\u03c0',
+				reading: false,
+			});
+			return JSON.stringify({ reply: 'Line 1\n"Hi" π', learner });
+		},
+		(event) => progress.push(event),
+	);
+	expect(progress).toEqual([
+		{ type: 'progress', reply: '', status: 'thinking' },
+		{ type: 'progress', reply: 'Try $x', status: 'writing' },
+		{ type: 'progress', reply: '', status: 'reading' },
+		{ type: 'progress', reply: 'Line 1\n"Hi" π', status: 'writing' },
+	]);
+	expect(getMathSession(session.id).messages.at(-1)?.content).toBe(
+		'Line 1\n"Hi" π',
+	);
+});
