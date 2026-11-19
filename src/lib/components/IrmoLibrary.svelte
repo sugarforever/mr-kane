@@ -261,7 +261,7 @@
 	.eyebrow {
 		font-size: 10px;
 		letter-spacing: 1.8px;
-		color: #74816b;
+		color: var(--math-label);
 		font-weight: 600;
 	}
 	h2 {
@@ -273,7 +273,7 @@
 	}
 	.intro {
 		font-weight: 600;
-		color: #52634a;
+		color: var(--library-muted-foreground);
 		font-size: 15px;
 	}
 	.description {
@@ -286,10 +286,10 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		background: #edf2e7;
+		background: var(--library-surface);
 		padding: 14px 18px;
 		border-radius: 9px;
-		color: #43543b;
+		color: var(--library-foreground);
 		font-size: 12px;
 		line-height: 1.8;
 	}
@@ -307,8 +307,8 @@
 		align-items: center;
 		justify-content: center;
 		gap: 8px;
-		background: #526b42;
-		color: white;
+		background: var(--library-primary);
+		color: var(--primary-foreground);
 		border: 0;
 		border-radius: 7px;
 		padding: 11px 14px;
@@ -324,7 +324,7 @@
 		align-items: center;
 		gap: 6px;
 		font-size: 12px;
-		color: #52634a;
+		color: var(--library-muted-foreground);
 		cursor: pointer;
 	}
 	.back {
@@ -398,7 +398,7 @@
 		border: 0;
 	}
 	.question-list button:hover {
-		background: #f0f3e9;
+		background: var(--math-sidebar);
 	}
 	.question-number {
 		font-size: 14px;
@@ -471,8 +471,8 @@
 		font-size: 10px;
 		padding: 4px 8px;
 		border-radius: 5px;
-		background: #edf2e7;
-		color: #52634a;
+		background: var(--library-surface);
+		color: var(--library-muted-foreground);
 	}
 	.prerequisites {
 		border-top: 1px solid var(--border);

@@ -540,9 +540,9 @@
 		border: 1px solid var(--border);
 		border-radius: 10px;
 		text-align: left;
-		background: #edf2e7;
+		background: var(--library-surface);
 		cursor: pointer;
-		color: #43543b;
+		color: var(--library-foreground);
 	}
 	.irmo-welcome span {
 		flex: 1;
@@ -568,7 +568,7 @@
 		flex-direction: column;
 		border-right: 1px solid var(--border);
 		gap: 18px;
-		background: #f0f3e9;
+		background: var(--math-sidebar);
 		position: sticky;
 		top: 0;
 		height: 100dvh;
@@ -597,7 +597,7 @@
 		display: flex;
 		align-items: center;
 		gap: 10px;
-		background: #e0e8d7;
+		background: var(--math-selected);
 		border-radius: 8px;
 		padding: 12px;
 		font-weight: 600;
@@ -611,7 +611,7 @@
 	.eyebrow {
 		font-size: 10px;
 		letter-spacing: 1.8px;
-		color: #74816b;
+		color: var(--math-label);
 		font-weight: 600;
 	}
 	.sidebar-label {
@@ -633,7 +633,7 @@
 		border-radius: 7px;
 		background: transparent;
 		font-size: 12px;
-		color: #62715f;
+		color: var(--math-conversations-button-foreground);
 		cursor: pointer;
 		margin-bottom: 4px;
 	}
@@ -643,12 +643,12 @@
 		white-space: nowrap;
 	}
 	.math-conversations button.chosen {
-		background: #e0e8d7;
-		color: #244d3e;
+		background: var(--math-selected);
+		color: var(--primary);
 	}
 	.empty-conversations {
 		font-size: 12px;
-		color: #7b8776;
+		color: var(--math-muted-foreground);
 		padding: 8px;
 	}
 	.sidebar-footer {
@@ -663,7 +663,7 @@
 	.sidebar-footer small {
 		font-size: 8px;
 		letter-spacing: 1.3px;
-		color: #7b8776;
+		color: var(--math-muted-foreground);
 	}
 	.math-main {
 		min-width: 0;
@@ -689,10 +689,10 @@
 		font-size: 11px;
 	}
 	.math-connection > span {
-		color: #9a745b;
+		color: var(--math-connection-span-foreground);
 	}
 	.math-connection > span.connected {
-		color: #4e7652;
+		color: var(--math-connection-span-connected-foreground);
 	}
 	.math-connection :global(select) {
 		max-width: 230px;
@@ -729,7 +729,7 @@
 		justify-content: center;
 		width: 60px;
 		height: 60px;
-		background: #e7eddf;
+		background: var(--welcome-mark-background);
 		border-radius: 18px;
 		margin: 0 auto 24px;
 	}
@@ -744,7 +744,7 @@
 	.math-welcome p {
 		font-size: 14px;
 		line-height: 1.8;
-		color: #75806e;
+		color: var(--math-description);
 		max-width: 420px;
 		margin: 0 auto;
 	}
@@ -757,7 +757,7 @@
 	}
 	.math-starters button {
 		text-align: left;
-		background: #fff;
+		background: var(--card);
 		border: 1px solid var(--border);
 		border-radius: 10px;
 		padding: 18px;
@@ -778,13 +778,13 @@
 	.math-starters button small {
 		display: block;
 		font-size: 11px;
-		color: #7b8776;
+		color: var(--math-muted-foreground);
 		margin-top: 7px;
 	}
 	.math-setup {
 		display: flex;
 		gap: 12px;
-		background: #edf1e7;
+		background: var(--secondary);
 		padding: 16px;
 		border-radius: 9px;
 		font-size: 12px;
@@ -805,19 +805,19 @@
 		width: 30px;
 		height: 30px;
 		border-radius: 50%;
-		background: #e4ecd9;
+		background: var(--message-avatar-background);
 		display: grid;
 		place-items: center;
 	}
 	.student .message-avatar {
-		background: #ece7de;
+		background: var(--student-message-avatar-background);
 	}
 	.message-author {
 		text-transform: uppercase;
 		letter-spacing: 1.4px;
 		font-size: 9px;
 		font-weight: 700;
-		color: #74816b;
+		color: var(--math-label);
 	}
 	.pending-message {
 		white-space: pre-wrap;
@@ -858,7 +858,7 @@
 	}
 	.math-prose :global(pre) {
 		overflow: auto;
-		background: #edf1e7;
+		background: var(--secondary);
 		padding: 14px;
 		border-radius: 8px;
 	}
@@ -895,11 +895,11 @@
 		resize: vertical;
 		min-height: 64px;
 		max-height: 160px;
-		background: white;
+		background: var(--card);
 	}
 	.math-composer small {
 		display: block;
-		color: #7b8776;
+		color: var(--math-muted-foreground);
 		font-size: 9px;
 		margin-top: 10px;
 		line-height: 1.5;
@@ -907,7 +907,7 @@
 	.learner-panel {
 		border-left: 1px solid var(--border);
 		padding: 30px 24px;
-		background: #f3f5ee;
+		background: var(--learner-panel-background);
 	}
 	.learner-title {
 		display: flex;
@@ -920,7 +920,7 @@
 	}
 	.learner-intro {
 		font-size: 11px;
-		color: #7b8776;
+		color: var(--math-muted-foreground);
 		line-height: 1.8;
 		margin: 14px 0 26px;
 	}
@@ -930,13 +930,13 @@
 		gap: 16px 10px;
 		align-items: center;
 		font-size: 11px;
-		color: #75806e;
+		color: var(--math-description);
 		margin-bottom: 35px;
 	}
 	.learner-empty span {
 		font-family: Georgia, serif;
 		font-size: 18px;
-		color: #9ca990;
+		color: var(--learner-empty-span-foreground);
 	}
 	.learner-empty p {
 		margin: 0;
@@ -946,7 +946,7 @@
 		font-size: 10px;
 		text-transform: uppercase;
 		letter-spacing: 1px;
-		color: #75806e;
+		color: var(--math-description);
 		margin: 22px 0 7px;
 	}
 	.learner-panel dd,
@@ -977,18 +977,18 @@
 	.math-library-note small {
 		font-size: 10px;
 		line-height: 1.9;
-		color: #7b8776;
+		color: var(--math-muted-foreground);
 	}
 	.math-thinking {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		font-size: 12px;
-		color: #74816b;
+		color: var(--math-label);
 	}
 	.math-notice {
 		padding: 16px;
-		background: #f6eade;
+		background: var(--math-notice-background);
 		border-radius: 8px;
 		font-size: 12px;
 		margin-bottom: 16px;
@@ -1014,7 +1014,7 @@
 			width: min(320px, 90vw);
 			z-index: 20;
 			overflow: auto;
-			box-shadow: -10px 0 30px #244d3e18;
+			box-shadow: -10px 0 30px var(--math-panel-shadow);
 		}
 		.learner-panel {
 			display: none;
