@@ -824,6 +824,15 @@
 							<h2>{current.title}</h2>
 							<p class="task-prompt">{current.prompt}</p>
 							<div class="focus">Your focus · {current.focus}</div>
+							<section aria-labelledby="writing-story-heading" class="my-6">
+								<h3 id="writing-story-heading">Story and example script</h3>
+								<p
+									class="whitespace-pre-wrap break-words"
+									lang={current.profile.language}
+								>
+									{current.script}
+								</p>
+							</section>
 							<Label class="editor-label block" for="writing"
 								>My writing <span
 									>{draft.trim() ? draft.trim().split(/\s+/).length : 0} words</span
