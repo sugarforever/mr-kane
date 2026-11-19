@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, tick, untrack } from 'svelte';
+	import { onMount, onDestroy, tick, untrack } from 'svelte';
 	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
 	import { goto } from '$app/navigation';
 	import {
@@ -17,6 +17,7 @@
 	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
 	import { renderMathMarkdown } from '$lib/math-markdown';
 	import type { MathSession, MathSummary } from '$lib/math';
+	import { readMathStream, type MathProgress } from '$lib/math-stream';
 	import 'katex/dist/katex.min.css';
 	let { data } = $props();
 	let session: MathSession | null = $state(untrack(() => data.session));
@@ -28,6 +29,9 @@
 	let draft = $state(''),
 		busy = $state(false),
 		notice = $state('');
+	let progress: MathProgress | null = $state(null);
+	let activeReply: AbortController | undefined;
+	onDestroy(() => activeReply?.abort());
 	let bottom = $state<HTMLDivElement>();
 	let showProfile = $state(false);
 	let showLibrary = $state(false);
@@ -199,12 +203,26 @@
 			/* The server also persists pending turns. */
 		}
 		busy = true;
+		progress = null;
+		activeReply = new AbortController();
 		draft = '';
 		void scroll();
 		try {
-			session = await api(`/api/math/chat/${id}`, {
-				requestId: pending.id,
-				message: pending.message,
+			const response = await fetch(`/api/math/chat/${id}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: 'application/x-ndjson',
+				},
+				body: JSON.stringify({
+					requestId: pending.id,
+					message: pending.message,
+				}),
+				signal: activeReply.signal,
+			});
+			session = await readMathStream(response, (event) => {
+				progress = event;
+				void scroll();
 			});
 			try {
 				localStorage.removeItem(`kane-math-pending:${id}`);
@@ -221,6 +239,8 @@
 			notice = (e as Error).message;
 		} finally {
 			busy = false;
+			progress = null;
+			activeReply = undefined;
 			void scroll();
 		}
 	}
@@ -376,8 +396,22 @@
 									<p class="pending-message">{session.pending.message}</p>
 								</div>
 							</article>{/if}
+						{#if busy && progress?.reply}<article class="math-message">
+								<span class="message-avatar"><Sparkles class="size-4" /></span>
+								<div>
+									<span class="message-author">Mr. Kane</span>
+									<div class="math-prose">
+										{@html renderMathMarkdown(progress.reply)}
+									</div>
+								</div>
+							</article>{/if}
 						{#if busy}<p class="math-thinking" role="status">
-								<Sparkles class="size-4" /> Thinking it through…
+								<Sparkles class="size-4" />
+								{progress?.status === 'reading'
+									? 'Reading the source material…'
+									: progress?.reply
+										? 'Writing your reply…'
+										: 'Thinking it through…'}
 							</p>{/if}
 						{#if notice || (session?.pending && !busy)}<div
 								class="math-notice"

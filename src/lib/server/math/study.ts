@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { database, locked, dataDir } from '../providers-store';
-import { runCoach } from '../agent';
+import { runCoach, type CoachOptions } from '../agent';
+import { parseStreamingJson } from '@earendil-works/pi-ai';
+import type { MathProgress } from '$lib/math-stream';
 import {
 	emptyLearner,
 	mathAnswerSchema,
@@ -89,13 +91,14 @@ type Generate = (
 	data: unknown,
 	schema: unknown,
 	requestId: string,
-	options: { coach: 'math' },
+	options: CoachOptions,
 ) => Promise<string>;
 export async function runMathTurn(
 	sessionId: string,
 	requestId: string,
 	message: string,
 	generate: Generate = runCoach,
+	onProgress?: (progress: MathProgress) => void,
 ) {
 	validId(sessionId);
 	const input = mathTurnSchema.parse({ requestId, message });
@@ -183,7 +186,27 @@ export async function runMathTurn(
 			JSON.parse(turn!.context),
 			z.toJSONSchema(mathAnswerSchema),
 			`math-${input.requestId}`,
-			{ coach: 'math' },
+			{
+				coach: 'math',
+				onProgress: onProgress
+					? ({ text, reading }) => {
+							const partial = parseStreamingJson<{ reply?: unknown }>(
+								text
+									.replace(/^\s*```(?:json)?\s*/, '')
+									.replace(/\s*```\s*$/, ''),
+							);
+							const reply =
+								typeof partial?.reply === 'string'
+									? partial.reply.slice(0, 20000)
+									: '';
+							onProgress({
+								type: 'progress',
+								reply,
+								status: reading ? 'reading' : reply ? 'writing' : 'thinking',
+							});
+						}
+					: undefined,
+			},
 		);
 		let parsed: unknown;
 		try {
