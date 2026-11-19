@@ -82,7 +82,7 @@
 		{ id: 'speaking', icon: Mic, label: 'Reading room' },
 		{ id: 'review', icon: BookOpen, label: 'Review notes' },
 		{ id: 'vocabulary', icon: BookOpen, label: 'Vocabulary' },
-		{ id: 'providers', icon: Settings, label: 'AI Providers' },
+		{ id: 'providers', icon: Settings, label: 'Settings' },
 	];
 	type PendingAI = {
 		id: string;

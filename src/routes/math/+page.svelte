@@ -312,7 +312,7 @@
 							disabled={!provider.connected}
 							>{provider.name} · {provider.modelId}</option
 						>{/each}</NativeSelect
-				><a href="/?tab=providers">AI Providers</a>
+				><a href="/?tab=providers">Settings</a>
 				<Button
 					variant="ghost"
 					class="profile-toggle"
@@ -365,7 +365,7 @@
 										<strong>Your books are ready.</strong>
 										<p>
 											Choose a connected model above, or add one in <a
-												href="/?tab=providers">AI Providers</a
+												href="/?tab=providers">Settings</a
 											>, to start a conversation.
 										</p>
 									</div>

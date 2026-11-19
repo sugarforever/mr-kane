@@ -203,7 +203,7 @@
 			generating another practice.
 		</p>{/if}
 	{#if !canGenerate}<p class="fineprint">
-			Connect an AI model in AI Providers to generate vocabulary practice.
+			Connect an AI model in Settings to generate vocabulary practice.
 		</p>{/if}
 	{#if chosenEntries.length && !selectionValid}<p role="status">
 			Choose up to 12 short words or phrases within the character limits.

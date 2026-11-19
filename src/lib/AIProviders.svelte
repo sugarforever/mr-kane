@@ -25,6 +25,23 @@
 	let settings: AISettings = $state({ providers: [], defaultProviderId: null });
 	let entries: CatalogEntry[] = $state([]);
 	let busy = $state(false);
+	let section = $state('models');
+	let loaded = $state(false);
+	let loading = $state(true);
+	let loadError = $state('');
+	let speechStatus = $state('Loading…');
+	let searchStatus = $state('Loading…');
+	let pendingRemoval = $state('');
+	let showKey = $state(false);
+	let drawer: HTMLDialogElement;
+	const defaultConnection = $derived(
+		settings.providers.find((p) => p.id === settings.defaultProviderId),
+	);
+	$effect(() => {
+		if (!drawer) return;
+		if (editing && !drawer.open) drawer.showModal();
+		else if (!editing && drawer.open) drawer.close();
+	});
 	let message = $state('');
 	let editing = $state(false);
 	let id = $state('');
@@ -70,11 +87,16 @@
 		});
 	}
 	async function refresh() {
+		loading = true;
+		loadError = '';
 		try {
 			apply(await request('/api/ai/settings'));
+			loaded = true;
 		} catch (e) {
-			message =
+			loadError =
 				e instanceof Error ? e.message : 'Settings could not be loaded.';
+		} finally {
+			loading = false;
 		}
 	}
 	onMount(() => {
@@ -115,6 +137,7 @@
 	}
 	function edit(p?: PublicConnection) {
 		editing = true;
+		showKey = false;
 		message = '';
 		auth = null;
 		answer = '';
@@ -331,328 +354,484 @@
 	}
 </script>
 
-<div class="eyebrow">YOUR MODELS, YOUR CHOICE</div>
-<div class="page-heading">
-	<div>
-		<h1>AI Providers</h1>
-		<p>Connect a subscription, bring an API key, or use a local model.</p>
-	</div>
-	<Button
-		variant="default"
-		class="primary"
-		onclick={() => edit()}
-		disabled={busy}><Icons.Plus aria-hidden="true" />Add provider</Button
-	>
-</div>
-{#if message}<Alert.Root class="notice" role="status">{message}</Alert.Root
-	>{/if}
-<div class="provider-layout">
-	<section class="provider-list">
-		{#each settings.providers as p}<Card.Root
-				class="panel provider-card"
-				data-selected={id === p.id && editing}
-			>
-				<div class="spread">
-					<div>
-						<span class="provider-symbol"
-							>{p.service === 'openai-codex'
-								? '◈'
-								: p.service === 'custom'
-									? '⌘'
-									: '✳'}</span
-						><strong>{p.name}</strong>
-					</div>
-					{#if settings.defaultProviderId === p.id}<Badge class="chip"
-							>Default</Badge
-						>{/if}
-				</div>
-				<p class="model-name">{p.modelId}</p>
-				<small class:connected={p.connected}
-					>{p.connected
-						? p.authMode === 'oauth'
-							? 'Account connected'
-							: p.authMode === 'none'
-								? 'No key required'
-								: 'Credential saved'
-						: 'Sign-in required'} · {p.service}</small
+<div class="settings-workspace">
+	<header class="settings-heading">
+		<div class="eyebrow">YOUR WORKSPACE</div>
+		<h1>Settings</h1>
+		<p>
+			Choose what powers your explanations, voice and search. Each part is set
+			up and saved on its own.
+		</p>
+	</header>
+	<div class="settings-layout">
+		<nav class="settings-nav" aria-label="Settings sections">
+			{#each [{ id: 'models', label: 'AI models', icon: Icons.Sparkles, status: loading ? 'Loading…' : loadError ? 'Unavailable' : defaultConnection?.connected ? 'Ready · ' + defaultConnection.name : 'Choose a model' }, { id: 'speech', label: 'Speech & voices', icon: Icons.Volume2, status: speechStatus }, { id: 'search', label: 'Web search', icon: Icons.Globe, status: searchStatus }] as item}
+				<button
+					type="button"
+					class:active={section === item.id}
+					aria-current={section === item.id ? 'page' : undefined}
+					aria-controls={'settings-' + item.id}
+					onclick={() => (section = item.id)}
 				>
-				<div class="provider-actions">
+					<span class="settings-nav-icon"><item.icon size={21} /></span>
+					<span><strong>{item.label}</strong><small>{item.status}</small></span>
+				</button>
+			{/each}
+			<p class="settings-nav-note">
+				Your text model, speech and search connect independently. Change one
+				without changing the others.
+			</p>
+		</nav>
+		<div class="settings-content">
+			<div id="settings-models" hidden={section !== 'models'}>
+				<div class="settings-section-heading">
+					<div>
+						<h2>AI models</h2>
+						<p>
+							Connect your favourite models, then choose one for new practice.
+						</p>
+					</div>
 					<Button
-						variant="outline"
-						class="secondary"
-						onclick={() => edit(p)}
-						disabled={busy}
-						size="icon"
-						title="Manage"
-						aria-label="Manage"><Icons.Settings2 aria-hidden="true" /></Button
-					><Button
-						variant="ghost"
-						class="text-button"
-						onclick={() => select(p)}
-						disabled={busy ||
-							!p.connected ||
-							settings.defaultProviderId === p.id}
-						><Icons.Check aria-hidden="true" />Use by default</Button
-					><Button
-						variant="destructive"
-						class="text-button danger"
-						onclick={() => remove(p)}
-						disabled={busy}
-						size="icon"
-						title="Remove"
-						aria-label="Remove"><Icons.Trash2 aria-hidden="true" /></Button
+						class="primary"
+						onclick={() => edit()}
+						disabled={busy || !loaded}
+						><Icons.Plus aria-hidden="true" />Add provider</Button
 					>
 				</div>
-			</Card.Root>{:else}<Card.Root class="panel empty">
-				<span class="empty-symbol">◈</span>
-				<h2>Bring your favourite model</h2>
-				<p>
-					Connect ChatGPT with your account, or add a provider with an API key.
-				</p>
-				<Button variant="default" class="primary" onclick={() => edit()}
-					><Icons.Plus aria-hidden="true" />Add your first provider</Button
-				>
-			</Card.Root>{/each}
-		<p class="fineprint">
-			Keys and tokens stay on this server, outside browser storage. Back up the
-			private data directory. This MVP is intended for local use.
-		</p>
-	</section>
-	{#if editing}<Card.Root class="panel provider-editor">
-			<div class="spread">
-				<h2>{id ? 'Manage connection' : 'New connection'}</h2>
-				<Button
-					variant="ghost"
-					class="text-button"
-					onclick={() => (editing = false)}
-					disabled={busy}
-					size="icon"
-					title="Close"
-					aria-label="Close"><Icons.X aria-hidden="true" /></Button
-				>
+				{#if loading && !loaded}<p role="status" class="settings-loading">
+						Loading your connections…
+					</p>{/if}
+				{#if loadError}<div class="settings-load-error" role="alert">
+						<p>{loadError}</p>
+						<Button variant="outline" onclick={refresh} disabled={loading}
+							>Retry loading connections</Button
+						>
+					</div>{/if}
+				{#if defaultConnection}
+					<div class="settings-default">
+						<Icons.Star size={20} aria-hidden="true" />
+						<div>
+							<Label for="settings-default-model">Default model</Label>
+							<NativeSelect
+								id="settings-default-model"
+								value={JSON.stringify([
+									defaultConnection.id,
+									defaultConnection.modelId,
+								])}
+								disabled={busy}
+								onchange={(event) => {
+									const [providerId, selectedModel] = JSON.parse(
+										event.currentTarget.value,
+									);
+									const provider = settings.providers.find(
+										(p) => p.id === providerId,
+									);
+									if (provider)
+										void select({ ...provider, modelId: selectedModel });
+								}}
+							>
+								{#each settings.providers.filter((p) => p.connected || p.id === defaultConnection.id) as provider}
+									<optgroup label={provider.name}>
+										{#each Array.from(new Set( [provider.modelId, ...provider.models] )) as model}
+											<option value={JSON.stringify([provider.id, model])}
+												>{model}</option
+											>
+										{/each}
+									</optgroup>
+								{/each}
+							</NativeSelect>
+							<small>{defaultConnection.name} · Used for new requests</small>
+						</div>
+						<Badge class="chip"
+							>{defaultConnection.connected
+								? 'Ready'
+								: 'Sign-in required'}</Badge
+						>
+					</div>
+				{/if}
+				{#if loaded}<h3 class="settings-list-heading">
+						Connected providers <span>{settings.providers.length}</span>
+					</h3>{/if}
+				{#if message}<Alert.Root class="notice" role="status"
+						>{message}</Alert.Root
+					>{/if}
+				<div class="provider-layout">
+					<section class="provider-list" aria-label="Connected providers">
+						{#if loaded}
+							{#each settings.providers as p}<Card.Root
+									class="panel provider-card"
+									data-selected={id === p.id && editing}
+								>
+									<div class="spread">
+										<div>
+											<span class="provider-symbol"
+												>{p.service === 'openai-codex'
+													? '◈'
+													: p.service === 'custom'
+														? '⌘'
+														: '✳'}</span
+											><strong>{p.name}</strong>
+										</div>
+										{#if settings.defaultProviderId === p.id}<Badge class="chip"
+												>Default</Badge
+											>{/if}
+									</div>
+									<p class="model-name">{p.modelId}</p>
+									<small class:connected={p.connected}
+										>{p.connected
+											? p.authMode === 'oauth'
+												? 'Account connected'
+												: p.authMode === 'none'
+													? 'No key required'
+													: 'Credential saved'
+											: 'Sign-in required'} · {p.service}</small
+									>
+									<div class="provider-actions">
+										<Button
+											variant="outline"
+											class="secondary"
+											onclick={() => edit(p)}
+											disabled={busy}
+											size="icon"
+											title="Manage"
+											aria-label={'Manage ' + p.name}
+											><Icons.Settings2 aria-hidden="true" /></Button
+										><Button
+											variant="ghost"
+											class="text-button"
+											onclick={() => select(p)}
+											disabled={busy ||
+												!p.connected ||
+												settings.defaultProviderId === p.id}
+											><Icons.Check aria-hidden="true" />Use by default</Button
+										><Button
+											variant="destructive"
+											class="text-button danger"
+											onclick={() => (pendingRemoval = p.id)}
+											disabled={busy}
+											size="icon"
+											title="Remove"
+											aria-label="Remove"
+											><Icons.Trash2 aria-hidden="true" /></Button
+										>
+									</div>
+									{#if pendingRemoval === p.id}<div
+											class="settings-remove-confirm"
+											role="group"
+											aria-label={'Remove ' + p.name + '?'}
+										>
+											<p>
+												Remove {p.name}? Your learning records will be kept.
+											</p>
+											<Button
+												variant="destructive"
+												disabled={busy}
+												onclick={async () => {
+													await remove(p);
+													pendingRemoval = '';
+												}}>Remove provider</Button
+											><Button
+												variant="outline"
+												disabled={busy}
+												onclick={() => (pendingRemoval = '')}
+												>Keep provider</Button
+											>
+										</div>{/if}
+								</Card.Root>{:else}<Card.Root class="panel empty">
+									<span class="empty-symbol">◈</span>
+									<h2>Bring your favourite model</h2>
+									<p>
+										Connect ChatGPT with your account, or add a provider with an
+										API key.
+									</p>
+									<Button
+										variant="default"
+										class="primary"
+										onclick={() => edit()}
+										><Icons.Plus aria-hidden="true" />Add your first provider</Button
+									>
+								</Card.Root>{/each}
+						{/if}
+						<details class="settings-details">
+							<summary>How keys and data are handled</summary>
+							<p>
+								Keys and tokens stay on this server, outside browser storage.
+								Back up the private data directory. This app is intended for
+								local use. A saved credential does not verify billing or model
+								access.
+							</p>
+						</details>
+					</section>
+				</div>
 			</div>
-			<Label class=" block"
-				>Connection name<Input
-					bind:value={name}
-					maxlength={80}
-					disabled={busy}
-				/></Label
-			>
-			<Label class=" block"
-				>Provider<NativeSelect
-					class="w-full"
-					value={service}
-					onchange={(e) => setService(e.currentTarget.value)}
-					disabled={busy || auth?.status === 'pending'}
-					><optgroup label="Subscriptions & account sign-in"
-						>{#each entries.filter((p) => p.oauth) as p}<option value={p.id}
-								>{p.name}{p.id === 'openai-codex'
-									? ' · ChatGPT subscription'
-									: ''}</option
-							>{/each}</optgroup
-					><optgroup label="API providers"
-						>{#each entries.filter((p) => !p.oauth) as p}<option value={p.id}
-								>{p.name}</option
-							>{/each}</optgroup
-					><option value="custom">Custom endpoint · Ollama / LM Studio</option
-					></NativeSelect
-				></Label
-			>
-			{#if service === 'custom' || (entry?.oauth && entry.apiKey)}<Label
-					class=" block"
-					>Authentication<NativeSelect
-						class="w-full"
-						value={authMode}
-						onchange={(e) => {
-							authMode = e.currentTarget.value as AuthMode;
-							apiKey = '';
-							models =
-								authMode === 'oauth'
-									? (entry?.models.map((m) => m.id) ?? [])
-									: [];
-							modelId = models[0] ?? '';
-							verified = authMode === 'oauth';
-							auth = null;
-						}}
-						disabled={busy || auth?.status === 'pending'}
-						>{#if entry?.oauth}<option value="oauth"
-								>Sign in with account</option
-							>{/if}<option value="api_key">API key</option
-						>{#if service === 'custom'}<option value="none"
-								>No key · local endpoint</option
-							>{/if}</NativeSelect
-					></Label
-				>{/if}
-			{#if authMode !== 'oauth'}<Label class=" block"
-					>Base URL<Input
-						value={baseUrl}
-						oninput={(e) => {
-							baseUrl = e.currentTarget.value;
-							invalidate();
-						}}
-						placeholder="https://api.example.com/v1"
+			<div id="settings-speech" hidden={section !== 'speech'}>
+				<SpeechSettings onstatus={(value) => (speechStatus = value)} />
+			</div>
+			<div id="settings-search" hidden={section !== 'search'}>
+				<SearchSettings onstatus={(value) => (searchStatus = value)} />
+			</div>
+		</div>
+	</div>
+	<dialog
+		bind:this={drawer}
+		class="settings-drawer"
+		aria-labelledby="provider-editor-title"
+		onclose={() => {
+			editing = false;
+			apiKey = '';
+			showKey = false;
+		}}
+		oncancel={(event) => {
+			if (busy) event.preventDefault();
+		}}
+	>
+		{#if editing}<Card.Root class="panel provider-editor">
+				<div class="spread">
+					<div>
+						<div class="eyebrow">AI MODELS · CONNECTION</div>
+						<h2 id="provider-editor-title">
+							{id ? 'Manage connection' : 'Add a text model'}
+						</h2>
+					</div>
+					<Button
+						variant="ghost"
+						class="text-button"
+						onclick={() => (editing = false)}
+						disabled={busy}
+						size="icon"
+						title="Close"
+						aria-label="Close"><Icons.X aria-hidden="true" /></Button
+					>
+				</div>
+				{#if message}<Alert.Root role="status">{message}</Alert.Root>{/if}
+				<Label class=" block"
+					>Connection name<Input
+						bind:value={name}
+						maxlength={80}
 						disabled={busy}
 					/></Label
-				>{#if service === 'custom'}<Label class=" block"
-						>API protocol<NativeSelect
+				>
+				<Label class=" block"
+					>Provider<NativeSelect
+						class="w-full"
+						value={service}
+						onchange={(e) => setService(e.currentTarget.value)}
+						disabled={busy || auth?.status === 'pending'}
+						><optgroup label="Subscriptions & account sign-in"
+							>{#each entries.filter((p) => p.oauth) as p}<option value={p.id}
+									>{p.name}{p.id === 'openai-codex'
+										? ' · ChatGPT subscription'
+										: ''}</option
+								>{/each}</optgroup
+						><optgroup label="API providers"
+							>{#each entries.filter((p) => !p.oauth) as p}<option value={p.id}
+									>{p.name}</option
+								>{/each}</optgroup
+						><option value="custom">Custom endpoint · Ollama / LM Studio</option
+						></NativeSelect
+					></Label
+				>
+				{#if service === 'custom' || (entry?.oauth && entry.apiKey)}<Label
+						class=" block"
+						>Authentication<NativeSelect
 							class="w-full"
-							bind:value={protocol}
-							onchange={invalidate}
-							disabled={busy}
-							><option value="openai-completions"
-								>OpenAI-compatible Chat Completions</option
-							><option value="openai-responses">OpenAI Responses</option><option
-								value="anthropic-messages">Anthropic Messages</option
-							><option value="google-generative-ai">Google Generative AI</option
-							></NativeSelect
+							value={authMode}
+							onchange={(e) => {
+								authMode = e.currentTarget.value as AuthMode;
+								apiKey = '';
+								models =
+									authMode === 'oauth'
+										? (entry?.models.map((m) => m.id) ?? [])
+										: [];
+								modelId = models[0] ?? '';
+								verified = authMode === 'oauth';
+								auth = null;
+							}}
+							disabled={busy || auth?.status === 'pending'}
+							>{#if entry?.oauth}<option value="oauth"
+									>Sign in with account</option
+								>{/if}<option value="api_key">API key</option
+							>{#if service === 'custom'}<option value="none"
+									>No key · local endpoint</option
+								>{/if}</NativeSelect
 						></Label
-					>{/if}{#if authMode === 'api_key'}<Label class=" block"
-						>API key<Input
-							type="password"
-							value={apiKey}
+					>{/if}
+				{#if authMode !== 'oauth'}<Label class=" block"
+						>Base URL<Input
+							value={baseUrl}
 							oninput={(e) => {
-								apiKey = e.currentTarget.value;
+								baseUrl = e.currentTarget.value;
 								invalidate();
 							}}
-							autocomplete="new-password"
-							placeholder={id
-								? 'Leave blank to keep the saved key'
-								: 'Enter your provider API key'}
+							placeholder="https://api.example.com/v1"
 							disabled={busy}
 						/></Label
-					>{/if}<Button
-					variant="outline"
-					class="secondary"
-					onclick={discover}
-					disabled={busy}
-					><Icons.PlugZap aria-hidden="true" />{busy
-						? 'Checking…'
-						: 'Test connection & discover models'}</Button
-				>{:else}<p class="fineprint">
-					Sign in directly on the official provider page. Available models and
-					usage limits depend on your account.
-				</p>{/if}
-			{#if models.length}<Label class="model-field block"
-					>Model<NativeSelect
-						class="w-full"
-						bind:value={modelId}
-						disabled={busy}
-						>{#each models as model}<option value={model}>{model}</option
-							>{/each}</NativeSelect
-					></Label
-				>{/if}
-			<div class="provider-actions">
-				<Button
-					variant="default"
-					class="primary"
-					onclick={save}
-					disabled={busy ||
-						!name.trim() ||
-						!modelId ||
-						!verified ||
-						auth?.status === 'pending'}
-					><Icons.Save aria-hidden="true" />Save connection</Button
-				>{#if authMode === 'oauth'}<Button
+					>{#if service === 'custom'}<Label class=" block"
+							>API protocol<NativeSelect
+								class="w-full"
+								bind:value={protocol}
+								onchange={invalidate}
+								disabled={busy}
+								><option value="openai-completions"
+									>OpenAI-compatible Chat Completions</option
+								><option value="openai-responses">OpenAI Responses</option
+								><option value="anthropic-messages">Anthropic Messages</option
+								><option value="google-generative-ai"
+									>Google Generative AI</option
+								></NativeSelect
+							></Label
+						>{/if}{#if authMode === 'api_key'}<Label class=" block"
+							>API key<Input
+								type={showKey ? 'text' : 'password'}
+								value={apiKey}
+								oninput={(e) => {
+									apiKey = e.currentTarget.value;
+									invalidate();
+								}}
+								autocomplete="new-password"
+								placeholder={id
+									? 'Leave blank to keep the saved key'
+									: 'Enter your provider API key'}
+								disabled={busy}
+							/></Label
+						><button
+							type="button"
+							class="settings-reveal"
+							aria-pressed={showKey}
+							onclick={() => (showKey = !showKey)}
+							>{showKey ? 'Hide key' : 'Show key'}</button
+						>{/if}<Button
 						variant="outline"
 						class="secondary"
-						onclick={() => login()}
-						disabled={busy || !name.trim() || auth?.status === 'pending'}
-						><Icons.LogIn aria-hidden="true" />{service === 'openai-codex'
-							? 'Sign in with ChatGPT'
-							: 'Connect account'}</Button
+						onclick={discover}
+						disabled={busy}
+						><Icons.PlugZap aria-hidden="true" />{busy
+							? 'Checking…'
+							: 'Test connection & discover models'}</Button
+					>{:else}<p class="fineprint">
+						Sign in directly on the official provider page. Available models and
+						usage limits depend on your account.
+					</p>{/if}
+				{#if models.length}<Label class="model-field block"
+						>Model<NativeSelect
+							class="w-full"
+							bind:value={modelId}
+							disabled={busy}
+							>{#each models as model}<option value={model}>{model}</option
+								>{/each}</NativeSelect
+						></Label
 					>{/if}
-			</div>
-			{#if authMode === 'oauth' && id}<Card.Root class="auth-panel">
-					{#if auth?.status === 'pending'}<strong
-							>Waiting for account authorisation</strong
-						>{#each auth.events as event}{#if event.type === 'auth_url'}<p>
-									<a
-										href={event.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="auth-link">Open official sign-in page ↗</a
+				<div class="provider-actions">
+					<Button
+						variant="default"
+						class="primary"
+						onclick={save}
+						disabled={busy ||
+							!name.trim() ||
+							!modelId ||
+							!verified ||
+							auth?.status === 'pending'}
+						><Icons.Save aria-hidden="true" />Save connection</Button
+					>{#if authMode === 'oauth'}<Button
+							variant="outline"
+							class="secondary"
+							onclick={() => login()}
+							disabled={busy || !name.trim() || auth?.status === 'pending'}
+							><Icons.LogIn aria-hidden="true" />{service === 'openai-codex'
+								? 'Sign in with ChatGPT'
+								: 'Connect account'}</Button
+						>{/if}
+				</div>
+				{#if authMode === 'oauth' && id}<Card.Root class="auth-panel">
+						{#if auth?.status === 'pending'}<strong
+								>Waiting for account authorisation</strong
+							>{#each auth.events as event}{#if event.type === 'auth_url'}<p>
+										<a
+											href={event.url}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="auth-link">Open official sign-in page ↗</a
+										>
+									</p>
+									{#if event.instructions}<p>
+											{event.instructions}
+										</p>{/if}{:else if event.type === 'device_code'}<p>
+										Your device code
+									</p>
+									<code class="device-code">{event.userCode}</code>
+									<p>
+										<a
+											class="auth-link"
+											href={event.verificationUri}
+											target="_blank"
+											rel="noopener noreferrer"
+											>Authorise on the official page ↗</a
+										>
+									</p>{:else if event.type === 'info' || event.type === 'progress'}<p
 									>
-								</p>
-								{#if event.instructions}<p>
-										{event.instructions}
-									</p>{/if}{:else if event.type === 'device_code'}<p>
-									Your device code
-								</p>
-								<code class="device-code">{event.userCode}</code>
-								<p>
-									<a
-										class="auth-link"
-										href={event.verificationUri}
-										target="_blank"
-										rel="noopener noreferrer"
-										>Authorise on the official page ↗</a
-									>
-								</p>{:else if event.type === 'info' || event.type === 'progress'}<p
-								>
-									{event.message}
-								</p>{/if}{/each}
-						{#if auth.prompt}<Label class=" block"
-								>{auth.prompt
-									.message}{#if auth.prompt.type === 'select'}<NativeSelect
-										class="w-full"
-										bind:value={answer}
-										><option value="">Choose a method</option
-										>{#each auth.prompt.options ?? [] as option}<option
-												value={option.id}>{option.label}</option
-											>{/each}</NativeSelect
-									>{:else}<Input
-										type={auth.prompt.type === 'secret' ? 'password' : 'text'}
-										bind:value={answer}
-										autocomplete="off"
-										placeholder="Paste the requested code or redirect URL"
-									/>{/if}</Label
-							><Button
-								variant="outline"
-								class="secondary"
-								onclick={() => authAction('answer')}
-								disabled={busy || !answer}
-								><Icons.ArrowRight aria-hidden="true" />Continue</Button
-							>{/if}
-						<Button
-							variant="ghost"
-							class="text-button"
-							onclick={() => authAction('cancel')}
-							disabled={busy}
-							><Icons.X aria-hidden="true" />Cancel sign-in</Button
-						>
-					{:else if settings.providers.find((p) => p.id === id)?.connected}<p
-							class="connected"
-						>
-							Account connected. Token refresh is handled by Pi.
-						</p>
-						<Button
-							variant="destructive"
-							class="text-button danger"
-							onclick={() => authAction('disconnect')}
-							disabled={busy}
-							><Icons.Trash2 aria-hidden="true" />Disconnect account</Button
-						>{:else if auth?.message}<p>{auth.message}</p>{/if}
-					{#if service === 'openai-codex' && auth?.status !== 'pending'}<Collapsible.Root
-						>
-							<Collapsible.Trigger
-								>Having trouble signing in?</Collapsible.Trigger
-							><Collapsible.Content>
-								<p>
-									Use a device code when the browser callback cannot reach this
-									server.
-								</p>
-								<Button
+										{event.message}
+									</p>{/if}{/each}
+							{#if auth.prompt}<Label class=" block"
+									>{auth.prompt
+										.message}{#if auth.prompt.type === 'select'}<NativeSelect
+											class="w-full"
+											bind:value={answer}
+											><option value="">Choose a method</option
+											>{#each auth.prompt.options ?? [] as option}<option
+													value={option.id}>{option.label}</option
+												>{/each}</NativeSelect
+										>{:else}<Input
+											type={auth.prompt.type === 'secret' ? 'password' : 'text'}
+											bind:value={answer}
+											autocomplete="off"
+											placeholder="Paste the requested code or redirect URL"
+										/>{/if}</Label
+								><Button
 									variant="outline"
 									class="secondary"
-									onclick={() => login('device_code')}
-									disabled={busy}
-									><Icons.LogIn aria-hidden="true" />Sign in with a device code</Button
-								>
-							</Collapsible.Content></Collapsible.Root
-						>{/if}
-				</Card.Root>{/if}
-		</Card.Root>{/if}
+									onclick={() => authAction('answer')}
+									disabled={busy || !answer}
+									><Icons.ArrowRight aria-hidden="true" />Continue</Button
+								>{/if}
+							<Button
+								variant="ghost"
+								class="text-button"
+								onclick={() => authAction('cancel')}
+								disabled={busy}
+								><Icons.X aria-hidden="true" />Cancel sign-in</Button
+							>
+						{:else if settings.providers.find((p) => p.id === id)?.connected}<p
+								class="connected"
+							>
+								Account connected. Your sign-in is refreshed automatically.
+							</p>
+							<Button
+								variant="destructive"
+								class="text-button danger"
+								onclick={() => authAction('disconnect')}
+								disabled={busy}
+								><Icons.Trash2 aria-hidden="true" />Disconnect account</Button
+							>{:else if auth?.message}<p>{auth.message}</p>{/if}
+						{#if service === 'openai-codex' && auth?.status !== 'pending'}<Collapsible.Root
+							>
+								<Collapsible.Trigger
+									>Having trouble signing in?</Collapsible.Trigger
+								><Collapsible.Content>
+									<p>
+										Use a device code when the browser callback cannot reach
+										this server.
+									</p>
+									<Button
+										variant="outline"
+										class="secondary"
+										onclick={() => login('device_code')}
+										disabled={busy}
+										><Icons.LogIn aria-hidden="true" />Sign in with a device
+										code</Button
+									>
+								</Collapsible.Content></Collapsible.Root
+							>{/if}
+					</Card.Root>{/if}
+			</Card.Root>{/if}
+	</dialog>
 </div>
-
-<SpeechSettings />
-<SearchSettings />
