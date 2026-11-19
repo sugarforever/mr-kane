@@ -1,15 +1,34 @@
 import { randomUUID } from 'node:crypto';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { z } from 'zod';
-import { database, locked, dataDir } from '../providers-store';
-import { runAgent, type AgentOptions } from '../agent-runtime';
+import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
+import {
+	defineDoc,
+	defineDocFamily,
+	type Harness,
+	type Conversation,
+	type ConversationId,
+	type SubmissionId,
+} from '@earendil-works/pi-durable';
 import { parseStreamingJson } from '@earendil-works/pi-ai';
-import type { StudyProgress } from '$lib/study-stream';
+import { database, locked, dataDir } from '../providers-store';
+import {
+	runAgent,
+	snapshotAgent,
+	openAgentHarness,
+	readAgentResponse,
+	type AgentOptions,
+	type AgentDefinition,
+	type AgentSnapshot,
+} from '../agent';
 import {
 	studyTurnSchema,
 	type StudySession,
 	type StudySummary,
 } from '$lib/learning';
-import type { AgentDefinition } from '../agent-runtime';
+import type { StudyProgress } from '$lib/study-stream';
+
 export class StudyError extends Error {
 	constructor(
 		public status: number,
@@ -26,24 +45,168 @@ export type StudyConfig<Learner> = {
 	emptyLearner: () => Learner;
 	answerSchema: z.ZodType<{ reply: string; learner: Learner }>;
 };
+type Turn = {
+	message: string;
+	content: string;
+	status: number;
+	snapshot: string;
+	submissionId: number | null;
+	legacy: boolean;
+};
+// Session JSON preserves the public, subject-specific learner shape without constraining it to a shared profile.
+const Study = defineDocFamily<
+	{
+		session: string;
+		conversationId: number | null;
+		turns: Record<string, Turn>;
+	},
+	string
+>({
+	kind: 'app.study',
+	version: 1,
+	scope: 'session',
+	family: true,
+	initial: (session) => ({ session, conversationId: null, turns: {} }),
+	checkpointWhen: () => true,
+});
+const Index = defineDoc<{
+	sessions: string[];
+	requests: Record<string, { sessionId: string; message: string }>;
+}>({
+	kind: 'app.study-index',
+	version: 1,
+	scope: 'session',
+	initial: () => ({ sessions: [], requests: {} }),
+	checkpointWhen: () => true,
+});
+type Generate = (
+	operation: string,
+	data: unknown,
+	schema: unknown,
+	requestId: string,
+	options: AgentOptions & { agent: AgentDefinition },
+) => Promise<string>;
+
 export function createStudy<Learner>(config: StudyConfig<Learner>) {
-	// Identifiers are interpolated into SQL, so only trusted identifier characters are allowed.
 	if (!/^[a-z][a-z0-9]{0,39}$/.test(config.namespace))
 		throw new Error('Invalid study namespace.');
 	type Session = StudySession<Learner>;
-	function db() {
-		const d = database();
-		d.exec(
-			`CREATE TABLE IF NOT EXISTS ${config.namespace}_sessions(id TEXT PRIMARY KEY,value TEXT NOT NULL);CREATE TABLE IF NOT EXISTS ${config.namespace}_turns(id TEXT PRIMARY KEY,session_id TEXT NOT NULL,message TEXT NOT NULL,context TEXT NOT NULL,complete INTEGER NOT NULL DEFAULT 0);`,
-		);
-		return d;
-	}
-	function validId(id: string) {
+	const file = (id: string) =>
+		join(dataDir(), 'study', config.namespace, `${id}.sqlite`);
+	const validId = (id: string) => {
 		if (!z.string().uuid().safeParse(id).success)
 			throw new StudyError(400, 'Invalid conversation ID.');
+	};
+
+	// Compatibility import only. New sessions and turns never write the old SQL tables.
+	async function importLegacy(harness: Harness) {
+		if (await harness.snapshot(Index, context)) return;
+		const db = database();
+		let sessions: { value: string }[] = [];
+		let turns: {
+			id: string;
+			session_id: string;
+			message: string;
+			context: string;
+			complete: number;
+		}[] = [];
+		try {
+			if (
+				db
+					.prepare('SELECT name FROM sqlite_master WHERE name=?')
+					.get(`${config.namespace}_sessions`)
+			) {
+				sessions = db
+					.prepare(`SELECT value FROM ${config.namespace}_sessions`)
+					.all() as typeof sessions;
+				turns = db
+					.prepare(`SELECT * FROM ${config.namespace}_turns`)
+					.all() as typeof turns;
+			}
+		} finally {
+			db.close();
+		}
+		// The index never contains runnable conversations. Session stores are isolated
+		// because Pi resumes every pending conversation in a harness when scheduling starts.
+		for (const { value } of sessions) {
+			const session = JSON.parse(value) as Session;
+			await write(session.id, async ({ harness: store }) => {
+				await store.commit(async (tx) => {
+					const record = await tx.doc(Study, session.id, value);
+					for (const turn of turns.filter((t) => t.session_id === session.id)) {
+						record.turns[turn.id] = {
+							message: turn.message,
+							content: turn.context,
+							status: turn.complete,
+							snapshot: '',
+							submissionId: null,
+							legacy: true,
+						};
+					}
+				}, context);
+			});
+		}
+		await harness.commit(async (tx) => {
+			const index = await tx.doc(Index);
+			index.sessions = sessions.map(
+				({ value }) => (JSON.parse(value) as Session).id,
+			);
+			for (const turn of turns)
+				index.requests[turn.id] = {
+					sessionId: turn.session_id,
+					message: turn.message,
+				};
+		}, context);
 	}
-	function createSession() {
-		const s: Session = {
+	async function write<T>(
+		id: string,
+		work: (opened: Awaited<ReturnType<typeof openAgentHarness>>) => Promise<T>,
+	): Promise<T> {
+		return locked(`study:${file(id)}`, async () => {
+			const opened = await openAgentHarness(file(id), { compaction: true });
+			try {
+				return await work(opened);
+			} finally {
+				await opened.harness.close(context);
+			}
+		});
+	}
+	async function writeIndex<T>(
+		work: (harness: Harness) => Promise<T>,
+	): Promise<T> {
+		return locked(`study:${file('index')}`, async () => {
+			const { harness } = await openAgentHarness(file('index'));
+			try {
+				await importLegacy(harness);
+				return await work(harness);
+			} finally {
+				await harness.close(context);
+			}
+		});
+	}
+	async function readIndex() {
+		if (!existsSync(file('index'))) await writeIndex(async () => {});
+		const { harness } = await openAgentHarness(file('index'), {
+			readOnly: true,
+		});
+		try {
+			const index = await harness.snapshot(Index, context);
+			if (index) return index;
+		} finally {
+			await harness.close(context);
+		}
+		// A process may have stopped after creating storage but before finishing import.
+		await writeIndex(async () => {});
+		return readIndex();
+	}
+	async function recordFor(harness: Harness, id: string) {
+		const record = await harness.snapshot(Study, id, context);
+		if (!record) throw new StudyError(404, 'Conversation not found.');
+		return record;
+	}
+	async function createSession(): Promise<Session> {
+		await readIndex();
+		const session: Session = {
 			id: randomUUID(),
 			title: config.title,
 			updatedAt: new Date().toISOString(),
@@ -51,271 +214,334 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			messages: [],
 			pending: null,
 		};
-		const d = db();
-		try {
-			d.prepare(`INSERT INTO ${config.namespace}_sessions VALUES (?,?)`).run(
-				s.id,
-				JSON.stringify(s),
-			);
-		} finally {
-			d.close();
-		}
-		return s;
+		await write(session.id, async ({ harness }) => {
+			await harness.commit(async (tx) => {
+				await tx.doc(Study, session.id, JSON.stringify(session));
+			}, context);
+		});
+		await writeIndex(async (harness) => {
+			await harness.commit(async (tx) => {
+				(await tx.doc(Index)).sessions.push(session.id);
+			}, context);
+		});
+		return session;
 	}
-	function listSessions(): StudySummary[] {
-		const d = db();
-		try {
-			return (
-				d.prepare(`SELECT value FROM ${config.namespace}_sessions`).all() as {
-					value: string;
-				}[]
-			)
-				.map((x) => JSON.parse(x.value) as Session)
-				.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-				.map(({ id, title, updatedAt }) => ({ id, title, updatedAt }));
-		} finally {
-			d.close();
-		}
-	}
-	function getSession(id: string): Session {
+	async function getSession(id: string): Promise<Session> {
 		validId(id);
-		const d = db();
+		if (!(await readIndex()).sessions.includes(id))
+			throw new StudyError(404, 'Conversation not found.');
+		const { harness } = await openAgentHarness(file(id), { readOnly: true });
 		try {
-			const x = d
-				.prepare(`SELECT value FROM ${config.namespace}_sessions WHERE id=?`)
-				.get(id) as { value: string } | undefined;
-			if (!x) throw new StudyError(404, 'Conversation not found.');
-			return JSON.parse(x.value);
+			return JSON.parse((await recordFor(harness, id)).session);
 		} finally {
-			d.close();
+			await harness.close(context);
 		}
 	}
-	function boundedMessages(messages: Session['messages']) {
-		let budget = 24000;
-		const out: Session['messages'] = [];
-		for (const m of [...messages].reverse()) {
-			if (out.length >= 16 || m.content.length > budget) break;
-			budget -= m.content.length;
-			out.unshift(m);
-		}
-		return out;
+	async function listSessions(): Promise<StudySummary[]> {
+		const sessions = await Promise.all(
+			(await readIndex()).sessions.map(getSession),
+		);
+		return sessions
+			.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+			.map(({ id, title, updatedAt }) => ({ id, title, updatedAt }));
 	}
-	type Generate = (
-		operation: string,
-		data: unknown,
-		schema: unknown,
+	async function hasRequest(requestId: string) {
+		return !!(await readIndex()).requests[requestId];
+	}
+	async function reserveRequest(
+		sessionId: string,
 		requestId: string,
-		options: AgentOptions & { agent: AgentDefinition },
-	) => Promise<string>;
+		message: string,
+	) {
+		await writeIndex(async (harness) => {
+			await harness.commit(async (tx) => {
+				const index = await tx.doc(Index);
+				const owner = index.requests[requestId];
+				if (
+					owner &&
+					(owner.sessionId !== sessionId || owner.message !== message)
+				)
+					throw new StudyError(
+						409,
+						'This request belongs to different content.',
+					);
+				index.requests[requestId] = { sessionId, message };
+			}, context);
+		});
+	}
+
+	function progressSink(
+		onProgress?: (event: StudyProgress) => void,
+	): AgentOptions['onProgress'] {
+		return onProgress
+			? ({ text, reading }) => {
+					const partial = parseStreamingJson<{ reply?: unknown }>(
+						text.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, ''),
+					);
+					const reply =
+						typeof partial?.reply === 'string'
+							? partial.reply.slice(0, 20000)
+							: '';
+					onProgress({
+						type: 'progress',
+						reply,
+						status: reading ? 'reading' : reply ? 'writing' : 'thinking',
+					});
+				}
+			: undefined;
+	}
+	// Used only to import pre-Pi transcripts or exclude a discarded failed response from model context.
+	const handoff = (session: Session) =>
+		JSON.stringify({ learner: session.learner, messages: session.messages });
 	async function runTurn(
 		sessionId: string,
 		requestId: string,
 		message: string,
-		generate: Generate = (operation, data, schema, id, options) =>
-			runAgent(operation, data, schema, id, options.agent, options),
-		onProgress?: (progress: StudyProgress) => void,
-	) {
+		generate?: Generate,
+		onProgress?: (event: StudyProgress) => void,
+	): Promise<Session> {
 		validId(sessionId);
 		const input = studyTurnSchema.parse({ requestId, message });
-		return locked(
-			`${config.namespace}-session:${dataDir()}:${sessionId}`,
-			async () => {
-				let session = getSession(sessionId);
-				let turn:
-					| {
-							session_id: string;
-							message: string;
-							context: string;
-							complete: number;
-					  }
-					| undefined;
-				const d = db();
-				try {
-					turn = d
-						.prepare(
-							`SELECT session_id,message,context,complete FROM ${config.namespace}_turns WHERE id=?`,
-						)
-						.get(input.requestId) as typeof turn;
-					if (
-						turn &&
-						(turn.session_id !== sessionId || turn.message !== input.message)
-					)
-						throw new StudyError(
-							409,
-							'This request belongs to different content.',
-						);
-					if (turn?.complete === -1)
-						throw new StudyError(
-							409,
-							'This message was discarded. Send it as a new message.',
-						);
-					if (turn?.complete === 1) return session;
-					if (session.pending && session.pending.id !== input.requestId)
-						throw new StudyError(
-							409,
-							'Retry the pending message before sending another.',
-						);
-					if (!turn) {
-						if (session.messages.length >= 400)
-							throw new StudyError(
-								409,
-								'Start a new conversation to continue studying.',
+		if (!(await readIndex()).sessions.includes(sessionId))
+			throw new StudyError(404, 'Conversation not found.');
+		return write(sessionId, async ({ harness, configure }) => {
+			const record = await recordFor(harness, sessionId);
+			let session = JSON.parse(record.session) as Session;
+			let turn = record.turns[input.requestId];
+			if (turn && turn.message !== input.message)
+				throw new StudyError(409, 'This request belongs to different content.');
+			if (turn?.status === -1)
+				throw new StudyError(
+					409,
+					'This message was discarded. Send it as a new message.',
+				);
+			if (turn?.status === 1) return session;
+			if (session.pending && session.pending.id !== input.requestId)
+				throw new StudyError(
+					409,
+					'Retry the pending message before sending another.',
+				);
+			if (!turn && session.messages.length >= 400)
+				throw new StudyError(
+					409,
+					'Start a new conversation to continue studying.',
+				);
+			await reserveRequest(sessionId, input.requestId, input.message);
+			const onAgentProgress = progressSink(onProgress);
+			let conversation: Conversation | undefined;
+			if (!turn) {
+				const snapshot = generate
+					? undefined
+					: await snapshotAgent(config.agent);
+				const content = JSON.stringify({
+					operation: config.operation,
+					data: {
+						learner: session.learner,
+						messages: [{ role: 'user', content: input.message }],
+						historyOmitted: false,
+					},
+					outputSchema: z.toJSONSchema(config.answerSchema),
+				});
+				if (snapshot) {
+					const agent = configure(
+						snapshot,
+						config.agent,
+						`${config.namespace}-${requestId}`,
+					);
+					conversation = record.conversationId
+						? (await harness.conversation(
+								record.conversationId as ConversationId,
+								context,
+							))!
+						: await harness.createConversation(
+								{ ownership: { kind: 'ownerless' }, agent },
+								context,
 							);
-						const context = JSON.stringify({
-							learner: session.learner,
-							messages: [
-								...boundedMessages(session.messages),
-								{ role: 'user', content: input.message },
-							],
-							historyOmitted:
-								boundedMessages(session.messages).length <
-								session.messages.length,
-						});
-						turn = {
-							session_id: sessionId,
-							message: input.message,
-							context,
-							complete: 0,
-						};
-						session.pending = { id: input.requestId, message: input.message };
-						d.exec('BEGIN IMMEDIATE');
-						try {
-							d.prepare(
-								`INSERT INTO ${config.namespace}_turns VALUES (?,?,?,?,0)`,
-							).run(input.requestId, sessionId, input.message, context);
-							d.prepare(
-								`UPDATE ${config.namespace}_sessions SET value=? WHERE id=?`,
-							).run(JSON.stringify(session), sessionId);
-							d.exec('COMMIT');
-						} catch (e) {
-							d.exec('ROLLBACK');
-							throw e;
-						}
-					}
-				} finally {
-					d.close();
+					await conversation.configure(agent, context);
+					if (!record.conversationId && session.messages.length)
+						await conversation.reset(handoff(session), context);
 				}
-				const raw = await generate(
+				turn = {
+					message: input.message,
+					content: snapshot ? '' : content,
+					status: 0,
+					snapshot: snapshot ? JSON.stringify(snapshot) : '',
+					submissionId: null,
+					legacy: false,
+				};
+				session.pending = { id: input.requestId, message: input.message };
+				await harness.commit(async (tx) => {
+					// Pi admits the submission and pending application state in the same commit.
+					if (conversation)
+						turn.submissionId = await conversation.submit(tx, {
+							type: 'input',
+							requestId: input.requestId,
+							content,
+						});
+					const state = await tx.doc(Study, sessionId, '');
+					state.session = JSON.stringify(session);
+					state.turns[input.requestId] = turn;
+					if (conversation) state.conversationId = conversation.id;
+				}, context);
+			}
+			let raw: string;
+			if (turn.legacy || generate) {
+				const data = turn.legacy
+					? JSON.parse(turn.content)
+					: JSON.parse(turn.content).data;
+				raw = await (
+					generate ??
+					((op, data, schema, id, options) =>
+						runAgent(op, data, schema, id, options.agent, options))
+				)(
 					config.operation,
-					JSON.parse(turn!.context),
+					data,
 					z.toJSONSchema(config.answerSchema),
 					`${config.namespace}-${input.requestId}`,
-					{
-						agent: config.agent,
-						onProgress: onProgress
-							? ({ text, reading }) => {
-									const partial = parseStreamingJson<{ reply?: unknown }>(
-										text
-											.replace(/^\s*```(?:json)?\s*/, '')
-											.replace(/\s*```\s*$/, ''),
-									);
-									const reply =
-										typeof partial?.reply === 'string'
-											? partial.reply.slice(0, 20000)
-											: '';
-									onProgress({
-										type: 'progress',
-										reply,
-										status: reading
-											? 'reading'
-											: reply
-												? 'writing'
-												: 'thinking',
-									});
-								}
-							: undefined,
-					},
+					{ agent: config.agent, onProgress: onAgentProgress },
 				);
-				let parsed: unknown;
-				try {
-					parsed = JSON.parse(
-						raw.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, ''),
-					);
-				} catch {
+			} else {
+				const snapshot = JSON.parse(turn.snapshot) as AgentSnapshot;
+				if (snapshot.agentId !== config.agent.id)
 					throw new StudyError(
-						502,
-						'The coach response could not be read. Retry this message.',
+						409,
+						'This request belongs to a different agent.',
 					);
+				const agent = configure(
+					snapshot,
+					config.agent,
+					`${config.namespace}-${requestId}`,
+				);
+				conversation ??= (await harness.conversation(
+					record.conversationId as ConversationId,
+					context,
+				))!;
+				await conversation.configure(agent, context);
+				const previous = await harness.submission(
+					turn.submissionId as SubmissionId,
+					context,
+				);
+				const status = await previous?.status(context);
+				if (status?.status === 'unanswered') {
+					// Pi owns recovery of work still placed/queued. A terminal failed run needs a
+					// new native continuation, without appending the student's message again.
+					await harness.commit(async (tx) => {
+						const id = await conversation!.submit(tx, {
+							type: 'continue',
+							requestId: `${input.requestId}-retry-${randomUUID()}`,
+						});
+						(await tx.doc(Study, sessionId, '')).turns[
+							input.requestId
+						].submissionId = id;
+						turn = { ...turn, submissionId: id };
+					}, context);
 				}
-				const answer = config.answerSchema.safeParse(parsed);
-				if (!answer.success)
-					throw new StudyError(
-						502,
-						'The coach response was incomplete. Retry this message.',
-					);
-				const now = new Date().toISOString();
-				session = {
-					...session,
-					title: session.messages.length
-						? session.title
-						: input.message.slice(0, 70),
-					learner: answer.data.learner,
-					messages: [
-						...session.messages,
-						{ role: 'user', content: input.message, createdAt: now },
-						{ role: 'assistant', content: answer.data.reply, createdAt: now },
-					],
-					updatedAt: now,
-					pending: null,
-				};
-				const save = db();
-				try {
-					save.exec('BEGIN IMMEDIATE');
-					try {
-						save
-							.prepare(
-								`UPDATE ${config.namespace}_sessions SET value=? WHERE id=?`,
-							)
-							.run(JSON.stringify(session), sessionId);
-						save
-							.prepare(
-								`UPDATE ${config.namespace}_turns SET complete=1 WHERE id=?`,
-							)
-							.run(input.requestId);
-						save.exec('COMMIT');
-					} catch (e) {
-						save.exec('ROLLBACK');
-						throw e;
-					}
-				} finally {
-					save.close();
-				}
-				return session;
-			},
-		);
+				raw = await readAgentResponse(
+					harness,
+					conversation,
+					turn.submissionId as SubmissionId,
+					snapshot.execution!.timeoutMs,
+					onAgentProgress,
+				);
+			}
+			let parsed: unknown;
+			try {
+				parsed = JSON.parse(
+					raw.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, ''),
+				);
+			} catch {
+				throw new StudyError(
+					502,
+					'The coach response could not be read. Retry this message.',
+				);
+			}
+			const answer = config.answerSchema.safeParse(parsed);
+			if (!answer.success)
+				throw new StudyError(
+					502,
+					'The coach response was incomplete. Retry this message.',
+				);
+			const now = new Date().toISOString();
+			session = {
+				...session,
+				title: session.messages.length
+					? session.title
+					: input.message.slice(0, 70),
+				learner: answer.data.learner,
+				messages: [
+					...session.messages,
+					{ role: 'user', content: input.message, createdAt: now },
+					{ role: 'assistant', content: answer.data.reply, createdAt: now },
+				],
+				updatedAt: now,
+				pending: null,
+			};
+			await harness.commit(async (tx) => {
+				const state = await tx.doc(Study, sessionId, '');
+				state.session = JSON.stringify(session);
+				state.turns[input.requestId].status = 1;
+				state.turns[input.requestId].snapshot = '';
+				state.turns[input.requestId].content = '';
+			}, context);
+			return session;
+		});
 	}
-
-	async function discardTurn(sessionId: string, requestId: string) {
+	async function discardTurn(
+		sessionId: string,
+		requestId: string,
+	): Promise<Session> {
 		validId(sessionId);
 		validId(requestId);
-		return locked(
-			`${config.namespace}-session:${dataDir()}:${sessionId}`,
-			async () => {
-				const session = getSession(sessionId);
-				if (session.pending?.id !== requestId) return session;
-				session.pending = null;
-				const d = db();
-				try {
-					d.exec('BEGIN IMMEDIATE');
-					try {
-						d.prepare(
-							`UPDATE ${config.namespace}_turns SET complete=-1 WHERE id=? AND session_id=?`,
-						).run(requestId, sessionId);
-						d.prepare(
-							`UPDATE ${config.namespace}_sessions SET value=? WHERE id=?`,
-						).run(JSON.stringify(session), sessionId);
-						d.exec('COMMIT');
-					} catch (e) {
-						d.exec('ROLLBACK');
-						throw e;
-					}
-				} finally {
-					d.close();
-				}
-				return session;
-			},
-		);
+		if (!(await readIndex()).sessions.includes(sessionId))
+			throw new StudyError(404, 'Conversation not found.');
+		return write(sessionId, async ({ harness, configure }) => {
+			const record = await recordFor(harness, sessionId);
+			const session = JSON.parse(record.session) as Session;
+			if (session.pending?.id !== requestId) return session;
+			const conversation = record.conversationId
+				? await harness.conversation(
+						record.conversationId as ConversationId,
+						context,
+					)
+				: undefined;
+			const pending = record.turns[requestId];
+			if (pending?.snapshot)
+				configure(
+					JSON.parse(pending.snapshot),
+					config.agent,
+					`${config.namespace}-${requestId}`,
+				);
+			await conversation?.abort(context);
+			session.pending = null;
+			await harness.commit(async (tx) => {
+				if (conversation)
+					await conversation.submit(tx, {
+						type: 'write',
+						entry: {
+							kind: 'pi.reset',
+							head: 'self',
+							model: [
+								{
+									role: 'user',
+									content: handoff(session),
+									timestamp: Date.now(),
+								},
+							],
+						},
+					});
+				const state = await tx.doc(Study, sessionId, '');
+				state.session = JSON.stringify(session);
+				state.turns[requestId].status = -1;
+			}, context);
+			return session;
+		});
 	}
-
-	return { createSession, listSessions, getSession, runTurn, discardTurn };
+	return {
+		createSession,
+		listSessions,
+		getSession,
+		runTurn,
+		discardTurn,
+		hasRequest,
+	};
 }

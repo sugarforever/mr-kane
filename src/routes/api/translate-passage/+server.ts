@@ -5,7 +5,11 @@ import {
 	passageOutput,
 	parsePassageTranslation,
 } from '$lib/reading';
-import { configured, runCoach, hasCoachRequest } from '$lib/server/agent';
+import {
+	configured,
+	runCoach,
+	hasCoachRequest,
+} from '$lib/server/language-agent';
 import { readInput } from '$lib/server/http';
 export async function POST({ request, url }) {
 	const input = passageInput.safeParse(await readInput(request, url));

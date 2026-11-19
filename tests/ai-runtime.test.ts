@@ -18,7 +18,7 @@ import {
 } from '../src/lib/server/providers-models';
 import { defaultProfile } from '../src/lib/domain';
 import { saveSearchSettings } from '../src/lib/server/research';
-import { runCoach, coachSources } from '../src/lib/server/agent';
+import { runCoach, coachSources } from '../src/lib/server/language-agent';
 import {
 	startLogin,
 	authStatus,

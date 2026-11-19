@@ -83,7 +83,7 @@ it.each([
 			);
 			return controller.signal;
 		});
-		const session = createMathSession();
+		const session = await createMathSession();
 		let settled = false;
 		const turn = runMathTurn(
 			session.id,
@@ -126,8 +126,8 @@ it.each([
 			);
 		} else {
 			expect(result.error).toBeTruthy();
-			expect(getMathSession(session.id).pending).not.toBeNull();
-			expect(getMathSession(session.id).messages).toHaveLength(0);
+			expect((await getMathSession(session.id)).pending).not.toBeNull();
+			expect((await getMathSession(session.id)).messages).toHaveLength(0);
 		}
 	},
 	10000,

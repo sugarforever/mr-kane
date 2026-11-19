@@ -5,10 +5,10 @@ import {
 	discardMathTurn,
 	MathStudyError,
 } from '$lib/server/math/study';
-export function GET({ request, url, params }) {
+export async function GET({ request, url, params }) {
 	recordingAccess(request, url);
 	try {
-		return json(getMathSession(params.id), {
+		return json(await getMathSession(params.id), {
 			headers: { 'Cache-Control': 'no-store' },
 		});
 	} catch (e) {

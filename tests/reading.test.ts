@@ -4,13 +4,13 @@ import {
 	translationInput,
 	readingSelection,
 } from '../src/lib/reading';
-vi.mock('../src/lib/server/agent', () => ({
+vi.mock('../src/lib/server/language-agent', () => ({
 	configured: vi.fn(() => true),
 	hasCoachRequest: vi.fn(() => false),
 	runCoach: vi.fn(async () => '{"english":"Good morning"}'),
 }));
 import { POST } from '../src/routes/api/translate/+server';
-import { configured, runCoach } from '../src/lib/server/agent';
+import { configured, runCoach } from '../src/lib/server/language-agent';
 beforeEach(() => vi.clearAllMocks());
 const url = new URL('http://localhost/api/translate');
 const request = (body: unknown, origin = url.origin) => ({

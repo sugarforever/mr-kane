@@ -1,6 +1,9 @@
+import { randomUUID } from 'node:crypto';
+import { runAgent, agentMetadata, type AgentOptions } from './agent';
+export { configured, hasAgentRequest as hasCoachRequest } from './agent';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { AgentDefinition } from './agent-runtime';
+import type { AgentDefinition } from './agent';
 import { createSpeechTools } from './speech/tools';
 import { requestSchema } from '#lib/domain';
 import { research } from './research';
@@ -44,5 +47,35 @@ export function languageAgent(speechTools = false): AgentDefinition {
 				metadata: { research: evidence },
 			};
 		},
+	};
+}
+
+export type CoachOptions = AgentOptions & {
+	agent?: AgentDefinition;
+	speechTools?: boolean;
+};
+export function runCoach(
+	operation: string,
+	data: unknown,
+	schema: unknown,
+	requestId: string = randomUUID(),
+	options: CoachOptions = {},
+) {
+	return runAgent(
+		operation,
+		data,
+		schema,
+		requestId,
+		options.agent ?? languageAgent(options.speechTools),
+		options,
+	);
+}
+export function coachSources(id: string) {
+	const evidence = agentMetadata(id, languageMetadata)?.research as
+		Awaited<ReturnType<typeof research>> | undefined;
+	return {
+		sources: evidence?.sources || [],
+		searchedAt: evidence?.searchedAt,
+		searchQuery: evidence?.query,
 	};
 }

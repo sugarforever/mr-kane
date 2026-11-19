@@ -15,3 +15,5 @@ export const listMathSessions = study.listSessions;
 export const getMathSession = study.getSession;
 export const runMathTurn = study.runTurn;
 export const discardMathTurn = study.discardTurn;
+
+export const hasMathRequest = study.hasRequest;

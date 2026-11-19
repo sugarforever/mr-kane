@@ -1,4 +1,4 @@
-import type { AgentDefinition } from '../agent-runtime';
+import type { AgentDefinition } from '../agent';
 import { modelFor } from '../providers-models';
 import { mathSystemPrompt, createMathTools } from './library';
 export const mathAgent: AgentDefinition = {

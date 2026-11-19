@@ -55,7 +55,7 @@ it('loads the requested module with working web source links and rejects paths o
 });
 it('retains learner background and conversation across turns and replays without another generation', async () => {
 	setup();
-	const session = createMathSession();
+	const session = await createMathSession();
 	const firstId = randomUUID();
 	let calls = 0;
 	const generate = async (_op: string, data: any) => {
@@ -63,7 +63,7 @@ it('retains learner background and conversation across turns and replays without
 		if (calls === 2) {
 			expect(data.learner.background).toBe('Grade 10');
 			expect(
-				data.messages.some((m: any) => m.content === 'I am in Grade 10.'),
+				data.messages.some((m: any) => m.content === 'What is a residue?'),
 			).toBe(true);
 		}
 		return JSON.stringify({ reply: 'Let us try residues modulo 5.', learner });
@@ -72,21 +72,21 @@ it('retains learner background and conversation across turns and replays without
 	await runMathTurn(session.id, firstId, 'I am in Grade 10.', generate);
 	expect(calls).toBe(1);
 	await runMathTurn(session.id, randomUUID(), 'What is a residue?', generate);
-	const saved = getMathSession(session.id);
+	const saved = await getMathSession(session.id);
 	expect(saved.learner).toEqual(learner);
 	expect(saved.messages.filter((m) => m.role === 'user')).toHaveLength(2);
 	expect(calls).toBe(2);
 });
 it('keeps failed turns retryable with original context and rejects conflicting follow-up turns', async () => {
 	setup();
-	const session = createMathSession();
+	const session = await createMathSession();
 	const id = randomUUID();
 	await expect(
 		runMathTurn(session.id, id, 'Help with algebra', async () => {
 			throw new Error('offline');
 		}),
 	).rejects.toThrow('offline');
-	expect(getMathSession(session.id).learner.background).toBe('');
+	expect((await getMathSession(session.id)).learner.background).toBe('');
 	await expect(
 		runMathTurn(session.id, randomUUID(), 'Another question', async () =>
 			JSON.stringify({ reply: 'ok', learner }),
@@ -96,7 +96,9 @@ it('keeps failed turns retryable with original context and rejects conflicting f
 		JSON.stringify({ reply: 'What have you tried?', learner }),
 	);
 	expect(
-		getMathSession(session.id).messages.filter((m) => m.role === 'user'),
+		(await getMathSession(session.id)).messages.filter(
+			(m) => m.role === 'user',
+		),
 	).toHaveLength(1);
 	await expect(
 		runMathTurn(session.id, id, 'Changed question', async () => ''),
@@ -142,13 +144,13 @@ it('returns a source page image only for models with vision and bounds image acc
 
 it('allows editing a failed turn without replaying its invalid cached answer', async () => {
 	setup();
-	const session = createMathSession();
+	const session = await createMathSession();
 	const id = randomUUID();
 	await expect(
 		runMathTurn(session.id, id, 'Teach me', async () => '{bad json'),
 	).rejects.toThrow();
 	await discardMathTurn(session.id, id);
-	expect(getMathSession(session.id).pending).toBeNull();
+	expect((await getMathSession(session.id)).pending).toBeNull();
 	await expect(
 		runMathTurn(session.id, id, 'Teach me', async () => ''),
 	).rejects.toThrow(/discarded/i);
@@ -156,13 +158,15 @@ it('allows editing a failed turn without replaying its invalid cached answer', a
 		JSON.stringify({ reply: 'Let us start with equations.', learner }),
 	);
 	expect(
-		getMathSession(session.id).messages.filter((m) => m.role === 'user'),
+		(await getMathSession(session.id)).messages.filter(
+			(m) => m.role === 'user',
+		),
 	).toHaveLength(1);
 });
 
 it('streams only the top-level reply across partial JSON, escapes and source lookup rounds', async () => {
 	setup();
-	const session = createMathSession();
+	const session = await createMathSession();
 	const progress: unknown[] = [];
 	await runMathTurn(
 		session.id,
@@ -192,7 +196,7 @@ it('streams only the top-level reply across partial JSON, escapes and source loo
 		{ type: 'progress', reply: '', status: 'reading' },
 		{ type: 'progress', reply: 'Line 1\n"Hi" π', status: 'writing' },
 	]);
-	expect(getMathSession(session.id).messages.at(-1)?.content).toBe(
+	expect((await getMathSession(session.id)).messages.at(-1)?.content).toBe(
 		'Line 1\n"Hi" π',
 	);
 });

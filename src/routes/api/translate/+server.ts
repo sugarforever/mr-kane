@@ -1,7 +1,11 @@
 import { json, error } from '@sveltejs/kit';
 import { z } from 'zod';
 import { translationInput, translationOutput } from '$lib/reading';
-import { configured, runCoach, hasCoachRequest } from '$lib/server/agent';
+import {
+	configured,
+	runCoach,
+	hasCoachRequest,
+} from '$lib/server/language-agent';
 import { readInput } from '$lib/server/http';
 export async function POST({ request, url }) {
 	const parsed = translationInput.safeParse(await readInput(request, url));

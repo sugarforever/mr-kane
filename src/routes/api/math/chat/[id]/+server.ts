@@ -1,13 +1,17 @@
 import { json, error } from '@sveltejs/kit';
 import { readInput } from '$lib/server/http';
 import { mathTurnSchema } from '$lib/math';
-import { runCoach, configured, hasCoachRequest } from '$lib/server/agent';
+import { configured } from '$lib/server/agent';
 import { studyResponse } from '$lib/server/learning/stream';
-import { runMathTurn, MathStudyError } from '$lib/server/math/study';
+import {
+	runMathTurn,
+	MathStudyError,
+	hasMathRequest,
+} from '$lib/server/math/study';
 export async function POST({ request, url, params }) {
 	const input = mathTurnSchema.safeParse(await readInput(request, url));
 	if (!input.success) error(400, input.error.issues[0].message);
-	if (!configured() && !hasCoachRequest(`math-${input.data.requestId}`))
+	if (!configured() && !(await hasMathRequest(input.data.requestId)))
 		error(503, 'Connect an AI provider to study Math.');
 	if (request.headers.get('accept')?.includes('application/x-ndjson')) {
 		return studyResponse(
@@ -16,7 +20,7 @@ export async function POST({ request, url, params }) {
 					params.id,
 					input.data.requestId,
 					input.data.message,
-					runCoach,
+					undefined,
 					progress,
 				),
 			(e) =>

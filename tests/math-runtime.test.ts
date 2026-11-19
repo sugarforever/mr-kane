@@ -5,11 +5,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import {
-	database,
 	saveConnection,
 	selectConnection,
 } from '../src/lib/server/providers-store';
-import { runCoach } from '../src/lib/server/agent';
 import type { MathProgress } from '../src/lib/math-stream';
 import { createMathSession, runMathTurn } from '../src/lib/server/math/study';
 let server: Server | undefined;
@@ -56,11 +54,14 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 		}
 		if (requests === 3) {
 			const input = JSON.parse(
-				parsed.messages.find((m: any) => m.role === 'user').content,
+				parsed.messages.filter((m: any) => m.role === 'user').at(-1).content,
 			);
 			expect(input.data.learner.background).toBe('Grade 10');
 			expect(
-				input.data.messages.some((m: any) => m.content === 'I am in Grade 10'),
+				parsed.messages.some(
+					(m: any) =>
+						m.role === 'user' && m.content.includes('I am in Grade 10'),
+				),
 			).toBe(true);
 		}
 		const delta =
@@ -114,51 +115,20 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 		'fixture-key',
 	);
 	selectConnection(connection.id);
-	const session = createMathSession();
+	const session = await createMathSession();
 	const id = randomUUID();
 	const progress: MathProgress[] = [];
 	const first = await runMathTurn(
 		session.id,
 		id,
 		'I am in Grade 10',
-		runCoach,
+		undefined,
 		(event) => progress.push(event),
 	);
 	expect(progress.some((event) => event.status === 'reading')).toBe(true);
 	expect(progress.every((event) => !event.reply.includes('read-1'))).toBe(true);
 	expect(first.learner.background).toBe('Grade 10');
 	expect(first.messages.at(-1)?.content).toContain('remainder');
-	// Simulate a job written before generic execution settings/identity were stored.
-	const db = database();
-	try {
-		const row = db
-			.prepare('SELECT snapshot FROM jobs WHERE id=?')
-			.get(`math-${id}`) as { snapshot: string };
-		const legacy = JSON.parse(row.snapshot);
-		delete legacy.agentId;
-		delete legacy.execution;
-		legacy.coach = 'math';
-		db.prepare('UPDATE jobs SET snapshot=? WHERE id=?').run(
-			JSON.stringify(legacy),
-			`math-${id}`,
-		);
-	} finally {
-		db.close();
-	}
-	// Bypass the completed session shortcut to check actual durable agent replay.
-	await runCoach(
-		'math-chat',
-		{
-			learner: session.learner,
-			messages: [{ role: 'user', content: 'I am in Grade 10' }],
-			historyOmitted: false,
-		},
-		(await import('zod')).z.toJSONSchema(
-			(await import('../src/lib/math')).mathAnswerSchema,
-		),
-		`math-${id}`,
-		{ agent: (await import('../src/lib/server/math/agent')).mathAgent },
-	);
 	await runMathTurn(session.id, id, 'I am in Grade 10');
 	expect(requests).toBe(2);
 	await runMathTurn(session.id, randomUUID(), 'I think it is 2');

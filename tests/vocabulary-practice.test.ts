@@ -1,13 +1,13 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 import { defaultProfile, requestSchema } from '../src/lib/domain';
-vi.mock('../src/lib/server/agent', () => ({
+vi.mock('../src/lib/server/language-agent', () => ({
 	configured: vi.fn(() => true),
 	hasCoachRequest: vi.fn(() => false),
 	coachSources: vi.fn(() => ({ sources: [] })),
 	runCoach: vi.fn(),
 }));
 import { POST } from '../src/routes/api/practice/+server';
-import { configured, runCoach } from '../src/lib/server/agent';
+import { configured, runCoach } from '../src/lib/server/language-agent';
 const url = new URL('http://localhost/api/practice');
 const input = {
 	profile: defaultProfile,

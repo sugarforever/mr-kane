@@ -36,8 +36,8 @@ it('reuses durable turns for another learner schema and isolates subjects while 
 	dir = mkdtempSync(join(tmpdir(), 'learning-session-'));
 	vi.stubEnv('MR_KANE_DATA_DIR', dir);
 	const history = makeStudy();
-	const session = history.createSession();
-	const math = createMathSession();
+	const session = await history.createSession();
+	const math = await createMathSession();
 	const id = randomUUID();
 	let context: unknown;
 	await expect(
@@ -49,8 +49,8 @@ it('reuses durable turns for another learner schema and isolates subjects while 
 			});
 		}),
 	).rejects.toThrow(/incomplete/);
-	expect(history.getSession(session.id).messages).toEqual([]);
-	expect(history.getSession(session.id).pending?.id).toBe(id);
+	expect((await history.getSession(session.id)).messages).toEqual([]);
+	expect((await history.getSession(session.id)).pending?.id).toBe(id);
 	await expect(
 		history.runTurn(session.id, randomUUID(), 'Next', async () => ''),
 	).rejects.toThrow(/pending/);
@@ -85,10 +85,10 @@ it('reuses durable turns for another learner schema and isolates subjects while 
 	await history.runTurn(session.id, id, 'Roman history', async () => {
 		throw new Error('must not regenerate');
 	});
-	expect(makeStudy().getSession(session.id)).toEqual(saved);
-	expect(history.listSessions()).toHaveLength(1);
-	expect(getMathSession(math.id).messages).toEqual([]);
-	expect(() => history.getSession(math.id)).toThrow(/not found/);
+	expect(await makeStudy().getSession(session.id)).toEqual(saved);
+	expect(await history.listSessions()).toHaveLength(1);
+	expect((await getMathSession(math.id)).messages).toEqual([]);
+	await expect(history.getSession(math.id)).rejects.toThrow(/not found/);
 	const discarded = randomUUID();
 	await expect(
 		history.runTurn(session.id, discarded, 'Next', async () => {
@@ -99,5 +99,5 @@ it('reuses durable turns for another learner schema and isolates subjects while 
 	await expect(
 		history.runTurn(session.id, discarded, 'Next', async () => ''),
 	).rejects.toThrow(/discarded/);
-	expect(history.getSession(session.id).pending).toBeNull();
+	expect((await history.getSession(session.id)).pending).toBeNull();
 });

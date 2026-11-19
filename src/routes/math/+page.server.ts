@@ -8,13 +8,13 @@ import {
 } from '$lib/server/math/study';
 import { error } from '@sveltejs/kit';
 export async function load({ url }) {
-	const sessions = listMathSessions();
+	const sessions = await listMathSessions();
 	const id = url.searchParams.get('session') || sessions[0]?.id;
 	try {
 		return {
 			sessions,
 			irmo: await irmoBrowse(),
-			session: id ? getMathSession(id) : null,
+			session: id ? await getMathSession(id) : null,
 			aiConfigured: configured(),
 			aiSettings: publicSettings(),
 		};

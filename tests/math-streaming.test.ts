@@ -76,7 +76,7 @@ async function setup(suffix?: string) {
 		'fixture-key',
 	);
 	selectConnection(connection.id);
-	const session = createMathSession();
+	const session = await createMathSession();
 	const turn = { requestId: randomUUID(), message: 'Help me factor' };
 	async function post(stream = true) {
 		const url = new URL(`http://localhost/api/math/chat/${session.id}`);
@@ -130,13 +130,13 @@ it('delivers partial reply before generation finishes, then saves once and suppo
 		);
 		expect(progress.reply).toBe('Try $x');
 		expect(progress).not.toHaveProperty('learner');
-		expect(getMathSession(session.id).messages).toHaveLength(0);
+		expect((await getMathSession(session.id)).messages).toHaveLength(0);
 		release!();
 		const complete = await until(reader, (e) => e.type === 'complete');
 		expect(complete.session.messages.at(-1).content).toBe(
 			'Try $x^2$\nNext step: "factor".',
 		);
-		expect(getMathSession(session.id)).toEqual(complete.session);
+		expect(await getMathSession(session.id)).toEqual(complete.session);
 		expect(complete.session.pending).toBeNull();
 		const replay = await (await post(false)).json();
 		expect(replay.messages).toHaveLength(2);
@@ -155,8 +155,8 @@ it('reports invalid completion as a stream error and keeps the turn retryable', 
 		release!();
 		const failure = await until(reader, (e) => e.type === 'error');
 		expect(failure.message).toMatch(/incomplete|retry/i);
-		expect(getMathSession(session.id).pending).not.toBeNull();
-		expect(getMathSession(session.id).messages).toHaveLength(0);
+		expect((await getMathSession(session.id)).pending).not.toBeNull();
+		expect((await getMathSession(session.id)).messages).toHaveLength(0);
 	} finally {
 		release!();
 		await reader.cancel();
@@ -169,8 +169,8 @@ it('continues saving after a streaming client disconnects', async () => {
 	await until(reader, (e) => e.type === 'progress' && e.reply);
 	await reader.cancel();
 	release!();
-	await vi.waitFor(() =>
-		expect(getMathSession(session.id).messages).toHaveLength(2),
+	await vi.waitFor(async () =>
+		expect((await getMathSession(session.id)).messages).toHaveLength(2),
 	);
 	const replay = await (await post(false)).json();
 	expect(replay.pending).toBeNull();

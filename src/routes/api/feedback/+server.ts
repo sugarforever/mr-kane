@@ -1,7 +1,11 @@
 import { json, error } from '@sveltejs/kit';
 import { z } from 'zod';
 import { practiceSchema, feedbackSchema, parseFeedback } from '#lib/domain';
-import { configured, runCoach, hasCoachRequest } from '#lib/server/agent';
+import {
+	configured,
+	runCoach,
+	hasCoachRequest,
+} from '#lib/server/language-agent';
 import { readInput } from '#lib/server/http';
 const inputSchema = z.object({
 	practice: practiceSchema,

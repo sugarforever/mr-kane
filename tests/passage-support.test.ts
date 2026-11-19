@@ -5,13 +5,13 @@ import {
 	createPassageSpeech,
 	speechChunks,
 } from '../src/lib/client/passage-speech';
-vi.mock('../src/lib/server/agent', () => ({
+vi.mock('../src/lib/server/language-agent', () => ({
 	configured: vi.fn(() => true),
 	hasCoachRequest: vi.fn(() => false),
 	runCoach: vi.fn(async () => '{"paragraphs":["Hello","Goodbye"]}'),
 }));
 import { POST } from '../src/routes/api/translate-passage/+server';
-import { configured, runCoach } from '../src/lib/server/agent';
+import { configured, runCoach } from '../src/lib/server/language-agent';
 const url = new URL('http://localhost/api/translate-passage');
 function request(body: unknown, origin = url.origin) {
 	return {

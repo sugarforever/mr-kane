@@ -5,10 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { z } from 'zod';
 import { defineTool } from '@earendil-works/pi-durable';
-import {
-	runAgent,
-	type AgentDefinition,
-} from '../src/lib/server/agent-runtime';
+import type { AgentDefinition } from '../src/lib/server/agent';
 import {
 	saveConnection,
 	selectConnection,
@@ -67,10 +64,39 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 		expect(input.tools.map((t: any) => t.function.name)).toEqual([
 			'archive_read',
 		]);
+		if (calls === 3) {
+			const users = input.messages.filter((m: any) => m.role === 'user');
+			expect(users).toHaveLength(2);
+			expect(users[0].content).toContain('Teach me Rome');
+			expect(
+				input.messages.some(
+					(m: any) =>
+						m.role === 'assistant' &&
+						m.content?.includes('Consider the Roman republic.'),
+				),
+			).toBe(true);
+			const current = JSON.parse(users[1].content);
+			expect(current.data.messages).toEqual([
+				{ role: 'user', content: 'What changed next?' },
+			]);
+			expect(current.data.learner).toEqual({ era: 'Roman' });
+		}
 		if (calls === 2)
 			expect(
 				input.messages.find((m: any) => m.role === 'tool').content,
 			).toContain('509 BCE');
+		if (calls === 5) {
+			expect(
+				input.messages.some((m: any) => m.content?.includes('private invalid')),
+			).toBe(false);
+			expect(
+				input.messages.some(
+					(m: any) =>
+						m.role === 'user' &&
+						m.content.includes('Consider the Roman republic.'),
+				),
+			).toBe(true);
+		}
 		const delta =
 			calls === 1
 				? {
@@ -87,7 +113,9 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 				: {
 						role: 'assistant',
 						content:
-							'{"reply":"Consider the Roman republic.","learner":{"era":"Roman"}}',
+							calls === 4
+								? '{"reply":"private invalid","learner":{}}'
+								: '{"reply":"Consider the Roman republic.","learner":{"era":"Roman"}}',
 					};
 		const chunk = (delta: unknown, finish_reason: string | null) =>
 			JSON.stringify({
@@ -127,10 +155,12 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 			learner: z.object({ era: z.string() }),
 		}),
 	});
-	const session = study.createSession();
+	const session = await study.createSession();
 	const requestId = randomUUID();
 	const progress: string[] = [];
-	const result = await readStudyStream<ReturnType<typeof study.getSession>>(
+	const result = await readStudyStream<
+		Awaited<ReturnType<typeof study.getSession>>
+	>(
 		studyResponse(
 			(onProgress) =>
 				study.runTurn(
@@ -152,35 +182,35 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 		),
 	).toBe(true);
 	expect(toolCalls).toBe(1);
-	// Re-enter the runtime directly to exercise its durable job replay, beyond session replay.
+	await study.runTurn(session.id, requestId, 'Teach me Rome');
+	expect(calls).toBe(2);
+	await study.runTurn(session.id, randomUUID(), 'What changed next?');
+	expect(calls).toBe(3);
+	const failedId = randomUUID();
+	await expect(
+		study.runTurn(session.id, failedId, 'An invalid response'),
+	).rejects.toThrow(/incomplete/);
+	const beforeDiscard = await study.getSession(session.id);
+	expect(beforeDiscard.messages).toHaveLength(4);
+	expect(beforeDiscard.learner).toEqual({ era: 'Roman' });
+	await expect(
+		study.runTurn(session.id, failedId, 'An invalid response'),
+	).rejects.toThrow(/incomplete/);
+	expect(calls).toBe(4);
+	await study.discardTurn(session.id, failedId);
+	await study.runTurn(session.id, randomUUID(), 'Try a new question');
+	expect(calls).toBe(5);
 	const db = database();
-	let original: any;
 	try {
-		original = JSON.parse(
-			(
-				db
-					.prepare('SELECT snapshot FROM jobs WHERE id=?')
-					.get(`history-${requestId}`) as { snapshot: string }
-			).snapshot,
-		);
+		expect(
+			db
+				.prepare(
+					"SELECT name FROM sqlite_master WHERE name IN ('history_sessions','history_turns')",
+				)
+				.all(),
+		).toEqual([]);
+		expect(db.prepare('SELECT id FROM jobs').all()).toEqual([]);
 	} finally {
 		db.close();
 	}
-	await runAgent(
-		'history-chat',
-		JSON.parse(original.content).data,
-		JSON.parse(original.content).outputSchema,
-		`history-${requestId}`,
-		definition,
-	);
-	expect(calls).toBe(2);
-	await expect(
-		runAgent(
-			'history-chat',
-			JSON.parse(original.content).data,
-			JSON.parse(original.content).outputSchema,
-			`history-${requestId}`,
-			{ ...definition, id: 'science-v1' },
-		),
-	).rejects.toThrow(/different/);
 });
