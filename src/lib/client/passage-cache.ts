@@ -1,5 +1,6 @@
 import { parsePassageTranslation } from '$lib/reading';
-const key = 'mr-kane-passage-translations';
+// Version the cache when translation instructions change so old wording is regenerated.
+const key = 'mr-kane-passage-translations-v2';
 type Entry = { text: string; language: 'ga' | 'es'; paragraphs: string[] };
 type Store = Pick<Storage, 'getItem' | 'setItem'>;
 function entries(store: Store): Entry[] {
