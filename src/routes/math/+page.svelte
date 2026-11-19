@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Brand from '$lib/Brand.svelte';
 	import { onMount, onDestroy, tick, untrack } from 'svelte';
 	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
 	import { goto } from '$app/navigation';
@@ -254,11 +255,7 @@
 >
 <div class="math-shell">
 	<aside class="math-sidebar">
-		<a class="math-brand" href="/"
-			><span class="math-monogram">k·</span><span
-				>mr. kane<small>YOUR LEARNING COMPANION</small></span
-			></a
-		>
+		<Brand companion="Your learning companion" />
 		<Button variant="ghost" href="/" class="justify-start"
 			><ArrowLeft class="size-4" /> Learning space</Button
 		>
@@ -573,26 +570,6 @@
 		top: 0;
 		height: 100dvh;
 	}
-	.math-brand {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		text-decoration: none;
-		font-size: 24px;
-		font-weight: 700;
-		margin-bottom: 12px;
-	}
-	.math-monogram {
-		font-family: Georgia, serif;
-		font-size: 42px;
-	}
-	.math-brand small {
-		display: block;
-		font-size: 8px;
-		letter-spacing: 1.4px;
-		color: var(--muted-foreground);
-		margin-top: 2px;
-	}
 	.math-current {
 		display: flex;
 		align-items: center;
@@ -656,7 +633,7 @@
 		padding: 22px 8px 0;
 	}
 	.sidebar-footer p {
-		font-family: Georgia, serif;
+		font-family: var(--font-heading);
 		font-size: 17px;
 		line-height: 1.5;
 	}
@@ -678,7 +655,7 @@
 		border-bottom: 1px solid var(--border);
 	}
 	.math-header h1 {
-		font-family: Georgia, serif;
+		font-family: var(--font-heading);
 		font-size: 28px;
 		margin: 2px 0;
 	}
@@ -734,7 +711,7 @@
 		margin: 0 auto 24px;
 	}
 	.math-welcome h2 {
-		font-family: Georgia, serif;
+		font-family: var(--font-heading);
 		font-size: clamp(36px, 4vw, 52px);
 		line-height: 1.12;
 		font-weight: 400;
@@ -835,7 +812,7 @@
 	.math-prose :global(h1),
 	.math-prose :global(h2),
 	.math-prose :global(h3) {
-		font-family: Georgia, serif;
+		font-family: var(--font-heading);
 		line-height: 1.35;
 		margin: 22px 0 10px;
 	}
@@ -934,7 +911,7 @@
 		margin-bottom: 35px;
 	}
 	.learner-empty span {
-		font-family: Georgia, serif;
+		font-family: var(--font-heading);
 		font-size: 18px;
 		color: var(--learner-empty-span-foreground);
 	}
@@ -1044,14 +1021,6 @@
 			border-right: 0;
 			border-bottom: 1px solid var(--border);
 		}
-		.math-brand {
-			font-size: 18px;
-			margin: 0 auto 0 0;
-		}
-		.math-monogram {
-			font-size: 30px;
-		}
-		.math-brand small,
 		.math-current,
 		.sidebar-label,
 		.sidebar-footer {
