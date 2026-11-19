@@ -1,0 +1,846 @@
+{
+  "collectedOn": "2026-11-19",
+  "source": {
+    "title": "The Irish Mathematical Olympiads Compendium 1988\u20132026",
+    "author": "Mark Dukes, University College Dublin",
+    "url": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf",
+    "archive": "https://maths.ucd.ie/~dukes/irmo.html"
+  },
+  "sourceSha256": "ae5ea53496521884e19064861a7f0421b1e4833a75451d87eed729420b74fe0a",
+  "sourcePageCount": 90,
+  "reuseStatus": "No explicit licence or blanket redistribution permission found; see collection-audit.md.",
+  "coverage": {
+    "round2Years": [
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "round2Papers": 30,
+    "round2Questions": 150,
+    "predecessorYears": [
+      2011
+    ],
+    "predecessorPapers": 2,
+    "predecessorQuestions": 10,
+    "missingWithinRound2Interval": [],
+    "notCollected": [
+      2027
+    ],
+    "earlierFinals": "1988\u20132010 source-linked, not transcribed"
+  },
+  "papers": [
+    {
+      "id": "IRMO-2011-P1",
+      "year": 2011,
+      "paper": 1,
+      "stage": "predecessor-final",
+      "date": "7 May 2011",
+      "questionIds": [
+        "IRMO-2011-P1-Q1",
+        "IRMO-2011-P1-Q2",
+        "IRMO-2011-P1-Q3",
+        "IRMO-2011-P1-Q4",
+        "IRMO-2011-P1-Q5"
+      ],
+      "pdfPage": 54,
+      "printedPage": 50,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=54"
+    },
+    {
+      "id": "IRMO-2011-P2",
+      "year": 2011,
+      "paper": 2,
+      "stage": "predecessor-final",
+      "date": "7 May 2011",
+      "questionIds": [
+        "IRMO-2011-P2-Q6",
+        "IRMO-2011-P2-Q7",
+        "IRMO-2011-P2-Q8",
+        "IRMO-2011-P2-Q9",
+        "IRMO-2011-P2-Q10"
+      ],
+      "pdfPage": 55,
+      "printedPage": 51,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=55"
+    },
+    {
+      "id": "IRMO-2012-P1",
+      "year": 2012,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "12 May 2012",
+      "questionIds": [
+        "IRMO-2012-P1-Q1",
+        "IRMO-2012-P1-Q2",
+        "IRMO-2012-P1-Q3",
+        "IRMO-2012-P1-Q4",
+        "IRMO-2012-P1-Q5"
+      ],
+      "pdfPage": 56,
+      "printedPage": 52,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=56"
+    },
+    {
+      "id": "IRMO-2012-P2",
+      "year": 2012,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "12 May 2012",
+      "questionIds": [
+        "IRMO-2012-P2-Q6",
+        "IRMO-2012-P2-Q7",
+        "IRMO-2012-P2-Q8",
+        "IRMO-2012-P2-Q9",
+        "IRMO-2012-P2-Q10"
+      ],
+      "pdfPage": 57,
+      "printedPage": 53,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=57"
+    },
+    {
+      "id": "IRMO-2013-P1",
+      "year": 2013,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "11 May 2013",
+      "questionIds": [
+        "IRMO-2013-P1-Q1",
+        "IRMO-2013-P1-Q2",
+        "IRMO-2013-P1-Q3",
+        "IRMO-2013-P1-Q4",
+        "IRMO-2013-P1-Q5"
+      ],
+      "pdfPage": 58,
+      "printedPage": 54,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=58"
+    },
+    {
+      "id": "IRMO-2013-P2",
+      "year": 2013,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "11 May 2013",
+      "questionIds": [
+        "IRMO-2013-P2-Q6",
+        "IRMO-2013-P2-Q7",
+        "IRMO-2013-P2-Q8",
+        "IRMO-2013-P2-Q9",
+        "IRMO-2013-P2-Q10"
+      ],
+      "pdfPage": 59,
+      "printedPage": 55,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=59"
+    },
+    {
+      "id": "IRMO-2014-P1",
+      "year": 2014,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "10 May 2014",
+      "questionIds": [
+        "IRMO-2014-P1-Q1",
+        "IRMO-2014-P1-Q2",
+        "IRMO-2014-P1-Q3",
+        "IRMO-2014-P1-Q4",
+        "IRMO-2014-P1-Q5"
+      ],
+      "pdfPage": 60,
+      "printedPage": 56,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=60"
+    },
+    {
+      "id": "IRMO-2014-P2",
+      "year": 2014,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "10 May 2014",
+      "questionIds": [
+        "IRMO-2014-P2-Q6",
+        "IRMO-2014-P2-Q7",
+        "IRMO-2014-P2-Q8",
+        "IRMO-2014-P2-Q9",
+        "IRMO-2014-P2-Q10"
+      ],
+      "pdfPage": 61,
+      "printedPage": 57,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=61"
+    },
+    {
+      "id": "IRMO-2015-P1",
+      "year": 2015,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "25 April 2015",
+      "questionIds": [
+        "IRMO-2015-P1-Q1",
+        "IRMO-2015-P1-Q2",
+        "IRMO-2015-P1-Q3",
+        "IRMO-2015-P1-Q4",
+        "IRMO-2015-P1-Q5"
+      ],
+      "pdfPage": 62,
+      "printedPage": 58,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=62"
+    },
+    {
+      "id": "IRMO-2015-P2",
+      "year": 2015,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "25 April 2015",
+      "questionIds": [
+        "IRMO-2015-P2-Q6",
+        "IRMO-2015-P2-Q7",
+        "IRMO-2015-P2-Q8",
+        "IRMO-2015-P2-Q9",
+        "IRMO-2015-P2-Q10"
+      ],
+      "pdfPage": 63,
+      "printedPage": 59,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=63"
+    },
+    {
+      "id": "IRMO-2016-P1",
+      "year": 2016,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "26 April 2016",
+      "questionIds": [
+        "IRMO-2016-P1-Q1",
+        "IRMO-2016-P1-Q2",
+        "IRMO-2016-P1-Q3",
+        "IRMO-2016-P1-Q4",
+        "IRMO-2016-P1-Q5"
+      ],
+      "pdfPage": 64,
+      "printedPage": 60,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=64"
+    },
+    {
+      "id": "IRMO-2016-P2",
+      "year": 2016,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "26 April 2016",
+      "questionIds": [
+        "IRMO-2016-P2-Q6",
+        "IRMO-2016-P2-Q7",
+        "IRMO-2016-P2-Q8",
+        "IRMO-2016-P2-Q9",
+        "IRMO-2016-P2-Q10"
+      ],
+      "pdfPage": 65,
+      "printedPage": 61,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=65"
+    },
+    {
+      "id": "IRMO-2017-P1",
+      "year": 2017,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "6 May 2017",
+      "questionIds": [
+        "IRMO-2017-P1-Q1",
+        "IRMO-2017-P1-Q2",
+        "IRMO-2017-P1-Q3",
+        "IRMO-2017-P1-Q4",
+        "IRMO-2017-P1-Q5"
+      ],
+      "pdfPage": 66,
+      "printedPage": 62,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=66"
+    },
+    {
+      "id": "IRMO-2017-P2",
+      "year": 2017,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "6 May 2017",
+      "questionIds": [
+        "IRMO-2017-P2-Q6",
+        "IRMO-2017-P2-Q7",
+        "IRMO-2017-P2-Q8",
+        "IRMO-2017-P2-Q9",
+        "IRMO-2017-P2-Q10"
+      ],
+      "pdfPage": 67,
+      "printedPage": 63,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=67"
+    },
+    {
+      "id": "IRMO-2018-P1",
+      "year": 2018,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "12 May 2018",
+      "questionIds": [
+        "IRMO-2018-P1-Q1",
+        "IRMO-2018-P1-Q2",
+        "IRMO-2018-P1-Q3",
+        "IRMO-2018-P1-Q4",
+        "IRMO-2018-P1-Q5"
+      ],
+      "pdfPage": 68,
+      "printedPage": 64,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=68"
+    },
+    {
+      "id": "IRMO-2018-P2",
+      "year": 2018,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "12 May 2018",
+      "questionIds": [
+        "IRMO-2018-P2-Q6",
+        "IRMO-2018-P2-Q7",
+        "IRMO-2018-P2-Q8",
+        "IRMO-2018-P2-Q9",
+        "IRMO-2018-P2-Q10"
+      ],
+      "pdfPage": 69,
+      "printedPage": 65,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=69"
+    },
+    {
+      "id": "IRMO-2019-P1",
+      "year": 2019,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "11 May 2019",
+      "questionIds": [
+        "IRMO-2019-P1-Q1",
+        "IRMO-2019-P1-Q2",
+        "IRMO-2019-P1-Q3",
+        "IRMO-2019-P1-Q4",
+        "IRMO-2019-P1-Q5"
+      ],
+      "pdfPage": 70,
+      "printedPage": 66,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=70"
+    },
+    {
+      "id": "IRMO-2019-P2",
+      "year": 2019,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "11 May 2019",
+      "questionIds": [
+        "IRMO-2019-P2-Q6",
+        "IRMO-2019-P2-Q7",
+        "IRMO-2019-P2-Q8",
+        "IRMO-2019-P2-Q9",
+        "IRMO-2019-P2-Q10"
+      ],
+      "pdfPage": 71,
+      "printedPage": 67,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=71"
+    },
+    {
+      "id": "IRMO-2020-P1",
+      "year": 2020,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "18 July 2020",
+      "questionIds": [
+        "IRMO-2020-P1-Q1",
+        "IRMO-2020-P1-Q2",
+        "IRMO-2020-P1-Q3",
+        "IRMO-2020-P1-Q4",
+        "IRMO-2020-P1-Q5"
+      ],
+      "pdfPage": 72,
+      "printedPage": 68,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=72"
+    },
+    {
+      "id": "IRMO-2020-P2",
+      "year": 2020,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "18 July 2020",
+      "questionIds": [
+        "IRMO-2020-P2-Q6",
+        "IRMO-2020-P2-Q7",
+        "IRMO-2020-P2-Q8",
+        "IRMO-2020-P2-Q9",
+        "IRMO-2020-P2-Q10"
+      ],
+      "pdfPage": 73,
+      "printedPage": 69,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=73"
+    },
+    {
+      "id": "IRMO-2021-P1",
+      "year": 2021,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "8 May 2021",
+      "questionIds": [
+        "IRMO-2021-P1-Q1",
+        "IRMO-2021-P1-Q2",
+        "IRMO-2021-P1-Q3",
+        "IRMO-2021-P1-Q4",
+        "IRMO-2021-P1-Q5"
+      ],
+      "pdfPage": 74,
+      "printedPage": 70,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=74"
+    },
+    {
+      "id": "IRMO-2021-P2",
+      "year": 2021,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "8 May 2021",
+      "questionIds": [
+        "IRMO-2021-P2-Q6",
+        "IRMO-2021-P2-Q7",
+        "IRMO-2021-P2-Q8",
+        "IRMO-2021-P2-Q9",
+        "IRMO-2021-P2-Q10"
+      ],
+      "pdfPage": 75,
+      "printedPage": 71,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=75"
+    },
+    {
+      "id": "IRMO-2022-P1",
+      "year": 2022,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "7 May 2022",
+      "questionIds": [
+        "IRMO-2022-P1-Q1",
+        "IRMO-2022-P1-Q2",
+        "IRMO-2022-P1-Q3",
+        "IRMO-2022-P1-Q4",
+        "IRMO-2022-P1-Q5"
+      ],
+      "pdfPage": 76,
+      "printedPage": 72,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=76"
+    },
+    {
+      "id": "IRMO-2022-P2",
+      "year": 2022,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "7 May 2022",
+      "questionIds": [
+        "IRMO-2022-P2-Q6",
+        "IRMO-2022-P2-Q7",
+        "IRMO-2022-P2-Q8",
+        "IRMO-2022-P2-Q9",
+        "IRMO-2022-P2-Q10"
+      ],
+      "pdfPage": 77,
+      "printedPage": 73,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=77"
+    },
+    {
+      "id": "IRMO-2023-P1",
+      "year": 2023,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "6 May 2023",
+      "questionIds": [
+        "IRMO-2023-P1-Q1",
+        "IRMO-2023-P1-Q2",
+        "IRMO-2023-P1-Q3",
+        "IRMO-2023-P1-Q4",
+        "IRMO-2023-P1-Q5"
+      ],
+      "pdfPage": 78,
+      "printedPage": 74,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=78"
+    },
+    {
+      "id": "IRMO-2023-P2",
+      "year": 2023,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "6 May 2023",
+      "questionIds": [
+        "IRMO-2023-P2-Q6",
+        "IRMO-2023-P2-Q7",
+        "IRMO-2023-P2-Q8",
+        "IRMO-2023-P2-Q9",
+        "IRMO-2023-P2-Q10"
+      ],
+      "pdfPage": 79,
+      "printedPage": 75,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=79"
+    },
+    {
+      "id": "IRMO-2024-P1",
+      "year": 2024,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "27 January 2024",
+      "questionIds": [
+        "IRMO-2024-P1-Q1",
+        "IRMO-2024-P1-Q2",
+        "IRMO-2024-P1-Q3",
+        "IRMO-2024-P1-Q4",
+        "IRMO-2024-P1-Q5"
+      ],
+      "pdfPage": 80,
+      "printedPage": 76,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=80"
+    },
+    {
+      "id": "IRMO-2024-P2",
+      "year": 2024,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "27 January 2024",
+      "questionIds": [
+        "IRMO-2024-P2-Q6",
+        "IRMO-2024-P2-Q7",
+        "IRMO-2024-P2-Q8",
+        "IRMO-2024-P2-Q9",
+        "IRMO-2024-P2-Q10"
+      ],
+      "pdfPage": 81,
+      "printedPage": 77,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=81"
+    },
+    {
+      "id": "IRMO-2025-P1",
+      "year": 2025,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "25 January 2025",
+      "questionIds": [
+        "IRMO-2025-P1-Q1",
+        "IRMO-2025-P1-Q2",
+        "IRMO-2025-P1-Q3",
+        "IRMO-2025-P1-Q4",
+        "IRMO-2025-P1-Q5"
+      ],
+      "pdfPage": 82,
+      "printedPage": 78,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=82"
+    },
+    {
+      "id": "IRMO-2025-P2",
+      "year": 2025,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "25 January 2025",
+      "questionIds": [
+        "IRMO-2025-P2-Q6",
+        "IRMO-2025-P2-Q7",
+        "IRMO-2025-P2-Q8",
+        "IRMO-2025-P2-Q9",
+        "IRMO-2025-P2-Q10"
+      ],
+      "pdfPage": 83,
+      "printedPage": 79,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=83"
+    },
+    {
+      "id": "IRMO-2026-P1",
+      "year": 2026,
+      "paper": 1,
+      "stage": "round-2",
+      "date": "24 January 2026",
+      "questionIds": [
+        "IRMO-2026-P1-Q1",
+        "IRMO-2026-P1-Q2",
+        "IRMO-2026-P1-Q3",
+        "IRMO-2026-P1-Q4",
+        "IRMO-2026-P1-Q5"
+      ],
+      "pdfPage": 84,
+      "printedPage": 80,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=84"
+    },
+    {
+      "id": "IRMO-2026-P2",
+      "year": 2026,
+      "paper": 2,
+      "stage": "round-2",
+      "date": "24 January 2026",
+      "questionIds": [
+        "IRMO-2026-P2-Q6",
+        "IRMO-2026-P2-Q7",
+        "IRMO-2026-P2-Q8",
+        "IRMO-2026-P2-Q9",
+        "IRMO-2026-P2-Q10"
+      ],
+      "pdfPage": 85,
+      "printedPage": 81,
+      "source": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=85"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/irmo/sources/ucd-archive.html",
+      "sha256": "c00c0e3c2bdfb556cc699bb4545a4b229026e4f5e73f6135517a26506a2b9b81",
+      "bytes": 1216
+    },
+    {
+      "path": "docs/irmo/sources/ucd-compendium-1988-2026.pdf",
+      "sha256": "ae5ea53496521884e19064861a7f0421b1e4833a75451d87eed729420b74fe0a",
+      "bytes": 511739
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-54.png",
+      "sha256": "cf2539d6f5bbc5824c133fcd605da274973baa220e7c99b1ba73d947b0893e12",
+      "bytes": 233310
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-55.png",
+      "sha256": "9bef52002a59ef2295a66a7b5b102644bfd76a68abac425bf1797c4ee2269123",
+      "bytes": 142259
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-56.png",
+      "sha256": "b89577b94076229f376ac040b2140c6e259cab56c4c5dc7f783abc6898eafca9",
+      "bytes": 186035
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-57.png",
+      "sha256": "7468346764f26709a64d78c5d02a3978e95ef6c8fe9cbe6af05abeebeee12799",
+      "bytes": 213932
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-58.png",
+      "sha256": "87faee3861ff0b6ecfc8ea41b94fc5a6553953b6517ade6d9a0463c9af1d3674",
+      "bytes": 154249
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-59.png",
+      "sha256": "a0b54205749648146cacd02c00176d8aa8c04000ebda714ec1a5f108f5a0e80b",
+      "bytes": 194883
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-60.png",
+      "sha256": "8d096649c9703fb0abe3b81af2de6dd7c81514b31a633738145cd08097d70309",
+      "bytes": 129738
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-61.png",
+      "sha256": "0c120cf48499d6e34322ecb7d49689c844610c99c1464e17b5500b46ad92a538",
+      "bytes": 210248
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-62.png",
+      "sha256": "c12c3844158d89ddb4bdeb52d0cf466798515394b5bcb13ebd8b3fce28f13aee",
+      "bytes": 180484
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-63.png",
+      "sha256": "5dac8722292a49314873916a8f8f1cd5ebad846f90e890d8b28aa1e28c024ace",
+      "bytes": 151089
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-64.png",
+      "sha256": "3d904c32da0079bfc3f62e64a19d305b24c721167e81079cf595a7b6f6efebda",
+      "bytes": 128627
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-65.png",
+      "sha256": "369618f32435afacbd35f6889c19ec1c5606e9dde0b752be65628c077d7405f4",
+      "bytes": 160981
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-66.png",
+      "sha256": "61c62432c709b5cb06527bc323949c04b4d338949479fdf617bd95d13e2ee726",
+      "bytes": 204147
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-67.png",
+      "sha256": "44f923b7dd6693ccec77d279b8e2059182b60d318dc13f7a3b1bd50ffc7f69fe",
+      "bytes": 180332
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-68.png",
+      "sha256": "c9de92189b1b75bc8287bc4b3834c722ae59fd435874b7601f68871c4c5a2b2a",
+      "bytes": 225468
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-69.png",
+      "sha256": "58453f67cde4b5b8d40c3b5b27a5328afc031b02f3c8bc2cb30c90cc590ba78c",
+      "bytes": 181294
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-70.png",
+      "sha256": "97ae2fe5a23d50ef9feb4839fd6273949fd34182353dbf39dffb32fc0d563301",
+      "bytes": 183155
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-71.png",
+      "sha256": "0093322143fcca6a03d10d28713642484d4037dd79d8e300b3cf28eae7814e5d",
+      "bytes": 236065
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-72.png",
+      "sha256": "588a3c073147f284e94a2d938d633da278b6cb5492cb09ebdc0574308c68caed",
+      "bytes": 226790
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-73.png",
+      "sha256": "23a3f94d03d045b7ace4e9503f97fe35941401d85057c378c15d080f3efef2f5",
+      "bytes": 154216
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-74.png",
+      "sha256": "898be8ee5da3bfd43ff829e727e19a4a717916cb7284d08673ba94144049b436",
+      "bytes": 161328
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-75.png",
+      "sha256": "e7f86f9aafe790a704ccc57dd272f1539fe9a457b5c3a087f69131d6ad6ff5fc",
+      "bytes": 189968
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-76.png",
+      "sha256": "597d8b5e0837b90a47394a80d543e0c3c8695e9f36b4a71a2c5026c9588e942c",
+      "bytes": 199895
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-77.png",
+      "sha256": "3e93f8332da163a668cd7cbf10ed5917b6a5d4f6cbcabd709b0ff9bbe87a7b15",
+      "bytes": 205056
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-78.png",
+      "sha256": "cee59e48c1454767137248250f62d1917761ebb3bbebc05c69e70c4081ab9758",
+      "bytes": 213290
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-79.png",
+      "sha256": "78a0c6c4ca5dd88404425c7f911b463e371d3ab246ea9920dbf7bf0015cd488c",
+      "bytes": 232969
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-80.png",
+      "sha256": "c431936f92ba411367d392f6161c83f89d8f91cfef7e412a19255b861d75229b",
+      "bytes": 181217
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-81.png",
+      "sha256": "8f754911f42a6a96cbad96fa713c22958171b3dbbfd6be9bff8592683adfbeaf",
+      "bytes": 170940
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-82.png",
+      "sha256": "87ce33e2d1d5fd14e28b47f3cedb55b39b4797bdb54c454d5f0c0927255a12e0",
+      "bytes": 197997
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-83.png",
+      "sha256": "a42397a5f83d49fae8e9c8d65428939780b3b73a70973e68db379983d1dfb85e",
+      "bytes": 224426
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-84.png",
+      "sha256": "ae20a754e0878a5d41cc5e1f4321fa9262e7b6a6056e02b432aa5faf9ac75f9d",
+      "bytes": 229376
+    },
+    {
+      "path": "skills/irmo-study/references/assets/page-85.png",
+      "sha256": "9f4795abcccb0b98e2cf026730be4a8ee952b784ba70bea41bb07db0e3a6d8d0",
+      "bytes": 201631
+    },
+    {
+      "path": "skills/irmo-study/references/catalog.json",
+      "sha256": "eea9a78f8e9c3e342884f62705afe2b82075c7c57bfde5f2d537de4647affe11",
+      "bytes": 170384
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2011.md",
+      "sha256": "6014e1b863df42cfed7a96394541f3c842a489c57cdeea5084cfe5a009714f7c",
+      "bytes": 2850
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2012.md",
+      "sha256": "56f5c156cf54d2ccfbdc9b2036dc7f8f559a3431a32e45c3a8440078c9b4d5e3",
+      "bytes": 2928
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2013.md",
+      "sha256": "06c118741fa856c5ce82b0bd4507b2e798bcd0b2e7e6166d4d028b61011a8774",
+      "bytes": 2803
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2014.md",
+      "sha256": "2fd12f3f95b9aef9e9b8fcc334053b7ce338de1f34f49a1b5f20c19ed7b75b2f",
+      "bytes": 2495
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2015.md",
+      "sha256": "ac1cbcfab7c7fa5208a181ccca25dce1d4e089e3305e23b4dc78186097f1cccb",
+      "bytes": 2344
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2016.md",
+      "sha256": "2883187517739435b823332b7bedd14b2189d8a87c01b88f1bf5e349174d24c7",
+      "bytes": 2430
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2017.md",
+      "sha256": "fccecab06267af00c2a708c3799100c96e7881485df64d554e158a817808566b",
+      "bytes": 2589
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2018.md",
+      "sha256": "31984e6b2c9d353b49fc4553408e4615e47fe79dac362a82d600c5c0c172671c",
+      "bytes": 2856
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2019.md",
+      "sha256": "e4ee4ff3d9233a5ec45fc8fbb76d9c73b3902f79994900649c18a5ac23f15b99",
+      "bytes": 2844
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2020.md",
+      "sha256": "cdeeaed44b16f6889a6369706efbc3324d6852d74d93c8d0e6d39aff93172c4d",
+      "bytes": 2700
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2021.md",
+      "sha256": "2ce8ec6c042d4d2613d391c63f19bf4b74d390461ca709644f2902a95d8ab950",
+      "bytes": 2509
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2022.md",
+      "sha256": "ccbd0408a34f0c5f1787c6853a0ded43c37edb259477dfbf61a42637b3fbdd77",
+      "bytes": 2690
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2023.md",
+      "sha256": "5d00d74ad059bde0e018e2f238abfd2b8fdbfbc364a725c838db4669a269492b",
+      "bytes": 3285
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2024.md",
+      "sha256": "aa4bf9a4f8d5a70494926c1bdac2fcce1698924201f9450a35653ef04d517ac1",
+      "bytes": 2548
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2025.md",
+      "sha256": "51d6849ab971096e3f1fe2e98f1e4050c49b7d3955aa4d8f28b31f662ce7b822",
+      "bytes": 2904
+    },
+    {
+      "path": "skills/irmo-study/references/papers/2026.md",
+      "sha256": "0b166139adf98a3468ad1a5ef1a211e713962be6b10f6a914e32827588c2573f",
+      "bytes": 3026
+    }
+  ]
+}

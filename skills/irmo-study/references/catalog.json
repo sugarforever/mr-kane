@@ -1,0 +1,6193 @@
+{
+  "name": "Irish Mathematical Olympiad · Round 2 / national final",
+  "years": [
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "coverage": "32 national-final papers, 160 questions: Round 2 finals from 2012–2026 (30 papers, 150 questions), plus the May 2011 predecessor final (2 papers, 10 questions). School Round 1 began in November 2011. Earlier national finals (1988–2010) remain in the source archive. No missing final year within 2012–2026; the 2027 final is not collected.",
+  "source": {
+    "title": "The Irish Mathematical Olympiads Compendium 1988–2026",
+    "author": "Mark Dukes, University College Dublin",
+    "url": "https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf",
+    "archive": "https://maths.ucd.ie/~dukes/irmo.html"
+  },
+  "topics": [
+    "number-theory",
+    "algebra",
+    "geometry",
+    "inequalities",
+    "combinatorics",
+    "sequences"
+  ],
+  "questions": [
+    {
+      "id": "IRMO-2011-P1-Q1",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 1,
+      "number": 1,
+      "date": "7 May 2011",
+      "title": "Linear systems",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C03",
+          "section": "3.3",
+          "title": "Two Equations, Two Variables"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-54.png",
+      "pdfPage": 54,
+      "printedPage": 50,
+      "hasDiagram": false,
+      "keywords": "suppose abc ne0 express in terms of a b c the solutions x y z u v w quad ay bz ub cv wc ax"
+    },
+    {
+      "id": "IRMO-2011-P1-Q2",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 1,
+      "number": 2,
+      "date": "7 May 2011",
+      "title": "Triangle medians",
+      "topics": [
+        "geometry",
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-54.png",
+      "pdfPage": 54,
+      "printedPage": 50,
+      "hasDiagram": false,
+      "keywords": "let abc be a triangle with side lengths bc b ca c ab m the of medians from to midpoints their opposite sides prove 2m deduce give examples i in which sqrt ii le"
+    },
+    {
+      "id": "IRMO-2011-P1-Q3",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 1,
+      "number": 3,
+      "date": "7 May 2011",
+      "title": "Recurrence common factors",
+      "topics": [
+        "number-theory",
+        "sequences"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-54.png",
+      "pdfPage": 54,
+      "printedPage": 50,
+      "hasDiagram": false,
+      "keywords": "the integers a 0 1 ldots are defined by 3 and n for ge1 find all which na share common factor greater than"
+    },
+    {
+      "id": "IRMO-2011-P1-Q4",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 1,
+      "number": 4,
+      "date": "7 May 2011",
+      "title": "Nested incircles",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-54.png",
+      "pdfPage": 54,
+      "printedPage": 50,
+      "hasDiagram": false,
+      "keywords": "the incircle c 1 of triangle abc touches ab ac at d e respectively 2 ade p q and intersects m n prove a centre lies on b four points in appropriate order form rectangle if only twice radius is three times"
+    },
+    {
+      "id": "IRMO-2011-P1-Q5",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 1,
+      "number": 5,
+      "date": "7 May 2011",
+      "title": "Talent show scores",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-54.png",
+      "pdfPage": 54,
+      "printedPage": 50,
+      "hasDiagram": false,
+      "keywords": "in the x 2 factor each of 8 judges awards contestant 0 fail pass or with distinction ann was awarded same score as barbara by exactly 4 david declares he obtained different scores to from at least and how many ways could have been allocated assuming is telling truth"
+    },
+    {
+      "id": "IRMO-2011-P2-Q6",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 2,
+      "number": 6,
+      "date": "7 May 2011",
+      "title": "Nonintegral sum",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-55.png",
+      "pdfPage": 55,
+      "printedPage": 51,
+      "hasDiagram": false,
+      "keywords": "prove that frac23 frac45 cdots frac 2010 2011 is not an integer"
+    },
+    {
+      "id": "IRMO-2011-P2-Q7",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 2,
+      "number": 7,
+      "date": "7 May 2011",
+      "title": "Tournament parity",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-55.png",
+      "pdfPage": 55,
+      "printedPage": 51,
+      "hasDiagram": false,
+      "keywords": "in a tournament with n 10 players each player plays every other once scoring 1 for win and 0 loss there are no draws only one ended an odd number of points was ranked fourth determine whether this is possible if so how many wins did that have"
+    },
+    {
+      "id": "IRMO-2011-P2-Q8",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 2,
+      "number": 8,
+      "date": "7 May 2011",
+      "title": "Rectangle areas",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C15",
+          "section": "15.2",
+          "title": "Same Base/Same Altitude"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-55.png",
+      "pdfPage": 55,
+      "printedPage": 51,
+      "hasDiagram": false,
+      "keywords": "abcd is a rectangle e lies between b on ab and f d ad the areas of triangles ebc eaf fdc are 16 12 30 respectively find area triangle efc"
+    },
+    {
+      "id": "IRMO-2011-P2-Q9",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 2,
+      "number": 9,
+      "date": "7 May 2011",
+      "title": "Symmetric inequalities",
+      "topics": [
+        "inequalities",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-55.png",
+      "pdfPage": 55,
+      "printedPage": 51,
+      "hasDiagram": false,
+      "keywords": "suppose x y z 0 and 1 2xyz xy yz zx prove i frac34 le ii xyz frac18 using or otherwise deduce ge frac32 derive the case of equality in this last inequality"
+    },
+    {
+      "id": "IRMO-2011-P2-Q10",
+      "year": 2011,
+      "stage": "predecessor-final",
+      "paper": 2,
+      "number": 10,
+      "date": "7 May 2011",
+      "title": "Exponential Diophantine equation",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2011.md",
+      "scan": "references/assets/page-55.png",
+      "pdfPage": 55,
+      "printedPage": 51,
+      "hasDiagram": false,
+      "keywords": "find with proof all solutions in nonnegative integers a b c d of 11 a5 3 c2 1"
+    },
+    {
+      "id": "IRMO-2012-P1-Q1",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "12 May 2012",
+      "title": "Partition by forbidden sums",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-56.png",
+      "pdfPage": 56,
+      "printedPage": 52,
+      "hasDiagram": false,
+      "keywords": "let c 1 2 ldots 20 and s 4 5 9 14 23 37 find sets a b such that cap varnothing cup the sum of two distinct elements is not in d"
+    },
+    {
+      "id": "IRMO-2012-P1-Q2",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "12 May 2012",
+      "title": "Tangent circumcircles",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-56.png",
+      "pdfPage": 56,
+      "printedPage": 52,
+      "hasDiagram": false,
+      "keywords": "a b c d are four points in that order on circle k ab perp bc and cd x lies the circumference between ax extended meets at e dx ba f prove circumcircles of axf dxe tangent their common line passes through centre"
+    },
+    {
+      "id": "IRMO-2012-P1-Q3",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "12 May 2012",
+      "title": "Integer coefficient polynomials",
+      "topics": [
+        "algebra",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V2-C06",
+          "section": "6.3",
+          "title": "Finding Roots of Polynomials"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-56.png",
+      "pdfPage": 56,
+      "printedPage": 52,
+      "hasDiagram": false,
+      "keywords": "find with proof all polynomials f nonnegative integer coefficients 1 8 and 2 2012"
+    },
+    {
+      "id": "IRMO-2012-P1-Q4",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "12 May 2012",
+      "title": "Integer triangles with sixty degrees",
+      "topics": [
+        "geometry",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-56.png",
+      "pdfPage": 56,
+      "printedPage": 52,
+      "hasDiagram": false,
+      "keywords": "there exists an infinite set of triangles whose side lengths are integers with no common factors and one only angle equal to 60 circ such triangle has 5 7 8 find two more"
+    },
+    {
+      "id": "IRMO-2012-P1-Q5",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "12 May 2012",
+      "title": "Best inequality constant",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-56.png",
+      "pdfPage": 56,
+      "printedPage": 52,
+      "hasDiagram": false,
+      "keywords": "a show for x y 0 that 5 ge12xy 3 b prove 12 is the best possible constant every k there exist such kxy"
+    },
+    {
+      "id": "IRMO-2012-P2-Q6",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "12 May 2012",
+      "title": "Digit sum obstruction",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-57.png",
+      "pdfPage": 57,
+      "printedPage": 53,
+      "hasDiagram": false,
+      "keywords": "let s n be the sum of decimal digits for example 2012 5 prove there is no integer 0 which 9990"
+    },
+    {
+      "id": "IRMO-2012-P2-Q7",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "12 May 2012",
+      "title": "Angle bisector and orthocentre",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-57.png",
+      "pdfPage": 57,
+      "printedPage": 53,
+      "hasDiagram": false,
+      "keywords": "consider triangle abc with ab ne ac the bisector of angle cab meets its circumcircle at a d circle centre and radius dc line c b bb e prove is orthocentre aed"
+    },
+    {
+      "id": "IRMO-2012-P2-Q8",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "12 May 2012",
+      "title": "Cyclic rational inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-57.png",
+      "pdfPage": 57,
+      "printedPage": 53,
+      "hasDiagram": false,
+      "keywords": "for a b c 0 prove left frac ab bc ca 1 right 2 ge 2a frac2a frac1b frac1c with equality if and only"
+    },
+    {
+      "id": "IRMO-2012-P2-Q9",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "12 May 2012",
+      "title": "Distinct prime divisors",
+      "topics": [
+        "number-theory",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-57.png",
+      "pdfPage": 57,
+      "printedPage": 53,
+      "hasDiagram": false,
+      "keywords": "let x 1 be an integer prove 5 is divisible by at least two distinct primes"
+    },
+    {
+      "id": "IRMO-2012-P2-Q10",
+      "year": 2012,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "12 May 2012",
+      "title": "Mice on a square board",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2012.md",
+      "scan": "references/assets/page-57.png",
+      "pdfPage": 57,
+      "printedPage": 53,
+      "hasDiagram": true,
+      "keywords": "let n be a positive integer mouse sits at each corner of an times board divided into unit squares source diagram shows 5 step the four mice travels one horizontally or vertically along edge b may not used twice in same direction c most two occupy point any time wish to arrange their movements so that every is necessarily by and ends its starting determine with proof values for which this possible assets page 57 png"
+    },
+    {
+      "id": "IRMO-2013-P1-Q1",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "11 May 2013",
+      "title": "Simultaneous perfect powers",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-58.png",
+      "pdfPage": 58,
+      "printedPage": 54,
+      "hasDiagram": false,
+      "keywords": "find the smallest positive integer m such that 5m is an exact fifth power 6m sixth and 7m seventh"
+    },
+    {
+      "id": "IRMO-2013-P1-Q2",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "11 May 2013",
+      "title": "Harmonic sum bound",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-58.png",
+      "pdfPage": 58,
+      "printedPage": 54,
+      "hasDiagram": false,
+      "keywords": "prove 1 frac1 2012 left frac12 frac13 cdots 2013 right ge frac sqrt"
+    },
+    {
+      "id": "IRMO-2013-P1-Q3",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "11 May 2013",
+      "title": "Iterated altitude triangles",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-58.png",
+      "pdfPage": 58,
+      "printedPage": 54,
+      "hasDiagram": false,
+      "keywords": "the altitudes of triangle abc form sides a second 1b 1c 1 its third 2b 2c 2 prove is similar to"
+    },
+    {
+      "id": "IRMO-2013-P1-Q4",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "11 May 2013",
+      "title": "Three colour table",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-58.png",
+      "pdfPage": 58,
+      "printedPage": 54,
+      "hasDiagram": false,
+      "keywords": "each square of a 6 times6 table is coloured red yellow or blue subject to no row column contains more than two squares the same colour b in any four obtained by intersecting rows and columns occurs exactly three times how many different ways can be"
+    },
+    {
+      "id": "IRMO-2013-P1-Q5",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "11 May 2013",
+      "title": "Tangents and collinearity",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-58.png",
+      "pdfPage": 58,
+      "printedPage": 54,
+      "hasDiagram": false,
+      "keywords": "a b c lie on circle with centre o tangents to the circumcircles of oab oac are drawn at p q respectively where diametrically opposite they intersect k line ca meets circumcircle x prove lies ko"
+    },
+    {
+      "id": "IRMO-2013-P2-Q6",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "11 May 2013",
+      "title": "Golden angle criterion",
+      "topics": [
+        "geometry",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-59.png",
+      "pdfPage": 59,
+      "printedPage": 55,
+      "hasDiagram": false,
+      "keywords": "distinct points b c d are collinear with between a point not on bd satisfies ab ac cd prove angle bac 36 circ if and only frac1"
+    },
+    {
+      "id": "IRMO-2013-P2-Q7",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "11 May 2013",
+      "title": "Counting squares in a diagram",
+      "topics": [
+        "combinatorics",
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-59.png",
+      "pdfPage": 59,
+      "printedPage": 55,
+      "hasDiagram": true,
+      "keywords": "consider the different squares formed by sets of four points chosen from 12 labelled in source diagram for each possible area determine how many have that explain why list is complete twelve assets page 59 png"
+    },
+    {
+      "id": "IRMO-2013-P2-Q8",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "11 May 2013",
+      "title": "Repeated product of squares minus one",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-59.png",
+      "pdfPage": 59,
+      "printedPage": 55,
+      "hasDiagram": false,
+      "keywords": "find the smallest positive integer n for which x 2 1 y is satisfied by at least two pairs of integers with le"
+    },
+    {
+      "id": "IRMO-2013-P2-Q9",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "11 May 2013",
+      "title": "Doubly infinite subaveraging sequences",
+      "topics": [
+        "sequences",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-59.png",
+      "pdfPage": 59,
+      "printedPage": 55,
+      "hasDiagram": false,
+      "keywords": "a doubly infinite sequence ldots s 2 1 0 is subaveraging if n 4 for every integer find such with all entries distinct and prove they are b show that has m integers it infinitely many pairs of i j"
+    },
+    {
+      "id": "IRMO-2013-P2-Q10",
+      "year": 2013,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "11 May 2013",
+      "title": "Translation invariant inequality",
+      "topics": [
+        "inequalities",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2013.md",
+      "scan": "references/assets/page-59.png",
+      "pdfPage": 59,
+      "printedPage": 55,
+      "hasDiagram": false,
+      "keywords": "let a b c be real and put x y 2 z 3 s 2x 9xy 9z prove is unchanged when are replaced by t for any 3y ge2s"
+    },
+    {
+      "id": "IRMO-2014-P1-Q1",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "10 May 2014",
+      "title": "Chessboard selections",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-60.png",
+      "pdfPage": 60,
+      "printedPage": 56,
+      "hasDiagram": false,
+      "keywords": "in how many ways can 56 squares be selected on an 8 times8 chessboard so that a all black are b exactly seven each row and column"
+    },
+    {
+      "id": "IRMO-2014-P1-Q2",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "10 May 2014",
+      "title": "Polynomial divisibility",
+      "topics": [
+        "number-theory",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V2-C06",
+          "section": "6.3",
+          "title": "Finding Roots of Polynomials"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-60.png",
+      "pdfPage": 60,
+      "printedPage": 56,
+      "hasDiagram": false,
+      "keywords": "prove for every integer n 1 that 2 2014 11 106 is divisible by 6 3"
+    },
+    {
+      "id": "IRMO-2014-P1-Q3",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "10 May 2014",
+      "title": "Trisected triangle angle",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-60.png",
+      "pdfPage": 60,
+      "printedPage": 56,
+      "hasDiagram": false,
+      "keywords": "in triangle abc d is the foot of altitude from a to bc and m midpoint angles angle bad dam mac are equal find"
+    },
+    {
+      "id": "IRMO-2014-P1-Q4",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "10 May 2014",
+      "title": "Cyclic equations",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-60.png",
+      "pdfPage": 60,
+      "printedPage": 56,
+      "hasDiagram": false,
+      "keywords": "three distinct nonzero real numbers a b c satisfy frac2b frac2c frac2a p prove abc 2p 0"
+    },
+    {
+      "id": "IRMO-2014-P1-Q5",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "10 May 2014",
+      "title": "Normalised squares inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-60.png",
+      "pdfPage": 60,
+      "printedPage": 56,
+      "hasDiagram": false,
+      "keywords": "suppose a 1 ldots n 0 and sum i put b 2 j prove frac le when does equality occur"
+    },
+    {
+      "id": "IRMO-2014-P2-Q6",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "10 May 2014",
+      "title": "Consecutive integers with six divisors",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-61.png",
+      "pdfPage": 61,
+      "printedPage": 57,
+      "hasDiagram": false,
+      "keywords": "each of n 1 2 3 has exactly six positive divisors 20 distinct numbers divide at least one them and is 27 find all possible both m count as"
+    },
+    {
+      "id": "IRMO-2014-P2-Q7",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "10 May 2014",
+      "title": "Square chord ratios",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-61.png",
+      "pdfPage": 61,
+      "printedPage": 57,
+      "hasDiagram": false,
+      "keywords": "square abcd is inscribed in a circle with centre o e the midpoint of ad line ce meets again at f lines fb meet h prove hd 2 ah"
+    },
+    {
+      "id": "IRMO-2014-P2-Q8",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "10 May 2014",
+      "title": "Integer valued polynomials",
+      "topics": [
+        "algebra",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V2-C06",
+          "section": "6.3",
+          "title": "Finding Roots of Polynomials"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-61.png",
+      "pdfPage": 61,
+      "printedPage": 57,
+      "hasDiagram": false,
+      "keywords": "a let p x 0 1x 2x 2 with real coefficients if 1 are integers prove n is an integer for every b q 3x 3 i some"
+    },
+    {
+      "id": "IRMO-2014-P2-Q9",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "10 May 2014",
+      "title": "Negative polynomial coefficients",
+      "topics": [
+        "algebra",
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V2-C06",
+          "section": "6.3",
+          "title": "Finding Roots of Polynomials"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-61.png",
+      "pdfPage": 61,
+      "printedPage": 57,
+      "hasDiagram": false,
+      "keywords": "let n 0 and a 1 ldots put g x cdots for real f b 1x 2x nx prove all are negative if only"
+    },
+    {
+      "id": "IRMO-2014-P2-Q10",
+      "year": 2014,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "10 May 2014",
+      "title": "Consecutive birth totals",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2014.md",
+      "scan": "references/assets/page-61.png",
+      "pdfPage": 61,
+      "printedPage": 57,
+      "hasDiagram": false,
+      "keywords": "over k consecutive days 2014 babies were born in a city with at least one each day show if 1014 le2014 some period of has exactly 100 births b such might not exist"
+    },
+    {
+      "id": "IRMO-2015-P1-Q1",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "25 April 2015",
+      "title": "Median length range",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-62.png",
+      "pdfPage": 62,
+      "printedPage": 58,
+      "hasDiagram": false,
+      "keywords": "in triangle abc the altitude from a to bc has length 1 d is midpoint of ac what are possible lengths bd"
+    },
+    {
+      "id": "IRMO-2015-P1-Q2",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "25 April 2015",
+      "title": "Three colour triangulation",
+      "topics": [
+        "combinatorics",
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-62.png",
+      "pdfPage": 62,
+      "printedPage": 58,
+      "hasDiagram": false,
+      "keywords": "a regular polygon with n ge3 sides has each vertex coloured red green or blue no adjacent vertices of the same colour and at least one prove that diagonals can be drawn intersecting only dividing into triangles having three different colours"
+    },
+    {
+      "id": "IRMO-2015-P1-Q3",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "25 April 2015",
+      "title": "Two cubes around 837",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-62.png",
+      "pdfPage": 62,
+      "printedPage": 58,
+      "hasDiagram": false,
+      "keywords": "find all positive integers n for which both 837 and are cubes of"
+    },
+    {
+      "id": "IRMO-2015-P1-Q4",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "25 April 2015",
+      "title": "Touching circles and chords",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-62.png",
+      "pdfPage": 62,
+      "printedPage": 58,
+      "hasDiagram": false,
+      "keywords": "circles c 1 2 with centres d e touch at b the circle diameter de intersects h and k on same side of line hk extended meets l m prove a lh km perpendicular to through bisects"
+    },
+    {
+      "id": "IRMO-2015-P1-Q5",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "25 April 2015",
+      "title": "Bounded doubly infinite recurrence",
+      "topics": [
+        "sequences"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-62.png",
+      "pdfPage": 62,
+      "printedPage": 58,
+      "hasDiagram": false,
+      "keywords": "a doubly infinite real sequence ldots 1 0 satisfies n 3 frac 2 for every integer show that if it is bounded there an r with le all constant"
+    },
+    {
+      "id": "IRMO-2015-P2-Q6",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "25 April 2015",
+      "title": "Quadratic inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-63.png",
+      "pdfPage": 63,
+      "printedPage": 59,
+      "hasDiagram": false,
+      "keywords": "for x y ge0 with le1 prove 8xy le5x 1 5y and determine the equality cases"
+    },
+    {
+      "id": "IRMO-2015-P2-Q7",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "25 April 2015",
+      "title": "Sum free subsets",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-63.png",
+      "pdfPage": 63,
+      "printedPage": 59,
+      "hasDiagram": false,
+      "keywords": "let n 1 and omega 2 ldots 2n a nonempty subset s is sum free if x y notin for every in allowing prove has more than distinct subsets"
+    },
+    {
+      "id": "IRMO-2015-P2-Q8",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "25 April 2015",
+      "title": "Equal chords from altitudes",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-63.png",
+      "pdfPage": 63,
+      "printedPage": 59,
+      "hasDiagram": false,
+      "keywords": "in triangle abc angle bac 90 circ the perpendiculars from c to ab and b ac meet circumcircle again at d e respectively if de bc find"
+    },
+    {
+      "id": "IRMO-2015-P2-Q9",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "25 April 2015",
+      "title": "Many integer roots",
+      "topics": [
+        "algebra",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-63.png",
+      "pdfPage": 63,
+      "printedPage": 59,
+      "hasDiagram": false,
+      "keywords": "nonconstant integer coefficient polynomials p q satisfy that x 2015 has at least 33 distinct roots prove neither nor degree less than three"
+    },
+    {
+      "id": "IRMO-2015-P2-Q10",
+      "year": 2015,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "25 April 2015",
+      "title": "Binomial moment inequality",
+      "topics": [
+        "inequalities",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.5",
+          "title": "The Binomial Theorem"
+        }
+      ],
+      "path": "references/papers/2015.md",
+      "scan": "references/assets/page-63.png",
+      "pdfPage": 63,
+      "printedPage": 59,
+      "hasDiagram": false,
+      "keywords": "prove for all nonnegative integers j n that sum k 0 binom nk ge2"
+    },
+    {
+      "id": "IRMO-2016-P1-Q1",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "26 April 2016",
+      "title": "Cyclic digits divisible by 27",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-64.png",
+      "pdfPage": 64,
+      "printedPage": 60,
+      "hasDiagram": false,
+      "keywords": "if the three digit number overline abc is divisible by 27 prove numbers bca cab are also"
+    },
+    {
+      "id": "IRMO-2016-P1-Q2",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "26 April 2016",
+      "title": "Equal angle bisector segments",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-64.png",
+      "pdfPage": 64,
+      "printedPage": 60,
+      "hasDiagram": false,
+      "keywords": "in triangle abc with ab ne ac the bisectors of angle acb meet at e f respectively and intersect i if ei fi find bac"
+    },
+    {
+      "id": "IRMO-2016-P1-Q3",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "26 April 2016",
+      "title": "Polynomial root existence",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V2-C06",
+          "section": "6.3",
+          "title": "Finding Roots of Polynomials"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-64.png",
+      "pdfPage": 64,
+      "printedPage": 60,
+      "hasDiagram": false,
+      "keywords": "do there exist four real coefficient polynomials p 1 2 3 4 such that the sum of any three has a root but two no"
+    },
+    {
+      "id": "IRMO-2016-P1-Q4",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "26 April 2016",
+      "title": "Internal and external bisectors",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-64.png",
+      "pdfPage": 64,
+      "printedPage": 60,
+      "hasDiagram": false,
+      "keywords": "in triangle abc ac ne bc the internal and external angle bisectors at c meet line ab p q with between a b prove that for any point m on circle diameter pq amp bmp"
+    },
+    {
+      "id": "IRMO-2016-P1-Q5",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "26 April 2016",
+      "title": "Integer geometric mean bound",
+      "topics": [
+        "inequalities",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-64.png",
+      "pdfPage": 64,
+      "printedPage": 60,
+      "hasDiagram": false,
+      "keywords": "positive integers a 1 ldots m none equal to 10 satisfy cdots 10m prove 1a 2 le3 sqrt 11"
+    },
+    {
+      "id": "IRMO-2016-P2-Q6",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "26 April 2016",
+      "title": "Centroid right angle",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-65.png",
+      "pdfPage": 65,
+      "printedPage": 61,
+      "hasDiagram": false,
+      "keywords": "triangle abc has sides a bc b ac points k h on segment satisfy ch 3 ck if g is the centroid prove angle kgh 90 circ"
+    },
+    {
+      "id": "IRMO-2016-P2-Q7",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "26 April 2016",
+      "title": "Distinct entries in four rows",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-65.png",
+      "pdfPage": 65,
+      "printedPage": 61,
+      "hasDiagram": false,
+      "keywords": "a rectangular array of positive integers has four rows every column sums to 20 and all entries within row are distinct what is the maximum number columns"
+    },
+    {
+      "id": "IRMO-2016-P2-Q8",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "26 April 2016",
+      "title": "Linear system identity",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C03",
+          "section": "3.3",
+          "title": "Two Equations, Two Variables"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-65.png",
+      "pdfPage": 65,
+      "printedPage": 61,
+      "hasDiagram": false,
+      "keywords": "for real a b c with abc ne0 determine x y z such that bz cy quad cx az ay bx prove also frac 1 2"
+    },
+    {
+      "id": "IRMO-2016-P2-Q9",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "26 April 2016",
+      "title": "Nested cube roots",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-65.png",
+      "pdfPage": 65,
+      "printedPage": 61,
+      "hasDiagram": false,
+      "keywords": "show the following number is an integer and find its value left frac 251 1 sqrt 3 252 5 2 10 63 right"
+    },
+    {
+      "id": "IRMO-2016-P2-Q10",
+      "year": 2016,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "26 April 2016",
+      "title": "Nine point circle",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2016.md",
+      "scan": "references/assets/page-65.png",
+      "pdfPage": 65,
+      "printedPage": 61,
+      "hasDiagram": false,
+      "keywords": "let ae be a diameter of the circumcircle triangle abc join e to its orthocentre h and extend eh meet circle again at d prove nine point passes through midpoint hd side midpoints altitude feet segments joining vertices"
+    },
+    {
+      "id": "IRMO-2017-P1-Q1",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "6 May 2017",
+      "title": "Smallest multiple with restricted digits",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-66.png",
+      "pdfPage": 66,
+      "printedPage": 62,
+      "hasDiagram": false,
+      "keywords": "determine with proof the smallest positive multiple of 99 all whose digits are 1 or 2"
+    },
+    {
+      "id": "IRMO-2017-P1-Q2",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "6 May 2017",
+      "title": "Symmetric system",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-66.png",
+      "pdfPage": 66,
+      "printedPage": 62,
+      "hasDiagram": false,
+      "keywords": "solve a b c 0 2 1 3 4abc for"
+    },
+    {
+      "id": "IRMO-2017-P1-Q3",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "6 May 2017",
+      "title": "Similar quadrilaterals from circles",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-66.png",
+      "pdfPage": 66,
+      "printedPage": 62,
+      "hasDiagram": false,
+      "keywords": "four circles have the sides of quadrilateral abcd as diameters through a meet again at those b c and d assuming are distinct prove is similar to corresponding angles equal proportional"
+    },
+    {
+      "id": "IRMO-2017-P1-Q4",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "6 May 2017",
+      "title": "Two colour triangular grid",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-66.png",
+      "pdfPage": 66,
+      "printedPage": 62,
+      "hasDiagram": true,
+      "keywords": "an equilateral triangle of integer side length n ge1 is subdivided into unit triangles as shown for 5 a subtriangle any formed by connecting grid vertices along lines colour each vertex red or blue with no having three the same let f count distinct colourings determine proof every triangular assets page 66 png"
+    },
+    {
+      "id": "IRMO-2017-P1-Q5",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "6 May 2017",
+      "title": "Recurrence modulo a prime",
+      "topics": [
+        "sequences",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-66.png",
+      "pdfPage": 66,
+      "printedPage": 62,
+      "hasDiagram": false,
+      "keywords": "let a 0 1 2 n 2a 41a for ge0 prove 2017 divides 2016"
+    },
+    {
+      "id": "IRMO-2017-P2-Q6",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "6 May 2017",
+      "title": "Coprimality of powers",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-67.png",
+      "pdfPage": 67,
+      "printedPage": 63,
+      "hasDiagram": false,
+      "keywords": "does there exist an even positive integer n for which 5 divides 1 and 2 are coprime means greatest common divisor equal to"
+    },
+    {
+      "id": "IRMO-2017-P2-Q7",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "6 May 2017",
+      "title": "Soccer scores",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-67.png",
+      "pdfPage": 67,
+      "printedPage": 63,
+      "hasDiagram": false,
+      "keywords": "five teams each play other once a winner gains 5 points and loser 0 both gain 1 point for draw 2 any the final totals are consecutive integers what is minimum number of goals scored"
+    },
+    {
+      "id": "IRMO-2017-P2-Q8",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "6 May 2017",
+      "title": "Sums of squared distances",
+      "topics": [
+        "geometry",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-67.png",
+      "pdfPage": 67,
+      "printedPage": 63,
+      "hasDiagram": false,
+      "keywords": "segment b 0b n is divided into equal parts by 1 ldots a point satisfies angle 0ab 90 circ prove sum k 0 ab 2"
+    },
+    {
+      "id": "IRMO-2017-P2-Q9",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "6 May 2017",
+      "title": "High power inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-67.png",
+      "pdfPage": 67,
+      "printedPage": 63,
+      "hasDiagram": false,
+      "keywords": "for all a b ge0 prove 1 2017 ge 10 7 7b 2000 when is equality attained"
+    },
+    {
+      "id": "IRMO-2017-P2-Q10",
+      "year": 2017,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "6 May 2017",
+      "title": "Powerful sequences",
+      "topics": [
+        "sequences",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2017.md",
+      "scan": "references/assets/page-67.png",
+      "pdfPage": 67,
+      "printedPage": 63,
+      "hasDiagram": false,
+      "keywords": "for a positive integer m real sequence 1 2 ldots is powerful if left sum k n right every show 30 and only at most one term nonzero b find 2017 none of whose terms zero"
+    },
+    {
+      "id": "IRMO-2018-P1-Q1",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "12 May 2018",
+      "title": "Modular number game",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-68.png",
+      "pdfPage": 68,
+      "printedPage": 64,
+      "hasDiagram": false,
+      "keywords": "mary picks an integer greater than 2017 multiplies it by and adds 2 pat 2019 to the result they alternate always multiplying current number adding wins if any obtained is divisible 2018 determine with proof smallest initial can choose prevent from winning"
+    },
+    {
+      "id": "IRMO-2018-P1-Q2",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "12 May 2018",
+      "title": "Incentre perpendiculars",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-68.png",
+      "pdfPage": 68,
+      "printedPage": 64,
+      "hasDiagram": false,
+      "keywords": "triangle abc is right angled at a with incentre i let h be the foot of perpendicular from to ab bc meets e and bisector angle d it f prove efd 45 circ"
+    },
+    {
+      "id": "IRMO-2018-P1-Q3",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "12 May 2018",
+      "title": "Quadratic function composition",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-68.png",
+      "pdfPage": 68,
+      "printedPage": 64,
+      "hasDiagram": false,
+      "keywords": "find all functions f x ax 2 bx c a ne0 such that 1 0"
+    },
+    {
+      "id": "IRMO-2018-P1-Q4",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "12 May 2018",
+      "title": "Nested rectangles",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-68.png",
+      "pdfPage": 68,
+      "printedPage": 64,
+      "hasDiagram": false,
+      "keywords": "a rectangle of sides b fits inside one c d if either le or set s contains 2019 rectangles with integer side lengths between 1 and 2018 inclusive show there are three in fitting"
+    },
+    {
+      "id": "IRMO-2018-P1-Q5",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "12 May 2018",
+      "title": "Tangents from circle points",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-68.png",
+      "pdfPage": 68,
+      "printedPage": 64,
+      "hasDiagram": false,
+      "keywords": "a b p lie on circle omega 1 with angle apb obtuse q is the foot of perpendicular from to ab 2 has centre and radius pq tangents intersect at f h respectively prove fh tangent"
+    },
+    {
+      "id": "IRMO-2018-P2-Q6",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "12 May 2018",
+      "title": "Real functional equation",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-69.png",
+      "pdfPage": 69,
+      "printedPage": 65,
+      "hasDiagram": false,
+      "keywords": "find all real valued functions f such that 2x y 4x 8y for x"
+    },
+    {
+      "id": "IRMO-2018-P2-Q7",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "12 May 2018",
+      "title": "Triangle side inequality",
+      "topics": [
+        "inequalities",
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-69.png",
+      "pdfPage": 69,
+      "printedPage": 65,
+      "hasDiagram": false,
+      "keywords": "if a b c are the side lengths of triangle prove 2 3 le3"
+    },
+    {
+      "id": "IRMO-2018-P2-Q8",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "12 May 2018",
+      "title": "Equilateral triangle extensions",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-69.png",
+      "pdfPage": 69,
+      "printedPage": 65,
+      "hasDiagram": false,
+      "keywords": "m is the midpoint of bc in equilateral triangle abc d lies on ca extended with a between c e ab b and md me let f cap prove angle bfm bme"
+    },
+    {
+      "id": "IRMO-2018-P2-Q9",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "12 May 2018",
+      "title": "Cubes in a recurrence",
+      "topics": [
+        "sequences",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-69.png",
+      "pdfPage": 69,
+      "printedPage": 65,
+      "hasDiagram": false,
+      "keywords": "a positive integer sequence satisfies n 1 2 2018 for ge1 prove at most one term is cube of an"
+    },
+    {
+      "id": "IRMO-2018-P2-Q10",
+      "year": 2018,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "12 May 2018",
+      "title": "Greed stone game",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2018.md",
+      "scan": "references/assets/page-69.png",
+      "pdfPage": 69,
+      "printedPage": 65,
+      "hasDiagram": false,
+      "keywords": "greed starts with one or more piles of stones player 1 the two players alternate each turn may remove stone from pile simple move remaining greedy whoever takes last wins find a strategy guaranteeing victory to for initial configuration 2018 containing either 20 18 b four 17 19 respectively"
+    },
+    {
+      "id": "IRMO-2019-P1-Q1",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "11 May 2019",
+      "title": "Quasi primes",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-70.png",
+      "pdfPage": 70,
+      "printedPage": 66,
+      "hasDiagram": false,
+      "keywords": "define q 1 2 for n ge2 the th quasi prime is smallest integer greater than not of form iq j le i determine with proof whether 1000 a"
+    },
+    {
+      "id": "IRMO-2019-P1-Q2",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "11 May 2019",
+      "title": "Seven day sports schedules",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-70.png",
+      "pdfPage": 70,
+      "printedPage": 66,
+      "hasDiagram": false,
+      "keywords": "jenny attends a sports camp for seven days each day she plays exactly one of hockey tennis or camogie in every four consecutive must play all three find with proof the number possible schedules"
+    },
+    {
+      "id": "IRMO-2019-P1-Q3",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "11 May 2019",
+      "title": "Trapezium angle bisectors",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-70.png",
+      "pdfPage": 70,
+      "printedPage": 66,
+      "hasDiagram": false,
+      "keywords": "in quadrilateral abcd ab parallel dc and bc cd prove the bisectors of angle abc bcd intersect at right angles on side ad"
+    },
+    {
+      "id": "IRMO-2019-P1-Q4",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "11 May 2019",
+      "title": "Rational expression zero set",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-70.png",
+      "pdfPage": 70,
+      "printedPage": 66,
+      "hasDiagram": false,
+      "keywords": "find all quadruples x y z w of nonzero real numbers satisfying 1 frac1x frac 2 xy 3 xyz 4 xyzw 0"
+    },
+    {
+      "id": "IRMO-2019-P1-Q5",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "11 May 2019",
+      "title": "Reflected circumcentres",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-70.png",
+      "pdfPage": 70,
+      "printedPage": 66,
+      "hasDiagram": false,
+      "keywords": "m lies on side bc of triangle abc p q are the circumcentres abm acm let l bp cap cq using extended lines and k be reflection in line pq so is perpendicular bisector kl prove concyclic"
+    },
+    {
+      "id": "IRMO-2019-P2-Q6",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "11 May 2019",
+      "title": "Smallest simultaneous power and consecutive sum",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-71.png",
+      "pdfPage": 71,
+      "printedPage": 67,
+      "hasDiagram": false,
+      "keywords": "the number 2019 is both a sum of fourth powers five distinct positive integers b six consecutive indeed 1 4 2 3 5 6 334 335 336 337 338 339 prove it smallest satisfying properties you may assume displayed equalities"
+    },
+    {
+      "id": "IRMO-2019-P2-Q7",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "11 May 2019",
+      "title": "Symmetric fourth powers",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-71.png",
+      "pdfPage": 71,
+      "printedPage": 67,
+      "hasDiagram": false,
+      "keywords": "nonzero real a b c satisfy 0 4 128 determine all values of ab bc ca"
+    },
+    {
+      "id": "IRMO-2019-P2-Q8",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "11 May 2019",
+      "title": "Parallelogram circle intersection",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-71.png",
+      "pdfPage": 71,
+      "printedPage": 67,
+      "hasDiagram": false,
+      "keywords": "g lies inside parallelogram abcd a circle gamma through meets ab ad again at e f respectively lines fg eg extended meet bc cd h i the circumcircle of hgi m ne prove on diagonal ac"
+    },
+    {
+      "id": "IRMO-2019-P2-Q9",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "11 May 2019",
+      "title": "Cubic constraint inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-71.png",
+      "pdfPage": 71,
+      "printedPage": 67,
+      "hasDiagram": false,
+      "keywords": "real x y z satisfy 2 2xyz 1 prove 8xyz le1 with equality exactly at left tfrac12 right quad"
+    },
+    {
+      "id": "IRMO-2019-P2-Q10",
+      "year": 2019,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "11 May 2019",
+      "title": "Island hopping directed graph",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2019.md",
+      "scan": "references/assets/page-71.png",
+      "pdfPage": 71,
+      "printedPage": 67,
+      "hasDiagram": false,
+      "keywords": "there are 64 islands numbered 1 through a holiday visits b c on its three nights where in t each i is nonempty notin and sum 128 exhibit sets giving at least 63 cdot64 6 4038 holidays return to the first island allowed distinct if their ordered triples differ any entry"
+    },
+    {
+      "id": "IRMO-2020-P1-Q1",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "18 July 2020",
+      "title": "Naoish digit sums",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-72.png",
+      "pdfPage": 72,
+      "printedPage": 68,
+      "hasDiagram": false,
+      "keywords": "an integer n is naoish if ge90 and its second to last decimal digit 9 thus 10798 1999 90 are but 9900 2009 not nino writes 2020 1 cdots k with each j what the smallest positive possible"
+    },
+    {
+      "id": "IRMO-2020-P1-Q2",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "18 July 2020",
+      "title": "Social distancing round a table",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-72.png",
+      "pdfPage": 72,
+      "printedPage": 68,
+      "hasDiagram": false,
+      "keywords": "a round table has 2n chairs no two people may sit next to each other how many ways are there choose seats for n 1 guests"
+    },
+    {
+      "id": "IRMO-2020-P1-Q3",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "18 July 2020",
+      "title": "Three touching circles",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-72.png",
+      "pdfPage": 72,
+      "printedPage": 68,
+      "hasDiagram": false,
+      "keywords": "circles omega 1 2 with centres q r touch externally at b a third circle 3 contains both and touches them c respectively line bc extended meets d prove qr ad intersect on"
+    },
+    {
+      "id": "IRMO-2020-P1-Q4",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "18 July 2020",
+      "title": "Honeycomb trex tilings",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-72.png",
+      "pdfPage": 72,
+      "printedPage": 68,
+      "hasDiagram": true,
+      "keywords": "for positive n an level honeycomb consists of unit side regular hexagons joined along edges whose boundary hexagon centres lie a length sqrt3 the diagram shows 2 with its central removed trex is three collinear middle sharing edge each neighbour find all which can be covered by trexes without overlap centre assets page 72 png"
+    },
+    {
+      "id": "IRMO-2020-P1-Q5",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "18 July 2020",
+      "title": "Seventh root inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-72.png",
+      "pdfPage": 72,
+      "printedPage": 68,
+      "hasDiagram": false,
+      "keywords": "for a b c 0 prove sqrt 7 frac ge3"
+    },
+    {
+      "id": "IRMO-2020-P2-Q6",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "18 July 2020",
+      "title": "Pentagon recolouring invariant",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-73.png",
+      "pdfPage": 73,
+      "printedPage": 69,
+      "hasDiagram": false,
+      "keywords": "each vertex of a pentagon is red or blue once per hour all vertices are recoloured becomes if its two neighbours were the same colour during last and they different prove at least one after first recolouring remains forever"
+    },
+    {
+      "id": "IRMO-2020-P2-Q7",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "18 July 2020",
+      "title": "Involutive integer function",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-73.png",
+      "pdfPage": 73,
+      "printedPage": 69,
+      "hasDiagram": false,
+      "keywords": "a function f mathbb n to with the strictly positive integers satisfies 1 2n 2f for every find 2020"
+    },
+    {
+      "id": "IRMO-2020-P2-Q8",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "18 July 2020",
+      "title": "Last three digits of odd product",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-73.png",
+      "pdfPage": 73,
+      "printedPage": 69,
+      "hasDiagram": false,
+      "keywords": "determine the last three decimal digits of 1 cdot3 cdot5 cdot7 cdots2019"
+    },
+    {
+      "id": "IRMO-2020-P2-Q9",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "18 July 2020",
+      "title": "Cyclic trapezium identity",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-73.png",
+      "pdfPage": 73,
+      "printedPage": 69,
+      "hasDiagram": false,
+      "keywords": "trapezium abcd with ab parallel dc is inscribed in a circle of radius r and centre o the nonparallel sides da cb extended meet at p diagonals e prove oe op 2"
+    },
+    {
+      "id": "IRMO-2020-P2-Q10",
+      "year": 2020,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "18 July 2020",
+      "title": "Hexagon with integer distances",
+      "topics": [
+        "geometry",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2020.md",
+      "scan": "references/assets/page-73.png",
+      "pdfPage": 73,
+      "printedPage": 69,
+      "hasDiagram": false,
+      "keywords": "show there exists a hexagon abcdef in the plane such that distance between every pair of vertices is an integer"
+    },
+    {
+      "id": "IRMO-2021-P1-Q1",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "8 May 2021",
+      "title": "Factorial as nine factors",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-74.png",
+      "pdfPage": 74,
+      "printedPage": 70,
+      "hasDiagram": false,
+      "keywords": "let n 15 cdot14 cdots2 cdot1 prove is a product of nine distinct integers all between 16 and 30 inclusive"
+    },
+    {
+      "id": "IRMO-2021-P1-Q2",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "8 May 2021",
+      "title": "Isosceles right triangle chords",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-74.png",
+      "pdfPage": 74,
+      "printedPage": 70,
+      "hasDiagram": false,
+      "keywords": "isosceles triangle abc is inscribed in a circle with angle acb 90 circ chord ef has neither endpoint equal to c lines ce cf meet ab at d g respectively prove dg cg"
+    },
+    {
+      "id": "IRMO-2021-P1-Q3",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "8 May 2021",
+      "title": "Moving two leading digits",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-74.png",
+      "pdfPage": 74,
+      "printedPage": 70,
+      "hasDiagram": false,
+      "keywords": "for each integer n ge100 let t be obtained by moving its two leading digits to the end example 12345 34512 and 100 10 find all integers such that 10n"
+    },
+    {
+      "id": "IRMO-2021-P1-Q4",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "8 May 2021",
+      "title": "Domino tilings modulo nineteen",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-74.png",
+      "pdfPage": 74,
+      "printedPage": 70,
+      "hasDiagram": false,
+      "keywords": "a 3 times2021 chessboard has one corner square removed there are 3031 identical dominoes each covering two adjacent squares if m counts coverings without gaps or overlaps what is the remainder of divided by 19"
+    },
+    {
+      "id": "IRMO-2021-P1-Q5",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "8 May 2021",
+      "title": "Iterated fractional function",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-74.png",
+      "pdfPage": 74,
+      "printedPage": 70,
+      "hasDiagram": false,
+      "keywords": "a function g 0 infty to satisfies x frac 3x 3 quad ge0 qquad 1 2 le le3 find 2021 b"
+    },
+    {
+      "id": "IRMO-2021-P2-Q6",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "8 May 2021",
+      "title": "Areas in arithmetic progression",
+      "topics": [
+        "sequences",
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        },
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C15",
+          "section": "15.2",
+          "title": "Same Base/Same Altitude"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-75.png",
+      "pdfPage": 75,
+      "printedPage": 71,
+      "hasDiagram": false,
+      "keywords": "a sequence has positive first term and each following is the area of an equilateral triangle whose perimeter preceding if three terms form arithmetic progression determine all possible"
+    },
+    {
+      "id": "IRMO-2021-P2-Q7",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "8 May 2021",
+      "title": "Squared row and column totals",
+      "topics": [
+        "combinatorics",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-75.png",
+      "pdfPage": 75,
+      "printedPage": 71,
+      "hasDiagram": false,
+      "keywords": "an n times grid is coloured red or blue with k cells let s b be the sum of squares cell counts in all rows plus that columns define r similarly for if 50 determine proof possible"
+    },
+    {
+      "id": "IRMO-2021-P2-Q8",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "8 May 2021",
+      "title": "Common tangent concurrency",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-75.png",
+      "pdfPage": 75,
+      "printedPage": 71,
+      "hasDiagram": false,
+      "keywords": "c lies between a b on segment ab circles have diameters ac cb common tangent touches them at p ne q respectively prove ap bq and the meet one point circle with diameter"
+    },
+    {
+      "id": "IRMO-2021-P2-Q9",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "8 May 2021",
+      "title": "Absolute value product inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-75.png",
+      "pdfPage": 75,
+      "printedPage": 71,
+      "hasDiagram": false,
+      "keywords": "real a b satisfy 0 3a le1 3b prove left frac ab 3 3ab right"
+    },
+    {
+      "id": "IRMO-2021-P2-Q10",
+      "year": 2021,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "8 May 2021",
+      "title": "Nearby points with fixed centroid",
+      "topics": [
+        "combinatorics",
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2021.md",
+      "scan": "references/assets/page-75.png",
+      "pdfPage": 75,
+      "printedPage": 71,
+      "hasDiagram": false,
+      "keywords": "points p 1 ldots 2021 lie in x y ge0 with centroid prove two distinct have distance at most sqrt2 20"
+    },
+    {
+      "id": "IRMO-2022-P1-Q1",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "7 May 2022",
+      "title": "Factorial plus three",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-76.png",
+      "pdfPage": 76,
+      "printedPage": 72,
+      "hasDiagram": false,
+      "keywords": "for positive n 1 cdot2 cdots determine with proof all integers which 3 is a power of"
+    },
+    {
+      "id": "IRMO-2022-P1-Q2",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "7 May 2022",
+      "title": "Square and tangent ratio",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-76.png",
+      "pdfPage": 76,
+      "printedPage": 72,
+      "hasDiagram": false,
+      "keywords": "abcd is a square and gamma the circle with diameter cd tangent from b touches at e meets segment ad k prove 4 kd"
+    },
+    {
+      "id": "IRMO-2022-P1-Q3",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "7 May 2022",
+      "title": "Permutation turning points",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-76.png",
+      "pdfPage": 76,
+      "printedPage": 72,
+      "hasDiagram": false,
+      "keywords": "for n ge3 let p 1 ldots be a permutation of turning point is t where 2 le and 0 example 4 6 7 5 3 8 has points q count permutations with exactly one find all which perfect square"
+    },
+    {
+      "id": "IRMO-2022-P1-Q4",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "7 May 2022",
+      "title": "Increasing iterated function",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-76.png",
+      "pdfPage": 76,
+      "printedPage": 72,
+      "hasDiagram": false,
+      "keywords": "for strictly positive integers mathbb n a function f to satisfies 1 and 4n every in find 2022"
+    },
+    {
+      "id": "IRMO-2022-P1-Q5",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "7 May 2022",
+      "title": "Circumcentre and parallelogram",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-76.png",
+      "pdfPage": 76,
+      "printedPage": 72,
+      "hasDiagram": false,
+      "keywords": "triangle abc has circumcentre o the perpendicular from to bc meets at m and ac p n q let d pq cap mn construct parallelogram pcqj with pj parallel cq qj cp prove a b j are concyclic od perp cj"
+    },
+    {
+      "id": "IRMO-2022-P2-Q6",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "7 May 2022",
+      "title": "Cubic identity",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-77.png",
+      "pdfPage": 77,
+      "printedPage": 73,
+      "hasDiagram": false,
+      "keywords": "for real a b c with 1 prove 3"
+    },
+    {
+      "id": "IRMO-2022-P2-Q7",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "7 May 2022",
+      "title": "Cyclic quadrilateral perpendicularity",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-77.png",
+      "pdfPage": 77,
+      "printedPage": 73,
+      "hasDiagram": false,
+      "keywords": "a b c d lie on the circle with diameter ab their diagonals meet at e and lines ad bc f line fe meets k dk again l prove cl perp"
+    },
+    {
+      "id": "IRMO-2022-P2-Q8",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "7 May 2022",
+      "title": "Distinct digit multiplication",
+      "topics": [
+        "number-theory",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-77.png",
+      "pdfPage": 77,
+      "printedPage": 73,
+      "hasDiagram": false,
+      "keywords": "in overline ab times cd efgh each letter is a distinct digit and c e are nonzero an example 46 times85 3910 find the smallest possible four product"
+    },
+    {
+      "id": "IRMO-2022-P2-Q9",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "7 May 2022",
+      "title": "Recurrence adjacent products",
+      "topics": [
+        "sequences",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C24",
+          "section": "24.5",
+          "title": "Sequences"
+        },
+        {
+          "chapterId": "V2-C16",
+          "section": "16.4",
+          "title": "Dealing with Recurrences"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-77.png",
+      "pdfPage": 77,
+      "printedPage": 73,
+      "hasDiagram": false,
+      "keywords": "for positive integer k define x 0 1 n kx ge1 prove is never a perfect square ge2 first then b every"
+    },
+    {
+      "id": "IRMO-2022-P2-Q10",
+      "year": 2022,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "7 May 2022",
+      "title": "Maximum minimum score gap",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2022.md",
+      "scan": "references/assets/page-77.png",
+      "pdfPage": 77,
+      "printedPage": 73,
+      "hasDiagram": false,
+      "keywords": "let n ge5 be odd and 1 le r 2 an integer in a tournament each subset of 2r players among plays exactly one contest assigns the scores ldots 0 some order player i has total s determine with proof maximum possible value min j"
+    },
+    {
+      "id": "IRMO-2023-P1-Q1",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "6 May 2023",
+      "title": "Right isosceles constructions",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-78.png",
+      "pdfPage": 78,
+      "printedPage": 74,
+      "hasDiagram": false,
+      "keywords": "triangle abc satisfies angle bac 90 circ point d is on the opposite side of ab to c with ad bd and adb e ac b ae ce aec if adxe a parallelogram prove bx cx"
+    },
+    {
+      "id": "IRMO-2023-P1-Q2",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "6 May 2023",
+      "title": "Special number triangles",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-78.png",
+      "pdfPage": 78,
+      "printedPage": 74,
+      "hasDiagram": true,
+      "keywords": "for n ge3 a special triangle has distinct numbers on each side with equal sums example the corners 41 43 47 and respective intervening 23 17 19 is since there are 3 1 in an infinite positive integer set if every its smallest form show integers not divisible by 2023 assets page 78 png"
+    },
+    {
+      "id": "IRMO-2023-P1-Q3",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "6 May 2023",
+      "title": "Equal chords and a midpoint circle",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-78.png",
+      "pdfPage": 78,
+      "printedPage": 74,
+      "hasDiagram": false,
+      "keywords": "five points a b c d e lie on circle with ab cd bc de segments ad be meet at f and m is the midpoint of prove centre radius me passes through af"
+    },
+    {
+      "id": "IRMO-2023-P1-Q4",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "6 May 2023",
+      "title": "Real functional equation with a quotient",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-78.png",
+      "pdfPage": 78,
+      "printedPage": 74,
+      "hasDiagram": false,
+      "keywords": "find all functions f mathbb r to such that x y xy 1 2f left frac right for real with ne1"
+    },
+    {
+      "id": "IRMO-2023-P1-Q5",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "6 May 2023",
+      "title": "Divisibility of four integers",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-78.png",
+      "pdfPage": 78,
+      "printedPage": 74,
+      "hasDiagram": false,
+      "keywords": "positive integers a b c d satisfy 2023 mid ab cd 2 assuming each is divisible by 7 prove 17"
+    },
+    {
+      "id": "IRMO-2023-P2-Q6",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "6 May 2023",
+      "title": "Totally square digit sums",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-79.png",
+      "pdfPage": 79,
+      "printedPage": 75,
+      "hasDiagram": false,
+      "keywords": "a positive integer is totally square if its decimal digit sum for example 13 since 1 3 2 but 16 not show infinitely many integers are the of two"
+    },
+    {
+      "id": "IRMO-2023-P2-Q7",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "6 May 2023",
+      "title": "Prime division game",
+      "topics": [
+        "number-theory",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-79.png",
+      "pdfPage": 79,
+      "printedPage": 75,
+      "hasDiagram": false,
+      "keywords": "aisling and brendan alternate starting with from x 2023 a move replaces the positive integer by 1 or p where is prime factor of first player to write wins determine which has winning strategy"
+    },
+    {
+      "id": "IRMO-2023-P2-Q8",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "6 May 2023",
+      "title": "Cyclic fraction inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-79.png",
+      "pdfPage": 79,
+      "printedPage": 75,
+      "hasDiagram": false,
+      "keywords": "for a b c 0 with 3 prove frac 2 ge2 and determine the equality cases"
+    },
+    {
+      "id": "IRMO-2023-P2-Q9",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "6 May 2023",
+      "title": "Diameter and orthogonal projections",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-79.png",
+      "pdfPage": 79,
+      "printedPage": 75,
+      "hasDiagram": false,
+      "keywords": "triangle abc has circumcentre o and circumcircle gamma let ai be a diameter ray meets the of boc for second time at p ad iq perpendicular to bc with d q on m midpoint prove qi cd cq bd bq b im parallel pd"
+    },
+    {
+      "id": "IRMO-2023-P2-Q10",
+      "year": 2023,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "6 May 2023",
+      "title": "Basketball scoreboard divisibility",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2023.md",
+      "scan": "references/assets/page-79.png",
+      "pdfPage": 79,
+      "printedPage": 75,
+      "hasDiagram": false,
+      "keywords": "caitlin and donal play ten rounds of basketball shoot out in every round they simultaneously throw a ball at each other s basket scoring one point for zero otherwise the scoreboard records player score cumulative is least after prove number possible scoreboards divisible by 4 but not 8"
+    },
+    {
+      "id": "IRMO-2024-P1-Q1",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "27 January 2024",
+      "title": "Runcible integers",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-80.png",
+      "pdfPage": 80,
+      "printedPage": 76,
+      "hasDiagram": false,
+      "keywords": "the positive integers 1 2 are runcible if a b not necessarily distinct then 2a 3b is 2024"
+    },
+    {
+      "id": "IRMO-2024-P1-Q2",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "27 January 2024",
+      "title": "Squares between binomial values",
+      "topics": [
+        "number-theory",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.5",
+          "title": "The Binomial Theorem"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-80.png",
+      "pdfPage": 80,
+      "printedPage": 76,
+      "hasDiagram": false,
+      "keywords": "a nonnegative integer p is 3 choice if k 1 2 6 for some positive choices q show there an n with le"
+    },
+    {
+      "id": "IRMO-2024-P1-Q3",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "27 January 2024",
+      "title": "Positive integer functional equation",
+      "topics": [
+        "algebra",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-80.png",
+      "pdfPage": 80,
+      "printedPage": 76,
+      "hasDiagram": false,
+      "keywords": "let mathbb z 1 2 ldots find all f to such that mn m n quad in 2024 qquad text for every positive equiv22 pmod 23"
+    },
+    {
+      "id": "IRMO-2024-P1-Q4",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "27 January 2024",
+      "title": "Equal digit differences",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-80.png",
+      "pdfPage": 80,
+      "printedPage": 76,
+      "hasDiagram": false,
+      "keywords": "how many four digit numbers overline abcd satisfy a b c d the leading cannot be zero"
+    },
+    {
+      "id": "IRMO-2024-P1-Q5",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "27 January 2024",
+      "title": "Tangency from a chord midpoint",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-80.png",
+      "pdfPage": 80,
+      "printedPage": 76,
+      "hasDiagram": false,
+      "keywords": "a b c lie on circle gamma and l is the midpoint of bc perpendicular bisector meets at m n with opposite sides let s cap am using segments line ns circumcircle alm d e inside prove circumcentre bcd circumcircles adn are tangent"
+    },
+    {
+      "id": "IRMO-2024-P2-Q6",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "27 January 2024",
+      "title": "Binomial sum a power of two",
+      "topics": [
+        "number-theory",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.5",
+          "title": "The Binomial Theorem"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-81.png",
+      "pdfPage": 81,
+      "printedPage": 77,
+      "hasDiagram": false,
+      "keywords": "find all positive integers n m such that binom 1 3 2"
+    },
+    {
+      "id": "IRMO-2024-P2-Q7",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "27 January 2024",
+      "title": "Coin operation invariants",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-81.png",
+      "pdfPage": 81,
+      "printedPage": 77,
+      "hasDiagram": false,
+      "keywords": "start with one head and tail on a table at each turn choose move over every coin b triple both the number of heads tails c if there are least four d five three discard two final is 2024 what all possible numbers"
+    },
+    {
+      "id": "IRMO-2024-P2-Q8",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "27 January 2024",
+      "title": "Product inequality",
+      "topics": [
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-81.png",
+      "pdfPage": 81,
+      "printedPage": 77,
+      "hasDiagram": false,
+      "keywords": "for positive real a b c with le and prove 10b 22c 7a ge2024abc"
+    },
+    {
+      "id": "IRMO-2024-P2-Q9",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "27 January 2024",
+      "title": "Parallelogram cyclicity criterion",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-81.png",
+      "pdfPage": 81,
+      "printedPage": 77,
+      "hasDiagram": false,
+      "keywords": "let k l m lie on sides bc ab ac respectively of triangle abc with alkm a parallelogram choose s t lines kl km so akbs akct are cyclic prove mlst is if and only the midpoint"
+    },
+    {
+      "id": "IRMO-2024-P2-Q10",
+      "year": 2024,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "27 January 2024",
+      "title": "Nested positive integer function",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2024.md",
+      "scan": "references/assets/page-81.png",
+      "pdfPage": 81,
+      "printedPage": 77,
+      "hasDiagram": false,
+      "keywords": "find with proof all f mathbb z to satisfying x y for positive integers"
+    },
+    {
+      "id": "IRMO-2025-P1-Q1",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "25 January 2025",
+      "title": "Smallest nonfactor",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-82.png",
+      "pdfPage": 82,
+      "printedPage": 78,
+      "hasDiagram": false,
+      "keywords": "find all pairs n p of positive integers such that is the smallest integer not dividing and divides 3p 2 1"
+    },
+    {
+      "id": "IRMO-2025-P1-Q2",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "25 January 2025",
+      "title": "CROSSWORD arrangements",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-82.png",
+      "pdfPage": 82,
+      "printedPage": 78,
+      "hasDiagram": true,
+      "keywords": "how many crosswords can be made from crossword subject to a two words one horizontal and vertical intersect at letter b word is any ordered sequence of least letters whether or not real c are used as often they appear in d differ unless their orientations intersection positions identical the source diagram illustrates three different distinct examples assets page 82 png"
+    },
+    {
+      "id": "IRMO-2025-P1-Q3",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "25 January 2025",
+      "title": "Four squares and equal products",
+      "topics": [
+        "number-theory",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-82.png",
+      "pdfPage": 82,
+      "printedPage": 78,
+      "hasDiagram": false,
+      "keywords": "find all positive integer quadruples a b c d satisfying 2 2025 qquad ab cd"
+    },
+    {
+      "id": "IRMO-2025-P1-Q4",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "25 January 2025",
+      "title": "Triple product bounds",
+      "topics": [
+        "inequalities",
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-82.png",
+      "pdfPage": 82,
+      "printedPage": 78,
+      "hasDiagram": false,
+      "keywords": "real a b c satisfy 1 and 2 prove frac4 27 le abc le0"
+    },
+    {
+      "id": "IRMO-2025-P1-Q5",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "25 January 2025",
+      "title": "Tangents from a constructed point",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-82.png",
+      "pdfPage": 82,
+      "printedPage": 78,
+      "hasDiagram": false,
+      "keywords": "triangle abc has circumcentre o and m the midpoint of bc perpendicular to ac through c meets line ab extended at t circumcircle again d choose l on ad so ct bisects angle bcl let p om cap tl prove pb pc are tangent"
+    },
+    {
+      "id": "IRMO-2025-P2-Q6",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "25 January 2025",
+      "title": "Sudoku diagonal products",
+      "topics": [
+        "number-theory",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-83.png",
+      "pdfPage": 83,
+      "printedPage": 79,
+      "hasDiagram": false,
+      "keywords": "a sudoku grid is 9 times9 table where each row column and of its nine 3 times3 subgrids contains 1 2 ldots exactly once let m n be the products numbers on two diagonals prove it possible that 2025 divides mn but 4 does not"
+    },
+    {
+      "id": "IRMO-2025-P2-Q7",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "25 January 2025",
+      "title": "Odd digit anchors",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-83.png",
+      "pdfPage": 83,
+      "printedPage": 79,
+      "hasDiagram": false,
+      "keywords": "a positive integer is an anchor if every decimal digit odd show there n such that no m 1 has mn also"
+    },
+    {
+      "id": "IRMO-2025-P2-Q8",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "25 January 2025",
+      "title": "Reconstruct a set from extreme sums",
+      "topics": [
+        "algebra",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-83.png",
+      "pdfPage": 83,
+      "printedPage": 79,
+      "hasDiagram": false,
+      "keywords": "let a contain five distinct integers and s x y in ne the two smallest elements of are 25 31 largest 57 71 determine every possible"
+    },
+    {
+      "id": "IRMO-2025-P2-Q9",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "25 January 2025",
+      "title": "Intersecting circles and angle bisector",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-83.png",
+      "pdfPage": 83,
+      "printedPage": 79,
+      "hasDiagram": false,
+      "keywords": "circles gamma 1 2 meet at distinct a b line ell through meets them again c d respectively with inside the perpendicular to e f lines ec fd extended x if lies on bisector of ef prove bx bisects angle cbd"
+    },
+    {
+      "id": "IRMO-2025-P2-Q10",
+      "year": 2025,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "25 January 2025",
+      "title": "Circular arrangement variation",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2025.md",
+      "scan": "references/assets/page-83.png",
+      "pdfPage": 83,
+      "printedPage": 79,
+      "hasDiagram": false,
+      "keywords": "for n ge3 determine as a function of the number circular arrangements x 1 ldots with sum i 2 2n 4 where indices are modulo rotations count same arrangement"
+    },
+    {
+      "id": "IRMO-2026-P1-Q1",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 1,
+      "date": "24 January 2026",
+      "title": "Quadrilateral area bound",
+      "topics": [
+        "geometry",
+        "inequalities"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        },
+        {
+          "chapterId": "V1-C22",
+          "title": "Inequalities"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.2",
+          "title": "Arithmetic Mean-Geometric Mean Inequality"
+        },
+        {
+          "chapterId": "V2-C14",
+          "section": "14.3",
+          "title": "Cauchy’s Inequality"
+        },
+        {
+          "chapterId": "V1-C15",
+          "section": "15.2",
+          "title": "Same Base/Same Altitude"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-84.png",
+      "pdfPage": 84,
+      "printedPage": 80,
+      "hasDiagram": false,
+      "keywords": "points a b c d lie on four different sides of square side r and ab bc cd da prove operatorname area abcd ge 2 frac14 that is rectangle in the equality case"
+    },
+    {
+      "id": "IRMO-2026-P1-Q2",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 2,
+      "date": "24 January 2026",
+      "title": "Powers and the minimum exponent",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-84.png",
+      "pdfPage": 84,
+      "printedPage": 80,
+      "hasDiagram": false,
+      "keywords": "find with proof all positive integer solutions of 2 a b c d 60 min"
+    },
+    {
+      "id": "IRMO-2026-P1-Q3",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 3,
+      "date": "24 January 2026",
+      "title": "Sixty degree angle bisector",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-84.png",
+      "pdfPage": 84,
+      "printedPage": 80,
+      "hasDiagram": false,
+      "keywords": "triangle abc satisfies ab ac and angle bac 60 circ its circumcentre is o the bisector of meets bc at d prove ado 2 dao"
+    },
+    {
+      "id": "IRMO-2026-P1-Q4",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 4,
+      "date": "24 January 2026",
+      "title": "Reachability by digit operations",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-84.png",
+      "pdfPage": 84,
+      "printedPage": 80,
+      "hasDiagram": false,
+      "keywords": "starting with a positive integer one may perform any sequence of divide by 2 if it is even b append the digit 0 c 8 for example to4 to2 to1 to18 to9 to90 uses aaacab prove 2026 can be reached from every"
+    },
+    {
+      "id": "IRMO-2026-P1-Q5",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 1,
+      "number": 5,
+      "date": "24 January 2026",
+      "title": "Nonintersecting triangle configurations",
+      "topics": [
+        "combinatorics",
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-84.png",
+      "pdfPage": 84,
+      "printedPage": 80,
+      "hasDiagram": false,
+      "keywords": "for positive n label 3n distinct points on a circle 1 2 ldots clockwise an triangle configuration partitions them into triples joining each triple to form with no two triangles intersecting let s count configurations thus and 3 from 123 456 234 561 345 612 find all which is not divisible by"
+    },
+    {
+      "id": "IRMO-2026-P2-Q6",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 6,
+      "date": "24 January 2026",
+      "title": "Three pile stone game",
+      "topics": [
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-85.png",
+      "pdfPage": 85,
+      "printedPage": 81,
+      "hasDiagram": false,
+      "keywords": "aisling and brendan play with 2026 stones divides them into three nonempty piles removes one stone from each of two adds those to the third pile discards other they continue alternating starting making same kind move a may become zero receive again but no negative first player unable loses determine strategy ensuring wins"
+    },
+    {
+      "id": "IRMO-2026-P2-Q7",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 7,
+      "date": "24 January 2026",
+      "title": "Reversed digits divisible by 121",
+      "topics": [
+        "number-theory"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-85.png",
+      "pdfPage": 85,
+      "printedPage": 81,
+      "hasDiagram": false,
+      "keywords": "if overline abcd and dcba are four digit numbers both divisible by 121 prove a c b d"
+    },
+    {
+      "id": "IRMO-2026-P2-Q8",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 8,
+      "date": "24 January 2026",
+      "title": "Odd set partition obstruction",
+      "topics": [
+        "number-theory",
+        "combinatorics"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C05",
+          "section": "5.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C05",
+          "section": "5.4",
+          "title": "Modular Arithmetic"
+        },
+        {
+          "chapterId": "V2-C23",
+          "section": "23.1",
+          "title": "Divisibility"
+        },
+        {
+          "chapterId": "V1-C25",
+          "title": "Learning to Count"
+        },
+        {
+          "chapterId": "V1-C28",
+          "section": "28.5",
+          "title": "Shooting Holes in Pigeons"
+        },
+        {
+          "chapterId": "V2-C15",
+          "section": "15.1",
+          "title": "Identities"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-85.png",
+      "pdfPage": 85,
+      "printedPage": 81,
+      "hasDiagram": false,
+      "keywords": "for every positive integer n prove it is impossible to partition s 1 3 5 7 ldots 2n into disjoint subsets so that in each subset one element equals the sum of all other elements"
+    },
+    {
+      "id": "IRMO-2026-P2-Q9",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 9,
+      "date": "24 January 2026",
+      "title": "Integer functional equation parameter",
+      "topics": [
+        "algebra"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C07",
+          "section": "7.1",
+          "title": "Factorizations"
+        },
+        {
+          "chapterId": "V2-C13",
+          "section": "13.3",
+          "title": "Symmetric Expressions and Advanced Factorizations"
+        },
+        {
+          "chapterId": "V1-C21",
+          "section": "21.3",
+          "title": "Inputs and Outputs"
+        },
+        {
+          "chapterId": "V2-C07",
+          "section": "7.3",
+          "title": "Solving Functional Identities"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-85.png",
+      "pdfPage": 85,
+      "printedPage": 81,
+      "hasDiagram": false,
+      "keywords": "let c in mathbb z find all f 0 to such that for integers x y 2f cf"
+    },
+    {
+      "id": "IRMO-2026-P2-Q10",
+      "year": 2026,
+      "stage": "round-2",
+      "paper": 2,
+      "number": 10,
+      "date": "24 January 2026",
+      "title": "Circle intersection line through orthocentre",
+      "topics": [
+        "geometry"
+      ],
+      "aops": [
+        {
+          "chapterId": "V1-C11",
+          "section": "11.6",
+          "title": "Similar Triangles"
+        },
+        {
+          "chapterId": "V1-C14",
+          "title": "Angle Chasing"
+        },
+        {
+          "chapterId": "V2-C04",
+          "section": "4.1",
+          "title": "Properties of Cyclic Quadrilaterals"
+        }
+      ],
+      "path": "references/papers/2026.md",
+      "scan": "references/assets/page-85.png",
+      "pdfPage": 85,
+      "printedPage": 81,
+      "hasDiagram": false,
+      "keywords": "triangle abc has circumcentre o lines bo ac meet at j and co ab l the circumcircle of boc meets line ao a second time p circumcircles pcj pbl q prove pq passes through orthocentre h"
+    }
+  ]
+}
