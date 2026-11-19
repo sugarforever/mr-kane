@@ -1,6 +1,20 @@
 # Mr. Kane
 
-A small, English-language learning companion built with SvelteKit, Pi Durable, and pi-ai. Practise Irish or Spanish through writing, reading aloud, and keeping a record of what you learn.
+A learning companion built with SvelteKit, Pi Durable, and pi-ai. Practise Irish or Spanish through writing and reading aloud, or study math through an adaptive AoPS conversation.
+
+## Math study
+
+Open **Math** from the main navigation, or visit `/math`. Math currently uses **The Art of Problem Solving, Volume 1: The Basics** and **Volume 2: And Beyond**. The complete study skill, 56 chapter Markdown documents, section catalog and source images are included uncompressed in `skills/aops-study/`; no Downloads folder or personal skill installation is required.
+
+Choose a connected AI provider, then ask a question, explore the curriculum, request a study plan or use **Find my starting point**. The coach starts learning about the student's background, goals, previous topics and available time through conversation. It can propose a short diagnostic and adapt from the student's work. The **Your starting point** panel distinguishes reported knowledge from observed strengths and topics to work on. On smaller screens, open the panel using the header button. Correct its understanding at any time in chat.
+
+Each Math conversation keeps its own messages and learner profile in the private server SQLite database. Reloading or selecting a saved conversation restores that context. New conversations start with a fresh learner profile. Model context uses up to 16 recent messages within a 24,000-character budget, plus the saved learner record; the complete conversation remains saved. Pending turns can be retried with their original request ID, or edited as a new request. Retried completed requests reuse their archived result instead of making another model call.
+
+The Math runtime automatically loads the AoPS skill, curriculum and teaching guidance, plus the full chapter overview. Bounded `aops_search` and `aops_read` tools load relevant sections, pages and problems as needed. `aops_image` supplies source-page images for models whose catalog declares image support; text-only models receive source links and must ask about unclear diagrams. Chat supports Markdown, LaTeX and local source images. The agent receives the evolving learner record with each turn, rather than treating each message as a new student. Math does not load the language-coach prompt or run web research by default.
+
+Math needs a connected model; there is no simulated tutoring mode. Conversation messages, learner records and retrieved book passages (or source images when requested with a vision model) are sent to the selected AI provider. Math follows this app's existing single-user, local-server deployment model.
+
+`npm run test:smoke:math` builds and runs an isolated production fixture on port 4182. It verifies real Pi tool execution, learner updates, restart recovery, replay without another model call, source-image delivery and origin protection using a synthetic local provider. It does not call a paid account and removes its temporary data directory.
 
 ## UI components
 
@@ -102,7 +116,7 @@ npm run build
 HOST=127.0.0.1 ORIGIN=http://127.0.0.1:3000 npm start
 ```
 
-The Node adapter produces `build/`. Run it from the repository root so the bundled skill is available at `skills/language-coach/SKILL.md`. Keep that directory alongside the build when packaging. `.env` is optional and is loaded by the dev/start commands; production environment variables also work.
+The Node adapter produces `build/`. Run it from the repository root so the bundled skills are available at `skills/language-coach/` and `skills/aops-study/`. Keep the entire uncompressed `skills/` directory alongside the build when packaging. `.env` is optional and is loaded by the dev/start commands; production environment variables also work.
 
 Tests cover request limits and origin checks, input/output validation, writing history, audio persistence, connection isolation, secret redaction, model discovery, the real Pi wire path, persisted result replay, and upstream Codex device authentication/refresh with synthetic external responses.
 
