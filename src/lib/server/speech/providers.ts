@@ -1,3 +1,4 @@
+import { languageNames } from '$lib/languages';
 import { z } from 'zod';
 import { speechModel } from '$lib/speech';
 import {
@@ -21,7 +22,7 @@ function supported(
 	)
 		throw new SpeechError(
 			400,
-			`${provider} ${capability.toUpperCase()} does not support Irish in this app. Choose a compatible provider in Speech settings.`,
+			`${provider} ${capability.toUpperCase()} does not support ${languageNames[input.language]} in this app. Choose a compatible provider in Speech settings.`,
 		);
 }
 function audioFile(audio: Blob) {
@@ -201,7 +202,7 @@ export const ttsProviders: Record<'openai' | 'minimax', TextToSpeechProvider> =
 							text: input.text,
 							stream: false,
 							output_format: 'hex',
-							language_boost: 'Spanish',
+							language_boost: languageNames[input.language],
 							voice_setting: { voice_id: input.voice, speed: input.rate },
 							audio_setting: {
 								format: 'mp3',

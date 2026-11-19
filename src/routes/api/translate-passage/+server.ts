@@ -16,7 +16,7 @@ export async function POST({ request, url }) {
 	if (!input.success)
 		error(
 			400,
-			'Use an Irish or Spanish passage of up to 12,000 characters and 100 paragraphs.',
+			'Use an the selected learning language passage of up to 12,000 characters and 100 paragraphs.',
 		);
 	const id = request.headers.get('x-request-id') ?? undefined;
 	if (!configured() && !hasCoachRequest(id ?? null))

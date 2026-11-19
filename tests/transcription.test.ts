@@ -96,7 +96,7 @@ it('enforces origin, language and MIME before upload and gives a clear missing-k
 		POST(request('audio', url.origin, 'text/plain') as any),
 	).rejects.toMatchObject({ status: 415 });
 	await expect(
-		POST(request('audio', url.origin, 'audio/webm', 'en') as any),
+		POST(request('audio', url.origin, 'audio/webm', 'xx') as any),
 	).rejects.toMatchObject({ status: 400 });
 	await expect(POST(request() as any)).rejects.toMatchObject({ status: 503 });
 });
@@ -179,3 +179,20 @@ it('falls back to the environment key only when no saved OpenAI API key is confi
 	vi.stubEnv('OPENAI_API_KEY', 'environment-key');
 	expect(transcriptionKey()).toBe('environment-key');
 });
+
+it.each(['en', 'ja'])(
+	'accepts %s transcription uploads and forwards the language',
+	async (language) => {
+		vi.stubEnv('OPENAI_API_KEY', 'synthetic-secret');
+		const fetchMock = vi.fn(async (_url, init) => {
+			expect((init.body as FormData).get('languages[]')).toBe(language);
+			return Response.json({ text: 'sample' });
+		});
+		vi.stubGlobal('fetch', fetchMock);
+		expect(
+			await (
+				await POST(request('audio', url.origin, 'audio/webm', language) as any)
+			).json(),
+		).toMatchObject({ transcript: 'sample', status: 'complete' });
+	},
+);

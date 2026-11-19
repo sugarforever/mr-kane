@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Language } from '$lib/languages';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import type { SpeechCheck } from '$lib/client/speech-recognition';
 	import { compareReading } from '$lib/reading-feedback';
@@ -6,7 +7,7 @@
 		check,
 		expected,
 		language,
-	}: { check: SpeechCheck; expected: string; language: 'ga' | 'es' } = $props();
+	}: { check: SpeechCheck; expected: string; language: Language } = $props();
 	const comparison = $derived.by(() => {
 		try {
 			return { words: compareReading(expected, check.transcript), error: '' };

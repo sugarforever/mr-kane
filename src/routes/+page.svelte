@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { languages } from '$lib/languages';
+	import type { Language } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -147,7 +149,7 @@
 	}
 	let tab: Tab = $state('today');
 	let profile: Profile = $state({ ...defaultProfile });
-	let profiles: Partial<Record<'ga' | 'es', Profile>> = {};
+	let profiles: Partial<Record<Language, Profile>> = {};
 	let notebook: Notebook = $state({
 		version: 1,
 		attempts: [],
@@ -238,7 +240,7 @@
 			const raw = localStorage.getItem('mr-kane-profiles');
 			if (raw) {
 				const saved = JSON.parse(raw);
-				for (const lang of ['ga', 'es'] as const) {
+				for (const lang of languages.map((entry) => entry.value)) {
 					if (saved[lang])
 						profiles[lang] = profileSchema.parse({
 							...saved[lang],
@@ -281,7 +283,7 @@
 			notice = 'Your profile could not be saved. Check browser storage.';
 		}
 	}
-	function changeLanguage(language: 'ga' | 'es') {
+	function changeLanguage(language: Language) {
 		profile = profiles[language] ?? { ...defaultProfile, language };
 		selectedId =
 			notebook.practices.find((p) => p.profile.language === language)?.id ?? '';
@@ -580,12 +582,11 @@
 					><span>Learning language</span><NativeSelect
 						class="w-full"
 						value={profile.language}
-						onchange={(e) =>
-							changeLanguage(e.currentTarget.value as 'ga' | 'es')}
+						onchange={(e) => changeLanguage(e.currentTarget.value as Language)}
 						disabled={!ready || busy || micBusy}
-						><option value="es">Spanish · Español</option><option value="ga"
-							>Irish · Gaeilge</option
-						></NativeSelect
+						>{#each languages as language}<option value={language.value}
+								>{language.label}</option
+							>{/each}</NativeSelect
 					></Label
 				>
 			</div>
@@ -844,9 +845,9 @@
 								value={draft}
 								oninput={(e) => edit(e.currentTarget.value)}
 								maxlength={12000}
-								placeholder={profile.language === 'es'
-									? 'Empieza aquí…'
-									: 'Tosaigh anseo…'}
+								placeholder={languages.find(
+									(entry) => entry.value === profile.language,
+								)?.placeholder}
 							></Textarea>
 							<div class="spread wrap">
 								<span class="fineprint">Draft saved in this browser</span>

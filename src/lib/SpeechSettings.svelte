@@ -221,7 +221,8 @@
 							href="https://www.minimax.io/audio/text-to-speech"
 							target="_blank"
 							rel="noreferrer">Explore MiniMax voices</a
-						>. The selected voice applies to new Spanish playback after saving.
+						>. The selected voice applies to new playback in supported languages
+						after saving.
 					</p>
 				{/if}
 			</fieldset>

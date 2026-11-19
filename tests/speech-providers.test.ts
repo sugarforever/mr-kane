@@ -344,3 +344,37 @@ it('reports MiniMax STT billing failures without echoing the provider body', asy
 		message: expect.stringContaining('credit'),
 	});
 });
+
+it.each(['en', 'ja'] as const)(
+	'sends %s hints to MiniMax recognition and synthesis',
+	async (language) => {
+		const fetchMock = vi
+			.fn()
+			.mockResolvedValueOnce(Response.json({ text: 'sample' }))
+			.mockResolvedValueOnce(
+				Response.json({
+					base_resp: { status_code: 0 },
+					data: { audio: '0102' },
+				}),
+			);
+		vi.stubGlobal('fetch', fetchMock);
+		await sttProviders.minimax.transcribe({
+			audio: new Blob(['audio'], { type: 'audio/wav' }),
+			language,
+			model: 'asr-1.0',
+			key: 'synthetic-secret',
+		});
+		expect(fetchMock.mock.calls[0][1].headers.language).toBe(language);
+		await ttsProviders.minimax.synthesize({
+			text: language === 'ja' ? 'こんにちは。' : 'Hello.',
+			language,
+			model: 'speech-2.8-hd',
+			voice: 'test-voice',
+			rate: 1,
+			key: 'synthetic-secret',
+		});
+		expect(JSON.parse(fetchMock.mock.calls[1][1].body).language_boost).toBe(
+			language === 'en' ? 'English' : 'Japanese',
+		);
+	},
+);

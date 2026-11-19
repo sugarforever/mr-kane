@@ -1,3 +1,4 @@
+import type { Language } from '$lib/languages';
 import {
 	recordingDetailsSchema,
 	type RecordingDetails,
@@ -42,7 +43,7 @@ export async function recordingBlob(id: string) {
 	).blob();
 }
 export async function listRecordings(
-	language?: 'ga' | 'es',
+	language?: Language,
 ): Promise<Recording[]> {
 	const list = (await listRecordingDetails())
 		.filter((r) => !language || r.practice.profile.language === language)

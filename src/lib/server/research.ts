@@ -1,3 +1,4 @@
+import { languageNames } from '$lib/languages';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { z } from 'zod';
@@ -13,7 +14,7 @@ export function researchQuery(input: PracticeRequest) {
 		science: 'science explained university museum',
 		nature: 'wildlife nature environment conservation',
 		news: `positive science nature community news ${new Date().toISOString().slice(0, 10)}`,
-		exam: `${input.profile.language === 'ga' ? 'Irish' : 'Spanish'} secondary school exam themes learning objectives official curriculum`,
+		exam: `${languageNames[input.profile.language]} secondary school exam themes learning objectives official curriculum`,
 	}[input.sourceType];
 	return `${scene}: ${topics}`;
 }

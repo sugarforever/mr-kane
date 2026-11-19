@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Language } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
 	import ReadingFeedback from '$lib/ReadingFeedback.svelte';
 	import { transcribeSpeech } from '$lib/client/speech-service';
@@ -30,7 +31,7 @@
 		onbusy = () => {},
 	}: {
 		practice: Practice | null;
-		language: 'ga' | 'es';
+		language: Language;
 		onbusy?: (busy: boolean) => void;
 	} = $props();
 	let autoCheck = $state(true);
@@ -378,7 +379,7 @@
 		<Collapsible.Root>
 			<Collapsible.Trigger>View the original script</Collapsible.Trigger
 			><Collapsible.Content>
-				<p lang={language === 'ga' ? 'ga' : 'es'}>{r.practice.script}</p>
+				<p lang={language}>{r.practice.script}</p>
 			</Collapsible.Content></Collapsible.Root
 		>
 		<Label class=" block"

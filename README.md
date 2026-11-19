@@ -1,6 +1,6 @@
 # Mr. Kane
 
-A learning companion built with SvelteKit, Pi Durable, and pi-ai. Practise Irish or Spanish through writing and reading aloud, or study math through an adaptive AoPS conversation.
+A learning companion built with SvelteKit, Pi Durable, and pi-ai. Practise Irish, Spanish, English or Japanese through writing and reading aloud, or study math through an adaptive AoPS conversation.
 
 ## Math study
 
@@ -71,7 +71,7 @@ Each coaching request runs in a Pi Durable SQLite session with the teaching skil
 
 Request identifiers are persisted in the browser. After a lost connection or server restart, **Resume request** reopens the same task instead of issuing duplicate work. Pi checkpoints and stored answers survive process interruption. Generation permits one bounded retry, with a 60-second model wait deadline after the bounded search step and a two-request per-process concurrency limit. A completed request is replayed without calling the model again. Recovery starts when the learner resumes; this version is not an always-running background worker. Dismissing the browser notice does not cancel a request already running on the server. Terminal failures require a new request.
 
-The host supplies `skills/language-coach/SKILL.md` as the durable teaching instruction. Use English for explanations; reading scripts, student quotations and suggested revisions use the target language. Profile preferences constrain task generation; they are not a calibrated proficiency assessment.
+The host supplies `skills/language-coach/SKILL.md` as the durable teaching instruction. Use English for explanations; reading scripts, student quotations and suggested revisions use the target language. Japanese practice uses natural kana and kanji with readings in vocabulary glosses; English practice uses simpler English definitions. English study hides the redundant passage translation control. Profile preferences constrain task generation; they are not a calibrated proficiency assessment.
 
 ### Optional environment bootstrap
 
@@ -87,7 +87,7 @@ Subsequent changes belong in AI Providers; changing `.env` does not overwrite sa
 
 ## What the MVP does
 
-- Maintains separate Irish and Spanish learning preferences: school stage, CEFR level, interests, vocabulary, and grammar.
+- Maintains separate Irish, Spanish, English and Japanese learning preferences: school stage, CEFR level, interests, vocabulary, and grammar.
 - Generates writing and reading-aloud material for everyday life, science, nature, news, and exam-inspired themes, adapted to interests, level, vocabulary and grammar.
 - Saves writing versions. AI feedback quotes must match the submitted text; feedback has hints and optional suggested revisions, without scores.
 - Collects feedback points in Review notes, with a manual reviewed state.
@@ -126,12 +126,11 @@ Tests cover request limits and origin checks, input/output validation, writing h
 
 Speech recognition and synthesis use independent provider/model selections. OpenAI recognition defaults to `gpt-transcribe`; MiniMax uses `asr-1.0` with WAV conversion. `npm start` defaults `BODY_SIZE_LIMIT` to `22M` for recording uploads and audio checks (an explicit environment value takes precedence). Set `BODY_SIZE_LIMIT=22M` if launching the built Node adapter directly; the app route still enforces 20 MB. Audio is forwarded in memory and is not stored on the server by this route. Transcription API usage requires its own API access and billing.
 
-
 ### Speech provider extension points
 
 `src/lib/speech.ts` defines the public capability/model/language/voice catalog and validated settings. `src/lib/server/speech/contracts.ts` defines `SpeechToTextProvider` and `TextToSpeechProvider`; implementations live in `providers.ts`, and `service.ts` resolves the saved choice and credential. Add a provider implementation and its catalog entries, then add a protocol test. Feature components use `client/speech-service.ts` for recognition and `client/speech-playback.ts` for all playback, including exclusive playback and microphone cancellation.
 
-Dedicated keys are private server credentials, never returned by Settings APIs. Precedence is dedicated speech key, matching saved API-provider connection, environment fallback (`OPENAI_API_KEY` / `MINIMAX_API_KEY`). No automatic provider fallback occurs when a model, language or key is unavailable. Browser-local TTS remains the default. MiniMax STT/TTS and remote OpenAI TTS are available for Spanish; Irish playback requires a matching local voice. OpenAI file TTS models are compatibility options with the documented January 6, 2027 shutdown; a future Realtime adapter belongs behind the same interface, not in feature components.
+Dedicated keys are private server credentials, never returned by Settings APIs. Precedence is dedicated speech key, matching saved API-provider connection, environment fallback (`OPENAI_API_KEY` / `MINIMAX_API_KEY`). No automatic provider fallback occurs when a model, language or key is unavailable. Browser-local TTS remains the default. MiniMax STT/TTS support Spanish, English and Japanese ([recognition](https://platform.minimax.io/docs/api-reference/speech-to-text), [synthesis](https://platform.minimax.io/docs/api-reference/speech-t2a-http)); remote OpenAI TTS supports Spanish, English and Japanese ([supported languages](https://developers.openai.com/api/docs/guides/text-to-speech)); Irish playback requires a matching local voice. OpenAI file TTS models are compatibility options with the documented January 6, 2027 shutdown; a future Realtime adapter belongs behind the same interface, not in feature components.
 
 ### Agent speech tools
 
@@ -139,7 +138,7 @@ Dedicated keys are private server credentials, never returned by Settings APIs. 
 
 - `speech_to_text({ artifactId, language })` returns `{ status, transcript, message? }`.
 - `text_to_speech({ text, language, rate? })` returns `{ artifactId, mimeType, bytes, expiresAt }`. It uses the configured remote voice; local browser voices cannot create a server audio file. Text is limited to 4,000 characters per call.
-- Language is `ga` or `es`, subject to the selected provider's support. Provider calls receive the agent cancellation signal. Interrupted calls are not automatically replayed, to avoid duplicate billable requests.
+- Language is `ga`, `es`, `en` or `ja`, subject to the selected provider's support. Provider calls receive the agent cancellation signal. Interrupted calls are not automatically replayed, to avoid duplicate billable requests.
 
 Audio artifacts are private server files (20 MB maximum), scoped to an application request ID. They expire after 24 hours and are deleted on expired reads or the next artifact creation. Upload audio with `POST /api/speech/artifacts?requestId=REQUEST_ID` (binary audio body, matching Origin, audio Content-Type). Retrieve it with `GET /api/speech/artifacts/ARTIFACT_ID?requestId=REQUEST_ID`. These endpoints follow the app's existing single-user deployment model.
 

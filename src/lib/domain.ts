@@ -1,8 +1,9 @@
+import { languageSchema } from '$lib/languages';
 import { z } from 'zod';
 import { readingUnitSchema } from './reading-levels';
 const short = z.string().trim().min(1).max(2000);
 export const profileSchema = z.object({
-	language: z.enum(['ga', 'es']),
+	language: languageSchema,
 	level: z.enum(['A1', 'A2', 'B1', 'B2']),
 	ageGroup: z.enum(['Middle school', 'High school']),
 	interests: z.string().max(500),
@@ -117,7 +118,7 @@ export function restoreNotebook(raw: string | null): Notebook {
 			)
 		: { version: 1, attempts: [], practices: [], reviews: {} };
 }
-export const languageNames = { ga: 'Irish', es: 'Spanish' } as const;
+export { languageNames } from './languages';
 export const defaultProfile: Profile = {
 	language: 'es',
 	level: 'A2',

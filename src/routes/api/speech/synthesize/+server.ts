@@ -8,7 +8,7 @@ export async function POST({ request, url }) {
 	if (!input.success || input.data.text.length > 4000)
 		error(
 			400,
-			'Use up to 4,000 characters of Irish or Spanish per speech segment.',
+			'Use up to 4,000 characters of the selected learning language per speech segment.',
 		);
 	try {
 		const result = await generateSpeech(

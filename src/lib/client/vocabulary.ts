@@ -1,9 +1,10 @@
+import { languageSchema } from '$lib/languages';
 import { z } from 'zod';
 export const vocabularyKey = 'mr-kane-vocabulary';
 const entrySchema = z.object({
 	id: z.string(),
 	text: z.string().trim().min(1).max(4000),
-	language: z.enum(['ga', 'es']),
+	language: languageSchema,
 	english: z.string().max(16000),
 	createdAt: z.string(),
 	reviewedAt: z.string().nullable(),

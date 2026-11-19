@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Language } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { Languages, Volume2, BookPlus } from '@lucide/svelte';
@@ -17,7 +18,7 @@
 		recording = false,
 	}: {
 		text: string;
-		language: 'ga' | 'es';
+		language: Language;
 		unit?: ReadingUnit;
 		recording?: boolean;
 	} = $props();
@@ -210,11 +211,13 @@
 			>
 		{:else}
 			<div class="flex flex-wrap gap-2">
-				<Button onclick={translate} disabled={loading || !selected}
-					><Languages aria-hidden="true" />{loading
-						? 'Translating…'
-						: 'Translate'}</Button
-				>
+				{#if language !== 'en'}<Button
+						onclick={translate}
+						disabled={loading || !selected}
+						><Languages aria-hidden="true" />{loading
+							? 'Translating…'
+							: 'Translate'}</Button
+					>{/if}
 				<Button
 					variant="outline"
 					size="icon"

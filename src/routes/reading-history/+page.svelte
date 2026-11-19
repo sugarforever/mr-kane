@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { languages, languageNames } from '$lib/languages';
 	import * as Icons from '@lucide/svelte';
 	import { onMount, onDestroy, untrack } from 'svelte';
 	import ReadingFeedback from '$lib/ReadingFeedback.svelte';
@@ -211,9 +212,10 @@
 	<div class="flex flex-wrap gap-4">
 		<Label
 			>Language<NativeSelect bind:value={language} disabled={busy}
-				><option value="all">All languages</option><option value="ga"
-					>Irish</option
-				><option value="es">Spanish</option></NativeSelect
+				><option value="all">All languages</option
+				>{#each languages as entry}<option value={entry.value}
+						>{languageNames[entry.value]}</option
+					>{/each}</NativeSelect
 			></Label
 		>
 		<Label
@@ -260,9 +262,7 @@
 						class="text-sm"
 						>{new Date(item.createdAt).toLocaleString('en-IE')} · {time(
 							item.duration,
-						)} · {item.practice.profile.language === 'ga'
-							? 'Irish'
-							: 'Spanish'}</span
+						)} · {languageNames[item.practice.profile.language]}</span
 					><span class="block text-sm text-muted-foreground"
 						>{item.speechCheck
 							? 'Reading feedback saved'

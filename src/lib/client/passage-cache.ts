@@ -1,7 +1,8 @@
+import { languageSchema, type Language } from '$lib/languages';
 import { parsePassageTranslation } from '$lib/reading';
 // Version the cache when translation instructions change so old wording is regenerated.
 const key = 'mr-kane-passage-translations-v2';
-type Entry = { text: string; language: 'ga' | 'es'; paragraphs: string[] };
+type Entry = { text: string; language: Language; paragraphs: string[] };
 type Store = Pick<Storage, 'getItem' | 'setItem'>;
 function entries(store: Store): Entry[] {
 	const raw = store.getItem(key);
@@ -12,15 +13,11 @@ function entries(store: Store): Entry[] {
 		(e): e is Entry =>
 			!!e &&
 			typeof e.text === 'string' &&
-			(e.language === 'ga' || e.language === 'es') &&
+			languageSchema.safeParse(e.language).success &&
 			Array.isArray(e.paragraphs),
 	);
 }
-export function cachedPassage(
-	store: Store,
-	text: string,
-	language: 'ga' | 'es',
-) {
+export function cachedPassage(store: Store, text: string, language: Language) {
 	const entry = entries(store).find(
 		(e) => e.text === text && e.language === language,
 	);
@@ -29,7 +26,7 @@ export function cachedPassage(
 export function cachePassage(
 	store: Store,
 	text: string,
-	language: 'ga' | 'es',
+	language: Language,
 	paragraphs: string[],
 ) {
 	const validated = parsePassageTranslation({ paragraphs }, text);

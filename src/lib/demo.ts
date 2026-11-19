@@ -1,7 +1,10 @@
+import { languageDemo } from './demo-languages';
 import type { PracticeRequest } from '#lib/domain';
 export function demoPractice(
 	input: Omit<PracticeRequest, 'research'> & { research?: boolean },
 ) {
+	if (input.profile.language === 'en' || input.profile.language === 'ja')
+		return languageDemo(input, input.profile.language);
 	const spanish = input.profile.language === 'es';
 	const science = ['science', 'nature'].includes(input.sourceType);
 	if (input.mode === 'speaking' && input.readingUnit) {

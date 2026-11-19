@@ -1,3 +1,4 @@
+import type { Language } from '$lib/languages';
 import {
 	connections,
 	defaultConnection,
@@ -27,7 +28,7 @@ export function transcriptionKey(): string | undefined {
 // Compatibility entry point for existing callers; new features use speech/service.
 export async function transcribeAudio(
 	audio: Blob,
-	language: 'ga' | 'es',
+	language: Language,
 	key: string,
 	signal?: AbortSignal,
 ) {
