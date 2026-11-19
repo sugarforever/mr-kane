@@ -405,7 +405,7 @@
 	--welcome-mark-background: var(--palette-pale);
 	--math-description: var(--palette-muted);
 	--message-avatar-background: var(--palette-pale);
-	--student-message-avatar-background: var(--palette-pale);
+	--student-message-avatar-background: var(--palette-paper);
 	--learner-panel-background: var(--palette-paper);
 	--learner-empty-span-foreground: var(--palette-ink);
 	--math-notice-background: var(--palette-pale);

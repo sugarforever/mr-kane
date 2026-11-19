@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Brand from '$lib/Brand.svelte';
+	import ChatAvatar from '$lib/ChatAvatar.svelte';
 	import { onMount, onDestroy, tick, untrack } from 'svelte';
 	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
 	import { goto } from '$app/navigation';
@@ -373,9 +374,7 @@
 								class:student={message.role === 'user'}
 							>
 								<span class="message-avatar"
-									>{#if message.role === 'assistant'}<Sparkles
-											class="size-4"
-										/>{:else}<UserRound class="size-4" />{/if}</span
+									><ChatAvatar role={message.role} /></span
 								>
 								<div>
 									<span class="message-author"
@@ -387,14 +386,14 @@
 								</div>
 							</article>{/each}
 						{#if session?.pending}<article class="math-message student">
-								<span class="message-avatar"><UserRound class="size-4" /></span>
+								<span class="message-avatar"><ChatAvatar role="user" /></span>
 								<div>
 									<span class="message-author">You</span>
 									<p class="pending-message">{session.pending.message}</p>
 								</div>
 							</article>{/if}
 						{#if busy && progress?.reply}<article class="math-message">
-								<span class="message-avatar"><Sparkles class="size-4" /></span>
+								<span class="message-avatar"><ChatAvatar /></span>
 								<div>
 									<span class="message-author">Mr. Kane</span>
 									<div class="math-prose">
@@ -782,12 +781,8 @@
 		width: 30px;
 		height: 30px;
 		border-radius: 50%;
-		background: var(--message-avatar-background);
 		display: grid;
 		place-items: center;
-	}
-	.student .message-avatar {
-		background: var(--student-message-avatar-background);
 	}
 	.message-author {
 		text-transform: uppercase;

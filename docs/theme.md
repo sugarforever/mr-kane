@@ -36,3 +36,7 @@ The existing `.dark` utility variant does not implement a dark theme. This chang
 `npm run check:theme` rejects authored color literals and fixed Tailwind colors outside theme.css. It is included in `npm run check`. System colors, transparent/currentColor, opacity modifiers and semantic color-mix remain available.
 
 Before shipping a theme change, run `npm run check`, `npm run build`, and `npm test`. Inspect desktop and mobile Today, writing/reading, vocabulary, review/history, math/library, all three settings sections and provider dialogs. Check selected, hover, keyboard focus, disabled, loading, error and recording states, long provider/model names, and mobile overflow. Never use real provider credentials for a visual smoke check or generate paid AI practice solely to validate styling.
+
+## Chat avatars
+
+`src/lib/ChatAvatar.svelte` renders the approved Claude Design pair on a 32-unit SVG grid at 30px: Kane uses a sprout speech bubble on a pale disc; the learner is a smiling child with a fringe and yellow top on a white disc. The SVG owns its disc and ring, uses theme roles, and has no IDs or external resources. Math history, pending messages and streamed replies share this component. Adjacent author labels remain visible; avatars are decorative and hidden from assistive technology.
