@@ -25,6 +25,57 @@ For a targeted change, repoint a semantic alias. For example, point
 `--settings-primary` at `var(--primary)` to make settings selection match shared
 primary controls, or change `--surface-paper` to recolor the warm panels.
 
+## Example: apply an ocean theme
+
+From the repository root, run the following script. It changes the green and
+olive palette families to blue, cools the neutral text and shadows, and keeps the
+warm illustration accents. Every semantic alias continues to work, so settings,
+math, library, and learning styles all inherit the new palette. The default theme
+in this PR stays unchanged until you run the example.
+
+```bash
+python3 - <<'PYTHON'
+import colorsys
+import re
+from pathlib import Path
+
+path = Path("src/lib/styles/theme.css")
+source = path.read_text()
+ocean_hue = 215 / 360
+
+
+def recolor(match):
+    token, hex_color = match.groups()
+    rgb = tuple(int(hex_color[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    _, lightness, saturation = colorsys.rgb_to_hls(*rgb)
+    blue = colorsys.hls_to_rgb(ocean_hue, lightness, saturation)
+    # Keep white white and preserve existing translucent shadow/backdrop alpha.
+    rgb_hex = "".join(f"{round(channel * 255):02x}" for channel in blue)
+    return f"{token}: #{rgb_hex}{hex_color[6:]};"
+
+
+source, count = re.subn(
+    r"(--palette-(?:sage|olive|neutral|shadow)-\d+): #([0-9a-f]{6}(?:[0-9a-f]{2})?);",
+    recolor,
+    source,
+)
+path.write_text(source)
+print(f"Applied ocean theme to {count} palette entries in {path}")
+PYTHON
+```
+
+Run `npm run dev` and open the URL printed by Vite. You should see blue navigation
+and actions, cool pale backgrounds, and blue settings/math selections, while the
+pencil and other warm accents keep their original colors. `git diff --
+src/lib/styles/theme.css` shows the palette edits; the semantic roles and component
+files should have no changes. To try another hue, change `ocean_hue` and rerun the
+script. Undo the palette edits in your editor to return to the original theme.
+
+This is an example palette, not a contrast-certified theme. The script preserves
+HSL lightness and saturation, which does not guarantee equal perceived contrast
+across hues. Review the foreground/background pairs and interactive states listed
+below before shipping it.
+
 The initial extraction preserves every effective color. It intentionally does not
 collapse nearby shades: white shared cards and warm paper panels remain distinct,
 as do shared muted text and legacy fine print. `--border` retains the effective
