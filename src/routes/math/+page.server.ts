@@ -1,3 +1,4 @@
+import { irmoBrowse } from '$lib/server/math/irmo';
 import { configured } from '$lib/server/agent';
 import { publicSettings } from '$lib/server/providers-store';
 import {
@@ -6,12 +7,13 @@ import {
 	MathStudyError,
 } from '$lib/server/math/study';
 import { error } from '@sveltejs/kit';
-export function load({ url }) {
+export async function load({ url }) {
 	const sessions = listMathSessions();
 	const id = url.searchParams.get('session') || sessions[0]?.id;
 	try {
 		return {
 			sessions,
+			irmo: await irmoBrowse(),
 			session: id ? getMathSession(id) : null,
 			aiConfigured: configured(),
 			aiSettings: publicSettings(),

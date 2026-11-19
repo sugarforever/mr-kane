@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, tick, untrack } from 'svelte';
+	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
 	import { goto } from '$app/navigation';
 	import {
 		ArrowLeft,
@@ -27,8 +28,16 @@
 	let draft = $state(''),
 		busy = $state(false),
 		notice = $state('');
-	let bottom: HTMLDivElement;
+	let bottom = $state<HTMLDivElement>();
 	let showProfile = $state(false);
+	let showLibrary = $state(false);
+	async function studyIrmo(message: string) {
+		if (busy || session?.pending) return;
+		draft = message;
+		showLibrary = false;
+		await tick();
+		document.getElementById('math-message')?.focus();
+	}
 	const starters = [
 		{
 			title: 'Find my starting point',
@@ -220,7 +229,7 @@
 <svelte:head
 	><title>Math · Mr. Kane</title><meta
 		name="description"
-		content="Study math through conversation. Explore AoPS, find your starting point, and build a plan that grows with you."
+		content="Study math through conversation. Explore AoPS and Irish Mathematical Olympiad papers, find your starting point, and build a plan that grows with you."
 	/></svelte:head
 >
 <div class="math-shell">
@@ -234,7 +243,7 @@
 			><ArrowLeft class="size-4" /> Learning space</Button
 		>
 		<div class="math-current">
-			<Calculator class="size-4" /> Math <span>AoPS</span>
+			<Calculator class="size-4" /> Math <span>AoPS · IrMO</span>
 		</div>
 		<Button variant="outline" onclick={newChat} disabled={busy} class="w-full"
 			><Plus class="size-4" /> New conversation</Button
@@ -264,6 +273,12 @@
 				<h1>Math</h1>
 			</div>
 			<div class="math-connection">
+				<Button
+					variant="outline"
+					aria-expanded={showLibrary}
+					onclick={() => (showLibrary = !showLibrary)}
+					><BookOpen class="size-4" /> IrMO papers</Button
+				>
 				<span class:connected={configured}
 					>{configured ? 'Coach connected' : 'Connect your coach'}</span
 				><NativeSelect
@@ -289,121 +304,137 @@
 		</header>
 		<div class="math-workspace">
 			<section class="chat-column" aria-label="Math study chat">
-				<div class="math-transcript" aria-live="polite" aria-busy={busy}>
-					{#if !session?.messages.length}
-						<div class="math-welcome">
-							<div class="welcome-mark"><Calculator size={28} /></div>
-							<span class="eyebrow">AOPS · THE BASICS & AND BEYOND</span>
-							<h2>Let’s make math<br />make sense.</h2>
-							<p>
-								Bring a question, explore an idea, or find a place to begin.
-								We’ll get to know what you know and build from there.
-							</p>
-						</div>
-						<div class="math-starters">
-							{#each starters as starter}<button
-									disabled={busy || !configured || !!session?.pending}
-									onclick={() => send(starter.message)}
-									><span>{starter.title}<ArrowUp class="size-4" /></span><small
-										>{starter.detail}</small
-									></button
-								>{/each}
-						</div>
-						{#if !configured}<div class="math-setup">
-								<BookOpen class="size-5" />
-								<div>
-									<strong>Your books are ready.</strong>
-									<p>
-										Choose a connected model above, or add one in <a
-											href="/?tab=providers">AI Providers</a
-										>, to start a conversation.
-									</p>
-								</div>
-							</div>{/if}
-					{/if}
-					{#each session?.messages ?? [] as message, index}<article
-							class="math-message"
-							class:student={message.role === 'user'}
-						>
-							<span class="message-avatar"
-								>{#if message.role === 'assistant'}<Sparkles
-										class="size-4"
-									/>{:else}<UserRound class="size-4" />{/if}</span
+				<!-- Browsing preserves the current conversation and any unfinished turn. -->
+				{#if showLibrary}
+					<IrmoLibrary
+						library={data.irmo}
+						disabled={busy || !!session?.pending || !configured}
+						onStudy={studyIrmo}
+						onClose={() => (showLibrary = false)}
+					/>
+				{:else}
+					<div class="math-transcript" aria-live="polite" aria-busy={busy}>
+						{#if !session?.messages.length}
+							<div class="math-welcome">
+								<div class="welcome-mark"><Calculator size={28} /></div>
+								<span class="eyebrow">AOPS · IRISH MATHEMATICAL OLYMPIAD</span>
+								<h2>Let’s make math<br />make sense.</h2>
+								<p>
+									Bring a question, explore an idea, or find a place to begin.
+									We’ll get to know what you know and build from there.
+								</p>
+							</div>
+							<button class="irmo-welcome" onclick={() => (showLibrary = true)}
+								><BookOpen class="size-4" /><span
+									><strong>Explore IrMO Round 2</strong><small
+										>Past papers · Proof practice · AoPS preparation</small
+									></span
+								><ArrowUp class="size-4" /></button
 							>
-							<div>
-								<span class="message-author"
-									>{message.role === 'assistant' ? 'Mr. Kane' : 'You'}</span
+							<div class="math-starters">
+								{#each starters as starter}<button
+										disabled={busy || !configured || !!session?.pending}
+										onclick={() => send(starter.message)}
+										><span>{starter.title}<ArrowUp class="size-4" /></span
+										><small>{starter.detail}</small></button
+									>{/each}
+							</div>
+							{#if !configured}<div class="math-setup">
+									<BookOpen class="size-5" />
+									<div>
+										<strong>Your books are ready.</strong>
+										<p>
+											Choose a connected model above, or add one in <a
+												href="/?tab=providers">AI Providers</a
+											>, to start a conversation.
+										</p>
+									</div>
+								</div>{/if}
+						{/if}
+						{#each session?.messages ?? [] as message, index}<article
+								class="math-message"
+								class:student={message.role === 'user'}
+							>
+								<span class="message-avatar"
+									>{#if message.role === 'assistant'}<Sparkles
+											class="size-4"
+										/>{:else}<UserRound class="size-4" />{/if}</span
 								>
-								<div class="math-prose">
-									{@html renderMathMarkdown(message.content)}
+								<div>
+									<span class="message-author"
+										>{message.role === 'assistant' ? 'Mr. Kane' : 'You'}</span
+									>
+									<div class="math-prose">
+										{@html renderMathMarkdown(message.content)}
+									</div>
 								</div>
-							</div>
-						</article>{/each}
-					{#if session?.pending}<article class="math-message student">
-							<span class="message-avatar"><UserRound class="size-4" /></span>
-							<div>
-								<span class="message-author">You</span>
-								<p class="pending-message">{session.pending.message}</p>
-							</div>
-						</article>{/if}
-					{#if busy}<p class="math-thinking" role="status">
-							<Sparkles class="size-4" /> Thinking it through…
-						</p>{/if}
-					{#if notice || (session?.pending && !busy)}<div
-							class="math-notice"
-							role="alert"
-						>
-							<p>
-								{notice ||
-									'This message has not finished yet. Retry it to continue, or edit it first.'}
-							</p>
-							{#if session?.pending}<Button
-									variant="outline"
-									onclick={() => send(session!.pending!.message)}
-									disabled={busy || !configured}
-									><RefreshCw class="size-4" /> Retry message</Button
-								><Button variant="ghost" onclick={editPending} disabled={busy}
-									>Edit message</Button
-								>{/if}
-						</div>{/if}
-					<div bind:this={bottom}></div>
-				</div>
-				<form
-					class="math-composer"
-					onsubmit={(e) => {
-						e.preventDefault();
-						void send();
-					}}
-				>
-					<label for="math-message">What would you like to work on?</label>
-					<div>
-						<Textarea
-							id="math-message"
-							bind:value={draft}
-							maxlength={6000}
-							rows={2}
-							placeholder="Ask a question, share what you’ve tried, or tell me about your goals…"
-							disabled={busy || !!session?.pending || !configured}
-							onkeydown={(e) => {
-								if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
-									e.preventDefault();
-									void send();
-								}
-							}}
-						/><Button
-							type="submit"
-							aria-label="Send math message"
-							disabled={busy ||
-								!!session?.pending ||
-								!draft.trim() ||
-								!configured}><ArrowUp class="size-5" /></Button
-						>
+							</article>{/each}
+						{#if session?.pending}<article class="math-message student">
+								<span class="message-avatar"><UserRound class="size-4" /></span>
+								<div>
+									<span class="message-author">You</span>
+									<p class="pending-message">{session.pending.message}</p>
+								</div>
+							</article>{/if}
+						{#if busy}<p class="math-thinking" role="status">
+								<Sparkles class="size-4" /> Thinking it through…
+							</p>{/if}
+						{#if notice || (session?.pending && !busy)}<div
+								class="math-notice"
+								role="alert"
+							>
+								<p>
+									{notice ||
+										'This message has not finished yet. Retry it to continue, or edit it first.'}
+								</p>
+								{#if session?.pending}<Button
+										variant="outline"
+										onclick={() => send(session!.pending!.message)}
+										disabled={busy || !configured}
+										><RefreshCw class="size-4" /> Retry message</Button
+									><Button variant="ghost" onclick={editPending} disabled={busy}
+										>Edit message</Button
+									>{/if}
+							</div>{/if}
+						<div bind:this={bottom}></div>
 					</div>
-					<small
-						>Enter to send · Shift + Enter for a new line · Saved in your Math
-						conversations.</small
+					<form
+						class="math-composer"
+						onsubmit={(e) => {
+							e.preventDefault();
+							void send();
+						}}
 					>
-				</form>
+						<label for="math-message">What would you like to work on?</label>
+						<div>
+							<Textarea
+								id="math-message"
+								bind:value={draft}
+								maxlength={6000}
+								rows={2}
+								placeholder="Ask a question, share what you’ve tried, or tell me about your goals…"
+								disabled={busy || !!session?.pending || !configured}
+								onkeydown={(e) => {
+									if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+										e.preventDefault();
+										void send();
+									}
+								}}
+							/><Button
+								type="submit"
+								aria-label="Send math message"
+								disabled={busy ||
+									!!session?.pending ||
+									!draft.trim() ||
+									!configured}><ArrowUp class="size-5" /></Button
+							>
+						</div>
+						<small
+							>Enter to send · Shift + Enter for a new line · Saved in your Math
+							conversations.</small
+						>
+					</form>
+				{/if}
 			</section>
 			<aside
 				class="learner-panel"
@@ -449,7 +480,10 @@
 						</ul>{/if}{/each}
 				<div class="math-library-note">
 					<BookOpen class="size-4" /><strong>Your study library</strong>
-					<p>AoPS Volume 1 · The Basics<br />AoPS Volume 2 · And Beyond</p>
+					<p>
+						AoPS Volume 1 · The Basics<br />AoPS Volume 2 · And Beyond<br />IrMO
+						finals · 2011–2026
+					</p>
 					<small
 						>Algebra · Number theory · Geometry<br />Counting · Probability ·
 						Proof</small
@@ -461,6 +495,33 @@
 </div>
 
 <style>
+	.irmo-welcome {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		max-width: 620px;
+		width: 100%;
+		margin: 0 auto 18px;
+		padding: 16px 20px;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		text-align: left;
+		background: #edf2e7;
+		cursor: pointer;
+		color: #43543b;
+	}
+	.irmo-welcome span {
+		flex: 1;
+	}
+	.irmo-welcome strong {
+		font-size: 13px;
+	}
+	.irmo-welcome small {
+		display: block;
+		font-size: 11px;
+		margin-top: 5px;
+		color: var(--muted-foreground);
+	}
 	.math-shell {
 		display: grid;
 		grid-template-columns: 244px minmax(0, 1fr);

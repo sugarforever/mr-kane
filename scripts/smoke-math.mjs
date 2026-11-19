@@ -31,6 +31,16 @@ const model = createServer(async (req, res) => {
 	const context = JSON.parse(
 		parsed.messages.find((m) => m.role === 'user').content,
 	).data;
+	const isIrmo = context.messages
+		.filter((m) => m.role === 'user')
+		.at(-1)
+		?.content.includes('IRMO-2024-P2-Q6');
+	const toolText = parsed.messages
+		.filter((m) => m.role === 'tool')
+		.map((m) => m.content)
+		.join('\n');
+	const needIrmo = isIrmo && !toolText.includes('IRMO-2024-P2-Q6');
+	const needAops = isIrmo && !needIrmo && !toolText.includes('pdf-page-');
 	const first = context.messages.filter((m) => m.role === 'user').length === 1;
 	const answer = {
 		reply: first
@@ -48,8 +58,15 @@ const model = createServer(async (req, res) => {
 				: {}),
 		},
 	};
+	if (isIrmo) {
+		assert.ok(parsed.tools.some((t) => t.function.name === 'irmo_read'));
+		assert.ok(parsed.tools.some((t) => t.function.name === 'aops_read'));
+		answer.reply =
+			'Let’s work on **IrMO 2024, Paper 2, Question 6**.\n\n$$\\binom{n}{1}+\\binom{n}{3}=2^m.$$\n\nThe binomial coefficient $\\binom{n}{3}$ counts ways to choose three objects from $n$. Start by writing it as $n(n-1)(n-2)/6$. What happens when you try $n=3$ and $n=4$?\n\nFor the foundations, we can revisit **AoPS Volume 1, section 5.1 (Divisibility)** and then binomial coefficients. [Original question](https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=81).';
+		answer.learner.goal = 'Prepare for Irish Mathematical Olympiad Round 2';
+	}
 	const delta =
-		calls === 1
+		calls === 1 || needIrmo || needAops
 			? {
 					role: 'assistant',
 					tool_calls: [
@@ -58,8 +75,12 @@ const model = createServer(async (req, res) => {
 							id: 'read-math',
 							type: 'function',
 							function: {
-								name: 'aops_read',
-								arguments: '{"chapterId":"V1-C03","section":"3.2"}',
+								name: needIrmo ? 'irmo_read' : 'aops_read',
+								arguments: needIrmo
+									? JSON.stringify({ id: 'IRMO-2024-P2-Q6' })
+									: needAops
+										? JSON.stringify({ chapterId: 'V1-C05', section: '5.1' })
+										: '{"chapterId":"V1-C03","section":"3.2"}',
 							},
 						},
 					],
@@ -74,7 +95,7 @@ const model = createServer(async (req, res) => {
 		choices: [{ index: 0, delta, finish_reason }],
 	});
 	res.end(
-		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
+		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 || needIrmo || needAops ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
 	);
 });
 await new Promise((r) => model.listen(0, '127.0.0.1', r));
@@ -170,8 +191,29 @@ try {
 		root + '/api/math/library/volume-1-the-basics/assets/pdf-page-031.png',
 	);
 	assert.equal(image.headers.get('content-type'), 'image/png');
+	const irmoList = await (
+		await fetch(root + '/api/math/irmo?year=2024&paper=2')
+	).json();
+	assert.equal(irmoList.questions.length, 5);
+	const question = await (
+		await fetch(root + '/api/math/irmo?id=IRMO-2024-P2-Q6')
+	).json();
+	assert.ok(question.content.includes('\\binom{n}{3}'));
+	const irmoTurn = await post(`/api/math/chat/${session.id}`, {
+		requestId: randomUUID(),
+		message:
+			'Help me study IRMO-2024-P2-Q6 and its AoPS prerequisites. I can study 3 hours a week.',
+	});
+	assert.ok(irmoTurn.messages.at(-1).content.includes('IrMO 2024'));
+	assert.equal(calls, 6);
+	const source = await fetch(root + question.scanUrl);
+	assert.equal(source.headers.get('content-type'), 'image/png');
+	const blocked = await fetch(root + '/api/math/irmo?year=2024', {
+		headers: { origin: 'https://foreign.test' },
+	});
+	assert.equal(blocked.status, 403);
 	console.log(
-		'Math production smoke: tools, profile, restart, replay, source images and access checks passed.',
+		'Math production smoke: AoPS and IrMO tools, question browsing, profile, restart, replay, source images and access checks passed.',
 	);
 	if (process.argv.includes('--serve')) {
 		console.log(`Local UI fixture: ${root}/math?session=${session.id}`);

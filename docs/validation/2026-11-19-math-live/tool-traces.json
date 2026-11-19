@@ -1,0 +1,405 @@
+[
+  {
+    "case": "novice-hints",
+    "requestId": "f94db753-07a6-4667-b696-f8a5f8c1c1c4",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P1-Q1"
+        }
+      }
+    ]
+  },
+  {
+    "case": "novice-hints",
+    "requestId": "5c6da821-2372-4b60-b067-3261c363e74b",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P1-Q1"
+        }
+      }
+    ]
+  },
+  {
+    "case": "novice-hints",
+    "requestId": "31a43459-0569-46c5-984f-2b311ab4a9c7",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P1-Q1"
+        }
+      }
+    ]
+  },
+  {
+    "case": "specific-full-solution",
+    "requestId": "4c2e6397-eb21-46fb-8572-143771365fae",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P2-Q6"
+        }
+      }
+    ]
+  },
+  {
+    "case": "foundations-and-diagnosis",
+    "requestId": "26bc4d66-1117-4b63-a54e-e69c5bc636bf",
+    "tools": [
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C05"
+        }
+      },
+      {
+        "name": "aops_search",
+        "arguments": {
+          "query": "common factors"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C28",
+          "section": "28.1"
+        }
+      }
+    ]
+  },
+  {
+    "case": "foundations-and-diagnosis",
+    "requestId": "c6d5faba-c338-4b25-b283-f226a5101e88",
+    "tools": [
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C05",
+          "section": "5.4"
+        }
+      }
+    ]
+  },
+  {
+    "case": "foundations-and-diagnosis",
+    "requestId": "e87ea155-52b0-4457-ba14-0be407a85942",
+    "tools": []
+  },
+  {
+    "case": "deep-study-then-practice",
+    "requestId": "6fac5c14-3b91-4842-a666-2f97eb1059cb",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2022-P2-Q6"
+        }
+      },
+      {
+        "name": "aops_search",
+        "arguments": {
+          "query": "symmetric"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C07"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V2-C13",
+          "section": "13.3"
+        }
+      }
+    ]
+  },
+  {
+    "case": "deep-study-then-practice",
+    "requestId": "995c217d-487f-405c-9ad9-6e907ebe93f9",
+    "tools": []
+  },
+  {
+    "case": "deep-study-then-practice",
+    "requestId": "bf73e06a-1131-4dfa-a950-1dc63f93ab2d",
+    "tools": []
+  },
+  {
+    "case": "deep-study-then-practice",
+    "requestId": "090fde6c-a1f7-4bec-aa09-38ad73dbe0fd",
+    "tools": []
+  },
+  {
+    "case": "time-bounded-preparation",
+    "requestId": "b0c55580-9058-40b8-a710-aaf011501be3",
+    "tools": [
+      {
+        "name": "irmo_search",
+        "arguments": {
+          "year": 2024
+        }
+      },
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P1-Q1"
+        }
+      },
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P1-Q5"
+        }
+      },
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P2-Q8"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C05",
+          "section": "5.4"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C28",
+          "section": "28.1"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C14"
+        }
+      },
+      {
+        "name": "irmo_search",
+        "arguments": {
+          "topic": "geometry",
+          "year": 2023
+        }
+      },
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2023-P1-Q1"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C11",
+          "section": "11.5"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C07",
+          "section": "7.1"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C22"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C05",
+          "section": "5.1"
+        }
+      },
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V2-C14",
+          "section": "14.2"
+        }
+      }
+    ]
+  },
+  {
+    "case": "precise-inequality",
+    "requestId": "c312a341-e99f-4d95-839d-3d29ac190515",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2021-P2-Q9"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2021-P2-Q9"
+        }
+      }
+    ]
+  },
+  {
+    "case": "ambiguous-numbering",
+    "requestId": "f2280c3a-dfcc-432d-a847-e2d5661144cc",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2024-P2-Q6"
+        }
+      }
+    ]
+  },
+  {
+    "case": "aops-only-continuity",
+    "requestId": "df09ec7f-7fd0-43a3-bf43-be1cc034942b",
+    "tools": [
+      {
+        "name": "aops_read",
+        "arguments": {
+          "chapterId": "V1-C05",
+          "section": "5.4"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-grounding",
+    "requestId": "95e7e661-7485-414f-a210-fd7bebb949c8",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-recheck-1",
+    "requestId": "308b44d3-1d38-496c-9150-22eca6859367",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-recheck-2",
+    "requestId": "f6af16a6-fa9b-4ba6-aee4-82c8dd966243",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-recheck-3",
+    "requestId": "cb4d8005-f6dc-4b1f-b45a-391fbeee6f89",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-recheck-4",
+    "requestId": "5949b029-dc68-4e10-8c92-df878fcfb579",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-recheck-6",
+    "requestId": "8c8798e5-0e24-4242-8c68-e09f4cbc3836",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  },
+  {
+    "case": "diagram-recheck-5",
+    "requestId": "cdccbbab-67d5-44f7-848a-89accac7556d",
+    "tools": [
+      {
+        "name": "irmo_read",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      },
+      {
+        "name": "irmo_image",
+        "arguments": {
+          "id": "IRMO-2013-P2-Q7"
+        }
+      }
+    ]
+  }
+]
