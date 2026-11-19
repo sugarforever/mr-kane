@@ -22,24 +22,8 @@ export const mathAnswerSchema = z.object({
 	reply: z.string().trim().min(1).max(20000),
 	learner: learnerSchema,
 });
-export const mathTurnSchema = z
-	.object({
-		requestId: z.string().uuid(),
-		message: z.string().trim().min(1).max(6000),
-	})
-	.strict();
+export { studyTurnSchema as mathTurnSchema } from './learning';
 export type Learner = z.infer<typeof learnerSchema>;
-export type MathMessage = {
-	role: 'user' | 'assistant';
-	content: string;
-	createdAt: string;
-};
-export type MathSession = {
-	id: string;
-	title: string;
-	updatedAt: string;
-	learner: Learner;
-	messages: MathMessage[];
-	pending: { id: string; message: string } | null;
-};
-export type MathSummary = Pick<MathSession, 'id' | 'title' | 'updatedAt'>;
+export type MathMessage = import('./learning').StudyMessage;
+export type MathSession = import('./learning').StudySession<Learner>;
+export type MathSummary = import('./learning').StudySummary;

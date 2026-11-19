@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
+	database,
 	saveConnection,
 	readConnection,
 	selectConnection,
@@ -288,6 +289,25 @@ it('grounds a news request before generation and replays its original sources wi
 		research: false,
 	};
 	await runCoach('practice', input, { type: 'object' }, 'research-request');
+	expect(coachSources('research-request').sources[0].title).toBe('Bird study');
+	// Legacy research was stored at the top level of the job snapshot.
+	const db = database();
+	try {
+		const row = db
+			.prepare('SELECT snapshot FROM jobs WHERE id=?')
+			.get('research-request') as { snapshot: string };
+		const legacy = JSON.parse(row.snapshot);
+		legacy.research = legacy.metadata.research;
+		delete legacy.metadata;
+		delete legacy.agentId;
+		delete legacy.execution;
+		db.prepare('UPDATE jobs SET snapshot=? WHERE id=?').run(
+			JSON.stringify(legacy),
+			'research-request',
+		);
+	} finally {
+		db.close();
+	}
 	expect(coachSources('research-request').sources[0].title).toBe('Bird study');
 	selectConnection(null);
 	await runCoach('practice', input, { type: 'object' }, 'research-request');
