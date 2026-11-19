@@ -22,7 +22,7 @@ export async function POST({ request, url }) {
 	if (!configured() && !hasCoachRequest(id ?? null))
 		error(
 			503,
-			'Connect an AI model in AI Providers to show an English translation.',
+			'Connect an AI model in Settings to show an English translation.',
 		);
 	try {
 		const answer = await runCoach(
