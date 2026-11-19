@@ -179,7 +179,11 @@ async function execute(snapshot: Snapshot, id: string) {
 				settings: {
 					retry: { enabled: true, maxRetries: 1, baseDelayMs: 100 },
 					compaction: { enabled: false },
-					stream: { maxRetries: 0, timeoutMs: 55000 },
+					// A math lesson may retrieve several passages before writing a proof or plan.
+					stream: {
+						maxRetries: 0,
+						timeoutMs: snapshot.coach === 'math' ? 120000 : 55000,
+					},
 				},
 			},
 			context,
@@ -205,7 +209,10 @@ async function execute(snapshot: Snapshot, id: string) {
 			context,
 		);
 		const settled = await submission.wait(
-			withAbortSignal(AbortSignal.timeout(60000), context),
+			withAbortSignal(
+				AbortSignal.timeout(snapshot.coach === 'math' ? 180000 : 60000),
+				context,
+			),
 		);
 		if (settled.status !== 'done' || settled.type !== 'input')
 			throw new Error(
