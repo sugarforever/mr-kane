@@ -8,7 +8,6 @@ import {
 	saveConnection,
 	selectConnection,
 } from '../src/lib/server/providers-store';
-import { runCoach } from '../src/lib/server/agent';
 import type { MathProgress } from '../src/lib/math-stream';
 import { createMathSession, runMathTurn } from '../src/lib/server/math/study';
 let server: Server | undefined;
@@ -55,11 +54,14 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 		}
 		if (requests === 3) {
 			const input = JSON.parse(
-				parsed.messages.find((m: any) => m.role === 'user').content,
+				parsed.messages.filter((m: any) => m.role === 'user').at(-1).content,
 			);
 			expect(input.data.learner.background).toBe('Grade 10');
 			expect(
-				input.data.messages.some((m: any) => m.content === 'I am in Grade 10'),
+				parsed.messages.some(
+					(m: any) =>
+						m.role === 'user' && m.content.includes('I am in Grade 10'),
+				),
 			).toBe(true);
 		}
 		const delta =
@@ -113,14 +115,14 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 		'fixture-key',
 	);
 	selectConnection(connection.id);
-	const session = createMathSession();
+	const session = await createMathSession();
 	const id = randomUUID();
 	const progress: MathProgress[] = [];
 	const first = await runMathTurn(
 		session.id,
 		id,
 		'I am in Grade 10',
-		runCoach,
+		undefined,
 		(event) => progress.push(event),
 	);
 	expect(progress.some((event) => event.status === 'reading')).toBe(true);

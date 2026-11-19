@@ -17,7 +17,7 @@
 	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
 	import { renderMathMarkdown } from '$lib/math-markdown';
 	import type { MathSession, MathSummary } from '$lib/math';
-	import { readMathStream, type MathProgress } from '$lib/math-stream';
+	import { readStudyStream, type StudyProgress } from '$lib/study-stream';
 	import 'katex/dist/katex.min.css';
 	let { data } = $props();
 	let session: MathSession | null = $state(untrack(() => data.session));
@@ -29,7 +29,7 @@
 	let draft = $state(''),
 		busy = $state(false),
 		notice = $state('');
-	let progress: MathProgress | null = $state(null);
+	let progress: StudyProgress | null = $state(null);
 	let activeReply: AbortController | undefined;
 	onDestroy(() => activeReply?.abort());
 	let bottom = $state<HTMLDivElement>();
@@ -220,7 +220,7 @@
 				}),
 				signal: activeReply.signal,
 			});
-			session = await readMathStream(response, (event) => {
+			session = await readStudyStream<MathSession>(response, (event) => {
 				progress = event;
 				void scroll();
 			});

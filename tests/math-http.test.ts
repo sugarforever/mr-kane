@@ -39,7 +39,7 @@ it('protects saved conversations from cross-origin access and rejects malformed 
 	expect(response.status).toBe(201);
 	const saved = await response.json();
 	expect(saved.learner.background).toBe('');
-	expect(() =>
+	await expect(
 		session({
 			url,
 			params: { id: saved.id },
@@ -47,14 +47,14 @@ it('protects saved conversations from cross-origin access and rejects malformed 
 				headers: { 'sec-fetch-site': 'cross-site' },
 			}),
 		} as any),
-	).toThrow();
-	expect(() =>
+	).rejects.toThrow();
+	await expect(
 		session({
 			url,
 			params: { id: '../other' },
 			request: new Request(url),
 		} as any),
-	).toThrow();
+	).rejects.toThrow();
 });
 it('serves bundled PNG source pages but never arbitrary paths', async () => {
 	const url = new URL('http://localhost/api/math/library/source');

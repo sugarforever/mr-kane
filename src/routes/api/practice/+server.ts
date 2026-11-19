@@ -9,7 +9,7 @@ import {
 	runCoach,
 	hasCoachRequest,
 	coachSources,
-} from '#lib/server/agent';
+} from '#lib/server/language-agent';
 import { demoPractice } from '#lib/demo';
 import { readInput } from '#lib/server/http';
 import { z } from 'zod';

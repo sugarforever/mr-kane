@@ -1,6 +1,5 @@
-import { readFile } from 'node:fs/promises';
 import { mkdirSync, closeSync, openSync, chmodSync } from 'node:fs';
-import { resolve, join } from 'node:path';
+import { join } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import {
 	BACKGROUND_CONTEXT as context,
@@ -22,53 +21,69 @@ import {
 	publicConnection,
 	locked,
 } from './providers-store';
-import { modelsFor, modelFor } from './providers-models';
-import { research } from './research';
-import { createSpeechTools } from './speech/tools';
-import { mathSystemPrompt, createMathTools } from './math/library';
-import { requestSchema } from '#lib/domain';
+import { modelsFor } from './providers-models';
+import { createModels } from '@earendil-works/pi-ai/models';
 import type { Connection } from '#lib/ai-types';
 export const configured = () => {
 	const p = defaultConnection();
 	return !!p && publicConnection(p).connected;
 };
-type Snapshot = {
+export type AgentExecution = {
+	maxTurns: number;
+	streamTimeoutMs: number;
+	timeoutMs: number;
+};
+export type AgentDefinition = {
+	/** Stable, versioned identity for prompt/tool semantics. Change it when compatibility changes. */
+	id: string;
+	loadPrompt: () => Promise<string>;
+	createTools: (context: {
+		requestId: string;
+		connection: Connection;
+	}) => import('@earendil-works/pi-durable').ToolRegistration[];
+	execution: AgentExecution;
+	prepare?: (
+		content: string,
+		metadata?: Record<string, unknown>,
+	) => Promise<{ content: string; metadata?: Record<string, unknown> }>;
+	/** Only for adapters that must resume jobs written before agent identities existed. */
+	legacyHashSuffix?: string;
+	legacyMetadata?: (
+		snapshot: Record<string, unknown>,
+	) => Record<string, unknown> | undefined;
+};
+export type AgentSnapshot = {
 	connection: Connection;
 	skill: string;
 	content: string;
-	research?: Awaited<ReturnType<typeof research>>;
-	speechTools?: boolean;
-	coach?: 'math';
+	agentId?: string;
+	execution?: AgentExecution;
+	metadata?: Record<string, unknown>;
+	[key: string]: unknown;
 };
 const state = globalThis as typeof globalThis & {
 	__kaneJobs?: Map<string, Promise<string>>;
 };
 const jobs = (state.__kaneJobs ??= new Map<string, Promise<string>>());
-export type CoachProgress = { text: string; reading: boolean };
-export type CoachOptions = {
-	speechTools?: boolean;
-	coach?: 'math';
-	onProgress?: (progress: CoachProgress) => void;
-};
-export async function runCoach(
+export type AgentProgress = { text: string; reading: boolean };
+export type AgentOptions = { onProgress?: (progress: AgentProgress) => void };
+export async function runAgent(
 	operation: string,
 	data: unknown,
 	schema: unknown,
 	requestId: string = randomUUID(),
-	options: CoachOptions = {},
+	definition: AgentDefinition,
+	options: AgentOptions = {},
 ): Promise<string> {
 	if (!/^[a-zA-Z0-9-]{1,80}$/.test(requestId))
 		throw new Error('Invalid request ID.');
 	const content = JSON.stringify({ operation, data, outputSchema: schema });
-	const coachContent =
-		options.coach === 'math' ? content + '\nmath-coach' : content;
-	const hashContent = options.speechTools
-		? coachContent + '\nspeech-tools-enabled'
-		: coachContent;
+	const hashContent =
+		content + (definition.legacyHashSuffix ?? `\nagent:${definition.id}`);
 	const hash = createHash('sha256').update(hashContent).digest('hex');
 	const connection = defaultConnection();
 	const db = database();
-	let snapshot: Snapshot;
+	let snapshot: AgentSnapshot;
 	try {
 		const saved = db
 			.prepare('SELECT hash,snapshot FROM jobs WHERE id=?')
@@ -77,17 +92,16 @@ export async function runCoach(
 			if (saved.hash !== hash)
 				throw new Error('This request ID belongs to different content.');
 			snapshot = JSON.parse(saved.snapshot);
+			if (snapshot.agentId && snapshot.agentId !== definition.id)
+				throw new Error('This request ID belongs to a different agent.');
 		} else {
 			if (!connection || !publicConnection(connection).connected)
 				throw new Error('Connect an AI provider in Settings first.');
 			snapshot = {
 				connection,
-				coach: options.coach,
-				speechTools: options.speechTools === true,
-				skill:
-					options.coach === 'math'
-						? await mathSystemPrompt()
-						: await readFile(resolve('skills/language-coach/SKILL.md'), 'utf8'),
+				agentId: definition.id,
+				execution: definition.execution,
+				skill: await definition.loadPrompt(),
 				content,
 			};
 			db.prepare('INSERT OR IGNORE INTO jobs VALUES (?,?,?)').run(
@@ -101,6 +115,8 @@ export async function runCoach(
 			if (admitted.hash !== hash)
 				throw new Error('This request ID belongs to different content.');
 			snapshot = JSON.parse(admitted.snapshot);
+			if (snapshot.agentId && snapshot.agentId !== definition.id)
+				throw new Error('This request ID belongs to a different agent.');
 		}
 	} finally {
 		db.close();
@@ -109,11 +125,9 @@ export async function runCoach(
 	const existing = jobs.get(key);
 	if (existing) return existing;
 	if (jobs.size >= 2)
-		throw new Error(
-			'Other practices are being prepared. Please retry shortly.',
-		);
+		throw new Error('Other requests are being prepared. Please retry shortly.');
 	const promise = locked(`job:${key}`, () =>
-		execute(snapshot, requestId, options.onProgress),
+		execute(snapshot, requestId, definition, options.onProgress),
 	);
 	jobs.set(key, promise);
 	try {
@@ -123,11 +137,12 @@ export async function runCoach(
 	}
 }
 async function execute(
-	snapshot: Snapshot,
+	snapshot: AgentSnapshot,
 	id: string,
-	onProgress?: CoachOptions['onProgress'],
+	definition: AgentDefinition,
+	onProgress?: AgentOptions['onProgress'],
 ) {
-	// A different process may have completed research while this worker waited for the lease.
+	// A different process may have prepared context while this worker waited for the lease.
 	const currentDb = database();
 	try {
 		const row = currentDb
@@ -138,22 +153,14 @@ async function execute(
 		currentDb.close();
 	}
 
-	const payload = JSON.parse(snapshot.content);
-	const practice =
-		payload.operation === 'practice'
-			? requestSchema.safeParse(payload.data)
-			: null;
-	if (
-		practice?.success &&
-		!practice.data.selectedVocabulary &&
-		(practice.data.research !== false || practice.data.sourceType === 'news') &&
-		!snapshot.research
-	) {
-		snapshot.research = await research(practice.data);
-		snapshot.content = JSON.stringify({
-			...payload,
-			research: snapshot.research,
-		});
+	const execution = snapshot.execution ?? definition.execution;
+	if (definition.prepare) {
+		const prepared = await definition.prepare(
+			snapshot.content,
+			snapshot.metadata ?? definition.legacyMetadata?.(snapshot),
+		);
+		snapshot.content = prepared.content;
+		snapshot.metadata = prepared.metadata;
 		const db = database();
 		try {
 			db.prepare('UPDATE jobs SET snapshot=? WHERE id=?').run(
@@ -165,41 +172,58 @@ async function execute(
 		}
 	}
 
-	const dir = join(dataDir(), 'requests');
-	mkdirSync(dir, { recursive: true, mode: 0o700 });
-	const file = join(dir, `${id}.sqlite`);
-	closeSync(openSync(file, 'a', 0o600));
-	chmodSync(file, 0o600);
+	const file = join(dataDir(), 'requests', `${id}.sqlite`);
+	const { harness, configure } = await openAgentHarness(file);
+	try {
+		const agent = configure(snapshot, definition, id);
+		const root = await harness.root(context, { agent });
+		const submission = await root.submit(
+			{ type: 'input', requestId: id, content: snapshot.content },
+			context,
+		);
+		return await readAgentResponse(
+			harness,
+			root,
+			submission.id,
+			execution.timeoutMs,
+			onProgress,
+		);
+	} finally {
+		await harness.close(context);
+	}
+}
+
+/** Provider/registry integration only; conversations, submissions and documents are Pi primitives. */
+export async function openAgentHarness(
+	file: string,
+	options: { readOnly?: boolean; compaction?: boolean } = {},
+) {
+	const readOnly = options.readOnly ?? false;
+	if (!readOnly) {
+		mkdirSync(join(file, '..'), { recursive: true, mode: 0o700 });
+		closeSync(openSync(file, 'a', 0o600));
+		chmodSync(file, 0o600);
+	}
 	const registry = createRegistry();
-	const speechTools = createSpeechTools(id);
-	const activeTools =
-		snapshot.coach === 'math'
-			? createMathTools(modelFor(snapshot.connection).input.includes('image'))
-			: snapshot.speechTools
-				? speechTools
-				: [];
-	registry.install({
-		name: snapshot.coach === 'math' ? 'aops-study' : 'language-coach',
-		tools: snapshot.coach === 'math' ? activeTools : speechTools,
-		sections: [{ key: 'teaching', tag: false, render: () => snapshot.skill }],
-	});
+	let models = createModels();
+	let execution: AgentExecution | undefined;
 	const storage = await openNodeSqliteStorage(file);
 	let harness: Harness;
 	try {
 		harness = await Harness.open(
 			storage,
 			{
-				models: modelsFor(snapshot.connection),
+				models: () => models,
 				registry,
-				settings: {
+				readOnly,
+				settings: () => ({
 					retry: { enabled: true, maxRetries: 1, baseDelayMs: 100 },
-					compaction: { enabled: false },
-					// A math lesson may retrieve several passages before writing a proof or plan.
+					compaction: { enabled: options.compaction ?? false },
 					stream: {
 						maxRetries: 0,
-						timeoutMs: snapshot.coach === 'math' ? 120000 : 55000,
+						timeoutMs: execution?.streamTimeoutMs ?? 55000,
 					},
-				},
+				}),
 			},
 			context,
 		);
@@ -207,19 +231,63 @@ async function execute(
 		await storage.close(context);
 		throw e;
 	}
-	let watch: ConversationWatch | undefined;
-	try {
-		const root = await harness.root(context, {
-			agent: {
+	return {
+		harness,
+		configure(
+			snapshot: AgentSnapshot,
+			definition: AgentDefinition,
+			requestId: string,
+		) {
+			models = modelsFor(snapshot.connection);
+			execution = snapshot.execution ?? definition.execution;
+			const tools = definition.createTools({
+				requestId,
+				connection: snapshot.connection,
+			});
+			registry.install({
+				name: definition.id,
+				tools,
+				sections: [
+					{ key: 'teaching', tag: false, render: () => snapshot.skill },
+				],
+			});
+			return {
 				model: {
 					provider: snapshot.connection.service,
 					modelId: snapshot.connection.modelId,
 				},
-				tools: activeTools,
-				thinkingLevel: 'off',
-				maxTurns: snapshot.coach === 'math' ? 6 : snapshot.speechTools ? 4 : 1,
-			},
-		});
+				tools,
+				thinkingLevel: 'off' as const,
+				maxTurns: execution.maxTurns,
+			};
+		},
+	};
+}
+
+export async function snapshotAgent(
+	definition: AgentDefinition,
+): Promise<AgentSnapshot> {
+	const connection = defaultConnection();
+	if (!connection || !publicConnection(connection).connected)
+		throw new Error('Connect an AI provider in Settings first.');
+	return {
+		connection,
+		skill: await definition.loadPrompt(),
+		content: '',
+		agentId: definition.id,
+		execution: definition.execution,
+	};
+}
+
+export async function readAgentResponse(
+	harness: Harness,
+	conversation: import('@earendil-works/pi-durable').Conversation,
+	submissionId: import('@earendil-works/pi-durable').SubmissionId,
+	timeoutMs: number,
+	onProgress?: AgentOptions['onProgress'],
+) {
+	let watch: ConversationWatch | undefined;
+	try {
 		if (onProgress) {
 			const publish = (view: ConversationView) => {
 				const live = view.docs['pi.live'] as LiveState | undefined;
@@ -233,27 +301,22 @@ async function execute(
 						.join('') ?? '';
 				onProgress({ text, reading });
 			};
-			watch = await root.watch(context);
+			watch = await conversation.watch(context);
 			publish(watch.value);
 			watch.start(async (call) => {
 				if (call.kind === 'value') publish(call.value);
 			});
 		}
-		const submission = await root.submit(
-			{ type: 'input', requestId: id, content: snapshot.content },
-			context,
-		);
+		const submission = await harness.submission(submissionId, context);
+		if (!submission) throw new Error('The saved submission was not found.');
 		const settled = await submission.wait(
-			withAbortSignal(
-				AbortSignal.timeout(snapshot.coach === 'math' ? 180000 : 60000),
-				context,
-			),
+			withAbortSignal(AbortSignal.timeout(timeoutMs), context),
 		);
-		if (settled.status !== 'done' || settled.type !== 'input')
+		if (settled.status !== 'done' || settled.type === 'write')
 			throw new Error(
 				'The model request failed. Check the connection and retry.',
 			);
-		const answer = await root.commit(
+		const answer = await conversation.commit(
 			(tx) => tx.entry(AssistantEntry, settled.answer),
 			context,
 		);
@@ -268,11 +331,10 @@ async function execute(
 		return text;
 	} finally {
 		await watch?.stop();
-		await harness.close(context);
 	}
 }
 
-export function hasCoachRequest(id: string | null) {
+export function hasAgentRequest(id: string | null) {
 	if (!id || !/^[a-zA-Z0-9-]{1,80}$/.test(id)) return false;
 	const db = database();
 	try {
@@ -282,19 +344,17 @@ export function hasCoachRequest(id: string | null) {
 	}
 }
 
-export function coachSources(id: string) {
+export function agentMetadata(
+	id: string,
+	legacyMetadata?: AgentDefinition['legacyMetadata'],
+): Record<string, unknown> | undefined {
 	const db = database();
 	try {
 		const row = db.prepare('SELECT snapshot FROM jobs WHERE id=?').get(id) as
 			{ snapshot: string } | undefined;
-		const evidence = row
-			? (JSON.parse(row.snapshot) as Snapshot).research
-			: undefined;
-		return {
-			sources: evidence?.sources || [],
-			searchedAt: evidence?.searchedAt,
-			searchQuery: evidence?.query,
-		};
+		if (!row) return;
+		const snapshot = JSON.parse(row.snapshot) as AgentSnapshot;
+		return snapshot.metadata ?? legacyMetadata?.(snapshot);
 	} finally {
 		db.close();
 	}

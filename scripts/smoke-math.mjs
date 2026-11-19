@@ -30,19 +30,20 @@ const model = createServer(async (req, res) => {
 	const parsed = JSON.parse(body);
 	calls++;
 	const context = JSON.parse(
-		parsed.messages.find((m) => m.role === 'user').content,
+		parsed.messages.filter((m) => m.role === 'user').at(-1).content,
 	).data;
 	const isIrmo = context.messages
 		.filter((m) => m.role === 'user')
 		.at(-1)
 		?.content.includes('IRMO-2024-P2-Q6');
 	const toolText = parsed.messages
+		.slice(parsed.messages.findLastIndex((m) => m.role === 'user') + 1)
 		.filter((m) => m.role === 'tool')
 		.map((m) => m.content)
 		.join('\n');
 	const needIrmo = isIrmo && !toolText.includes('IRMO-2024-P2-Q6');
 	const needAops = isIrmo && !needIrmo && !toolText.includes('pdf-page-');
-	const first = context.messages.filter((m) => m.role === 'user').length === 1;
+	const first = parsed.messages.filter((m) => m.role === 'user').length === 1;
 	const answer = {
 		reply: first
 			? 'We can build from what you already know. **Algebra and number theory** share a useful foundation: clear reasoning about equations and integers.\n\nBefore making your plan, let’s try one small question:\n\n$$2x+3=11$$\n\nWhat would you do first, and why? There’s no need to rush.'
