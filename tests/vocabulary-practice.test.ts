@@ -1,4 +1,7 @@
-import { beforeEach, expect, it, vi } from 'vitest';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { defaultProfile, requestSchema } from '../src/lib/domain';
 vi.mock('../src/lib/server/language-agent', () => ({
 	configured: vi.fn(() => true),
@@ -17,19 +20,26 @@ const input = {
 	research: false,
 	selectedVocabulary: ['páirc', 'crann'],
 };
-const request = (body: unknown) => ({
+const request = (body: unknown, id = 'vocabulary-test') => ({
 	url,
 	request: new Request(url, {
 		method: 'POST',
 		headers: {
 			origin: url.origin,
 			'Content-Type': 'application/json',
-			'x-request-id': 'vocabulary-test',
+			'x-request-id': id,
 		},
 		body: JSON.stringify(body),
 	}),
 });
+let storageDir = '';
+afterEach(() => {
+	vi.unstubAllEnvs();
+	if (storageDir) rmSync(storageDir, { recursive: true, force: true });
+});
 beforeEach(() => {
+	storageDir = mkdtempSync(join(tmpdir(), 'vocabulary-api-'));
+	vi.stubEnv('MR_KANE_DATA_DIR', storageDir);
 	vi.clearAllMocks();
 	vi.mocked(configured).mockReturnValue(true);
 });
@@ -113,6 +123,11 @@ it('persists a reading unit and rejects model output that does not match it', as
 		JSON.stringify({ ...content, script: 'word '.repeat(100) }),
 	);
 	await expect(
-		POST(request({ ...input, mode: 'speaking', readingUnit: 'words' }) as any),
+		POST(
+			request(
+				{ ...input, mode: 'speaking', readingUnit: 'words' },
+				'malformed-vocabulary-test',
+			) as any,
+		),
 	).rejects.toMatchObject({ status: 502 });
 });

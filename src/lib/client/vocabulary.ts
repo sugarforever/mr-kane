@@ -1,15 +1,11 @@
 import { languageSchema } from '$lib/languages';
 import { z } from 'zod';
 export const vocabularyKey = 'mr-kane-vocabulary';
-const entrySchema = z.object({
-	id: z.string(),
-	text: z.string().trim().min(1).max(4000),
-	language: languageSchema,
-	english: z.string().max(16000),
-	createdAt: z.string(),
-	reviewedAt: z.string().nullable(),
-});
-export type VocabularyEntry = z.infer<typeof entrySchema>;
+import {
+	vocabularyEntrySchema as entrySchema,
+	type VocabularyEntry,
+} from '../learning-records';
+export type { VocabularyEntry };
 type Store = Pick<Storage, 'getItem' | 'setItem'>;
 export function loadVocabulary(store: Store): VocabularyEntry[] {
 	const raw = store.getItem(vocabularyKey);

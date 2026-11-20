@@ -505,6 +505,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					)
 				: undefined;
 			const pending = record.turns[requestId];
+			const pendingMessage = session.pending.message;
 			if (pending?.snapshot)
 				configure(
 					JSON.parse(pending.snapshot),
@@ -531,17 +532,58 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					});
 				const state = await tx.doc(Study, sessionId, '');
 				state.session = JSON.stringify(session);
+				// An imported browser marker has no Pi submission yet. Preserve a discard tombstone.
+				state.turns[requestId] ??= {
+					message: pendingMessage,
+					content: '',
+					snapshot: '',
+					status: -1,
+					submissionId: null,
+					legacy: false,
+				};
 				state.turns[requestId].status = -1;
 			}, context);
 			return session;
 		});
 	}
+	// Compatibility admission only: import an old browser marker without invoking a model.
+	async function importPending(
+		sessionId: string,
+		input: unknown,
+	): Promise<Session> {
+		validId(sessionId);
+		const pending = studyTurnSchema.parse(input);
+		return write(sessionId, async ({ harness }) => {
+			const record = await recordFor(harness, sessionId);
+			const session = JSON.parse(record.session) as Session;
+			const turn = record.turns[pending.requestId];
+			if (
+				(turn && turn.message !== pending.message) ||
+				(session.pending &&
+					(session.pending.id !== pending.requestId ||
+						session.pending.message !== pending.message))
+			)
+				throw new StudyError(
+					409,
+					'Another saved request must be resolved before importing this browser request.',
+				);
+			if (turn || session.pending) return session;
+			await reserveRequest(sessionId, pending.requestId, pending.message);
+			session.pending = { id: pending.requestId, message: pending.message };
+			await harness.commit(async (tx) => {
+				(await tx.doc(Study, sessionId, '')).session = JSON.stringify(session);
+			}, context);
+			return session;
+		});
+	}
+
 	return {
 		createSession,
 		listSessions,
 		getSession,
 		runTurn,
 		discardTurn,
+		importPending,
 		hasRequest,
 	};
 }

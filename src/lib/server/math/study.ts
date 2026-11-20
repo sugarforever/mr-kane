@@ -17,3 +17,5 @@ export const runMathTurn = study.runTurn;
 export const discardMathTurn = study.discardTurn;
 
 export const hasMathRequest = study.hasRequest;
+
+export const importMathPending = study.importPending;

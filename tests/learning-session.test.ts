@@ -101,3 +101,56 @@ it('reuses durable turns for another learner schema and isolates subjects while 
 	).rejects.toThrow(/discarded/);
 	expect((await history.getSession(session.id)).pending).toBeNull();
 });
+it('imports a legacy pending marker into Pi without executing and never restores a discarded turn', async () => {
+	dir = mkdtempSync(join(tmpdir(), 'learning-import-'));
+	vi.stubEnv('MR_KANE_DATA_DIR', dir);
+	const study = makeStudy();
+	const session = await study.createSession();
+	const requestId = randomUUID();
+	const pending = await study.importPending(session.id, {
+		requestId,
+		message: 'Roman history',
+	});
+	expect(pending.pending).toEqual({ id: requestId, message: 'Roman history' });
+	expect((await study.getSession(session.id)).pending).toEqual(pending.pending);
+	await study.runTurn(session.id, requestId, 'Roman history', async () =>
+		JSON.stringify({ reply: 'Rome', learner: { era: 'Roman' } }),
+	);
+	expect(
+		(
+			await study.importPending(session.id, {
+				requestId,
+				message: 'Roman history',
+			})
+		).pending,
+	).toBeNull();
+	const next = randomUUID();
+	await study.importPending(session.id, { requestId: next, message: 'Next' });
+	await study.discardTurn(session.id, next);
+	expect(
+		(
+			await study.importPending(session.id, {
+				requestId: next,
+				message: 'Next',
+			})
+		).pending,
+	).toBeNull();
+});
+it('rejects conflicting legacy pending imports without replacing the server request', async () => {
+	dir = mkdtempSync(join(tmpdir(), 'learning-import-conflict-'));
+	vi.stubEnv('MR_KANE_DATA_DIR', dir);
+	const study = makeStudy();
+	const session = await study.createSession();
+	const requestId = randomUUID();
+	await study.importPending(session.id, { requestId, message: 'First' });
+	await expect(
+		study.importPending(session.id, {
+			requestId: randomUUID(),
+			message: 'Other',
+		}),
+	).rejects.toMatchObject({ status: 409 });
+	await expect(
+		study.importPending(session.id, { requestId, message: 'Changed' }),
+	).rejects.toMatchObject({ status: 409 });
+	expect((await study.getSession(session.id)).pending?.message).toBe('First');
+});

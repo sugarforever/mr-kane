@@ -70,21 +70,29 @@
 				'I want to learn number theory. Help me work out what I already know and where to begin.',
 		},
 	];
-	function restorePending() {
+	async function restorePending() {
 		if (!session) return;
+		const id = session.id;
 		try {
-			const raw = localStorage.getItem(`kane-math-pending:${session.id}`);
-			if (raw && !session.pending) {
-				const saved = JSON.parse(raw);
-				if (typeof saved.id === 'string' && typeof saved.message === 'string')
-					session = { ...session, pending: saved };
-			}
+			// Legacy import only. New turns use the existing Pi-backed server state.
+			const key = `kane-math-pending:${id}`;
+			const raw = localStorage.getItem(key);
+			if (!raw) return;
+			const old = JSON.parse(raw);
+			const saved = await api(`/api/math/sessions/${id}`, {
+				action: 'import-pending',
+				requestId: old.id,
+				message: old.message,
+			});
+			if (session?.id === id) session = saved;
+			if (localStorage.getItem(key) === raw) localStorage.removeItem(key);
 		} catch {
-			/* Server-side pending turns remain recoverable. */
+			notice =
+				'An old browser request could not be imported. Its original has been kept.';
 		}
 	}
 	onMount(() => {
-		restorePending();
+		void restorePending();
 		if (session?.messages.length || session?.pending) void scroll();
 	});
 	async function scroll() {
@@ -136,7 +144,7 @@
 		if (busy) return;
 		try {
 			session = await api(`/api/math/sessions/${id}`);
-			restorePending();
+			await restorePending();
 			draft = '';
 			notice = '';
 			await goto(`/math?session=${id}`, {
@@ -159,11 +167,6 @@
 				action: 'discard',
 				requestId: pending.id,
 			});
-			try {
-				localStorage.removeItem(`kane-math-pending:${id}`);
-			} catch {
-				/* Server state is authoritative. */
-			}
 			draft = pending.message;
 			notice = '';
 		} catch (e) {
@@ -199,11 +202,6 @@
 		const pending = session.pending ?? { id: crypto.randomUUID(), message };
 		session = { ...session, pending };
 		const id = session.id;
-		try {
-			localStorage.setItem(`kane-math-pending:${id}`, JSON.stringify(pending));
-		} catch {
-			/* The server also persists pending turns. */
-		}
 		busy = true;
 		progress = null;
 		activeReply = new AbortController();
@@ -226,9 +224,6 @@
 				progress = event;
 				void scroll();
 			});
-			try {
-				localStorage.removeItem(`kane-math-pending:${id}`);
-			} catch {}
 			sessions = [
 				{
 					id: session!.id,

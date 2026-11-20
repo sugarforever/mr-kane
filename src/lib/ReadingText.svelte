@@ -6,7 +6,7 @@
 	import { readingItems, type ReadingUnit } from '$lib/reading-levels';
 	import ReadingSupport from '$lib/ReadingSupport.svelte';
 	import { createSpeechPlayback } from '$lib/client/speech-playback';
-	import { addVocabulary } from '$lib/client/vocabulary';
+	import { updateLearning } from '$lib/client/learning';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
@@ -44,19 +44,16 @@
 	let speechPlayer: ReturnType<typeof createSpeechPlayback> | undefined;
 	let controller: AbortController | undefined;
 	let generation = 0;
-	function saveWord() {
+	async function saveWord() {
 		try {
-			const added = addVocabulary(localStorage, {
-				text: selected,
-				language,
-				english,
+			await updateLearning({
+				type: 'vocabulary.add',
+				entry: { text: selected, language, english },
 			});
-			message = added
-				? 'Added to Vocabulary. Open Vocabulary to review it later.'
-				: 'Already in Vocabulary. Any new English meaning has been saved.';
+			message = 'Saved to Vocabulary. Open Vocabulary to review it later.';
 		} catch {
 			message =
-				'Could not save vocabulary. Check browser storage and try again.';
+				'Could not save vocabulary. Check the server connection and try again.';
 		}
 	}
 	function stop() {
