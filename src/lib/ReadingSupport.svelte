@@ -4,8 +4,7 @@
 	import { onMount, type Snippet } from 'svelte';
 	import type { ReadingUnit } from '$lib/reading-levels';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { NativeSelect } from '$lib/components/ui/native-select/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { parsePassageTranslation } from '$lib/reading';
 	import { cachedPassage, cachePassage } from '$lib/client/passage-cache';
@@ -124,71 +123,112 @@
 	}
 </script>
 
-<div class="flex flex-wrap items-end gap-2 my-4">
-	{#if language !== 'en'}<Button
-			variant="outline"
-			onclick={toggleEnglish}
-			aria-expanded={showEnglish}
-			aria-controls={comparisonId}
-			><Icons.Languages aria-hidden="true" />{showEnglish
-				? 'Hide English'
-				: 'Show English'}</Button
-		>{/if}
-	<Button
-		variant="outline"
-		disabled={!speechAvailable || recording || playback !== 'idle'}
-		onclick={() => {
-			if (speechAvailable && !recording) void player?.play(text, Number(rate));
-		}}
-		><Icons.Volume2 aria-hidden="true" />{unit === 'words' ||
-		unit === 'sentences'
-			? 'Listen to all items'
-			: 'Listen to passage'}</Button
-	>
-	<Label
-		>Reading speed<NativeSelect
-			bind:value={rate}
-			disabled={playback !== 'idle'}
-			aria-label="Reading speed"
-			><option value="1">Normal</option><option value="0.8">Slow</option
-			></NativeSelect
-		></Label
-	>
-	{#if playback !== 'idle'}
-		<Button
-			variant="outline"
-			size="icon"
-			title={playback === 'paused' ? 'Resume' : 'Pause'}
-			aria-label={playback === 'paused' ? 'Resume' : 'Pause'}
-			disabled={playback === 'loading'}
-			onclick={() =>
-				playback === 'paused' ? player?.resume() : player?.pause()}
-			>{#if playback === 'paused'}<Icons.Play
-					aria-hidden="true"
-				/>{:else}<Icons.Pause aria-hidden="true" />{/if}</Button
-		>
-		<Button
-			variant="outline"
-			onclick={() => player?.stop()}
-			size="icon"
-			title="Stop"
-			aria-label="Stop"><Icons.Square aria-hidden="true" /></Button
-		>
-	{/if}
+<div class="reading-controls-layout">
+	<div class="reading-controls" role="group" aria-label="Reading controls">
+		<div class="playback-controls">
+			<Button
+				class="listen-control"
+				aria-busy={playback === 'loading'}
+				disabled={!speechAvailable || recording || playback === 'loading'}
+				aria-label={recording
+					? 'Stop recording before listening'
+					: playback === 'playing'
+						? 'Pause reading'
+						: playback === 'paused'
+							? 'Resume reading'
+							: audioError
+								? 'Retry reading audio'
+								: 'Listen to reading text'}
+				onclick={() => {
+					if (!speechAvailable || recording) return;
+					if (playback === 'playing') player?.pause();
+					else if (playback === 'paused') player?.resume();
+					else if (playback === 'idle') void player?.play(text, Number(rate));
+				}}
+				>{#if playback === 'loading'}<Icons.LoaderCircle
+						aria-hidden="true"
+					/>Loading
+				{:else if playback === 'playing'}<Icons.Pause aria-hidden="true" />Pause
+				{:else if playback === 'paused'}<Icons.Play aria-hidden="true" />Resume
+				{:else if recording}<Icons.Mic aria-hidden="true" />Recording
+				{:else if audioError}<Icons.RotateCcw
+						aria-hidden="true"
+					/>Retry{:else}<Icons.Play aria-hidden="true" />Listen{/if}</Button
+			>
+			<Button
+				variant="outline"
+				class="stop-control"
+				size="icon"
+				disabled={playback === 'idle'}
+				title="Stop"
+				aria-label="Stop reading"
+				onclick={() => player?.stop()}
+				><Icons.Square aria-hidden="true" /></Button
+			>
+		</div>
+		<div class="reading-preferences">
+			<div class="speed-control" role="group" aria-label="Reading speed">
+				{#each [{ value: '0.8', label: 'Slow' }, { value: '1', label: 'Normal' }] as speed}
+					<button
+						type="button"
+						disabled={playback !== 'idle'}
+						aria-pressed={rate === speed.value}
+						onclick={() => (rate = speed.value)}>{speed.label}</button
+					>
+				{/each}
+			</div>
+			{#if language !== 'en'}
+				<Button
+					variant="ghost"
+					class="english-control"
+					onclick={toggleEnglish}
+					aria-pressed={showEnglish}
+					aria-expanded={showEnglish}
+					aria-controls={comparisonId}
+					title={showEnglish
+						? 'Hide English translation'
+						: 'Show English translation'}
+				>
+					English <span class="english-switch" aria-hidden="true"
+						><span></span></span
+					>
+				</Button>
+			{/if}
+		</div>
+		<Popover.Root>
+			<Popover.Trigger
+				class="audio-info"
+				aria-label="Audio information"
+				title="Audio information"
+				><Icons.Info aria-hidden="true" size={18} /></Popover.Trigger
+			>
+			<Popover.Content align="end" class="max-w-[calc(100vw-2rem)]">
+				<Popover.Title>Audio</Popover.Title>
+				<Popover.Description>{speechDescription}</Popover.Description>
+				<p class="text-sm">
+					Generated audio is cached. Changing voice or speed creates a separate
+					version.
+				</p>
+			</Popover.Content>
+		</Popover.Root>
+	</div>
 </div>
-<p class="fineprint">
-	Generated audio is cached for repeat listening. Changing the voice or speed
-	creates a separate version.
-</p>
-<p class="fineprint" role="status">
+<p class="sr-only" role="status">
 	{recording
-		? 'Stop recording before listening to the passage.'
-		: speechDescription}{playback === 'paused'
-		? ' Playback paused.'
-		: playback === 'playing'
-			? ' Playing the original reading text.'
-			: ''}
+		? 'Stop recording before listening.'
+		: playback === 'loading'
+			? 'Preparing audio.'
+			: playback === 'playing'
+				? 'Playing reading text.'
+				: playback === 'paused'
+					? 'Playback paused.'
+					: ''}
 </p>
+{#if !speechAvailable && speechDescription !== 'Loading speech settings…'}
+	<p class="audio-unavailable" role="status">
+		Audio unavailable. <a href="/?tab=providers">Speech settings</a>
+	</p>
+{/if}
 {#snippet listen(item: string, index: number)}
 	<Button
 		variant="ghost"
@@ -249,3 +289,173 @@
 		</section>
 	{/if}
 </div>
+
+<style>
+	.reading-controls-layout {
+		container-type: inline-size;
+		margin: 1rem 0 1.5rem;
+	}
+	.reading-controls {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 6px;
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		background: var(--background);
+	}
+	.playback-controls,
+	.reading-preferences {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		min-width: 0;
+	}
+	.reading-preferences {
+		gap: 10px;
+		padding-left: 10px;
+		border-left: 1px solid var(--separator);
+	}
+	.reading-controls :global(.listen-control) {
+		min-width: 116px;
+		height: 44px;
+		border-radius: 10px;
+	}
+	.reading-controls :global(.stop-control),
+	.reading-controls :global(.audio-info) {
+		width: 44px;
+		height: 44px;
+		flex: none;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+	}
+	.reading-controls :global(.audio-info) {
+		display: grid;
+		place-items: center;
+		margin-left: auto;
+		background: var(--background);
+		color: var(--foreground);
+		cursor: pointer;
+	}
+	.speed-control {
+		display: flex;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		overflow: hidden;
+	}
+	.speed-control button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		min-width: 64px;
+		min-height: 42px;
+		padding: 0 12px;
+		font-size: 14px;
+		font-weight: 600;
+		background: var(--background);
+		color: var(--foreground);
+		cursor: pointer;
+	}
+	.speed-control button[aria-pressed='true'] {
+		background: var(--foreground);
+		color: var(--background);
+	}
+	.speed-control button[aria-pressed='true']::before {
+		content: '';
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--brand-accent);
+	}
+	.speed-control button:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+	.reading-controls :global(.english-control) {
+		height: 44px;
+		gap: 8px;
+		padding: 0 12px;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+	}
+	.english-switch {
+		display: flex;
+		align-items: center;
+		width: 32px;
+		height: 20px;
+		padding: 2px;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		background: var(--background);
+	}
+	.english-switch span {
+		width: 14px;
+		height: 14px;
+		border: 1px solid var(--border);
+		border-radius: 50%;
+		background: var(--background);
+	}
+	:global(.english-control[aria-pressed='true']) .english-switch {
+		background: var(--brand-accent);
+	}
+	:global(.english-control[aria-pressed='true']) .english-switch span {
+		margin-left: auto;
+		background: var(--foreground);
+	}
+	.reading-controls :global(button:focus-visible) {
+		outline: 2px solid var(--foreground);
+		outline-offset: 2px;
+	}
+	.speed-control button:focus-visible {
+		outline: 2px solid var(--foreground);
+		outline-offset: -4px;
+	}
+	.speed-control button[aria-pressed='true']:focus-visible {
+		outline-color: var(--brand-accent);
+	}
+	.audio-unavailable {
+		margin: -1rem 0 1rem;
+		font-size: 12px;
+		color: var(--muted-foreground);
+	}
+	.audio-unavailable a {
+		text-decoration: underline;
+	}
+	@container (max-width: 620px) {
+		.reading-controls {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 44px;
+			gap: 6px;
+		}
+		.playback-controls {
+			grid-column: 1;
+		}
+		.reading-controls :global(.listen-control) {
+			flex: 1;
+			min-width: 0;
+		}
+		.reading-controls :global(.audio-info) {
+			grid-column: 2;
+			grid-row: 1;
+		}
+		.reading-preferences {
+			grid-column: 1/-1;
+			grid-row: 2;
+			padding: 0;
+			border: 0;
+			gap: 6px;
+		}
+		.speed-control {
+			flex: 1;
+		}
+		.speed-control button {
+			flex: 1;
+			min-width: 0;
+			padding: 0 8px;
+		}
+		.reading-controls :global(.english-control) {
+			flex: none;
+		}
+	}
+</style>
