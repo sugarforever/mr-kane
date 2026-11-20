@@ -207,6 +207,7 @@
 	--palette-scrim: #16161652;
 	--palette-clear: #16161600;
 	--palette-hover: #3a3a3a;
+	--reading-selection: #ffe482;
 	--brand-accent: var(--palette-spark);
 	--brand-accent-foreground: var(--palette-ink);
 	--separator: var(--palette-line);
