@@ -10,12 +10,8 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
-	import {
-		loadVocabulary,
-		writeVocabulary,
-		vocabularyKey,
-		type VocabularyEntry,
-	} from '$lib/client/vocabulary';
+	import { readLearningRecords, updateLearning } from '$lib/client/learning';
+	import type { VocabularyEntry } from '$lib/learning-records';
 	let {
 		language,
 		busy = false,
@@ -61,57 +57,54 @@
 					.includes(query.toLocaleLowerCase()),
 		),
 	);
-	function refresh() {
+	async function refresh() {
 		try {
-			entries = loadVocabulary(localStorage);
+			entries = (await readLearningRecords()).vocabulary;
 			ready = true;
 		} catch {
 			ready = false;
-			message =
-				'Could not read your vocabulary. Browser storage may be unavailable or damaged. Existing data has not been changed.';
+			message = 'Could not load vocabulary. Please retry.';
 		}
 	}
 	onMount(() => {
-		refresh();
-		const changed = (event: StorageEvent) => {
-			if (event.key === vocabularyKey || event.key === null) refresh();
+		void refresh();
+		const focus = () => {
+			void refresh();
 		};
-		window.addEventListener('storage', changed);
-		return () => window.removeEventListener('storage', changed);
+		window.addEventListener('focus', focus);
+		return () => window.removeEventListener('focus', focus);
 	});
-	function update(
+	async function update(
 		id: string,
 		action: 'review' | 'remove' | 'meaning',
 		english = '',
 	) {
 		try {
-			const current = loadVocabulary(localStorage);
-			const next =
+			const entry = entries.find((e) => e.id === id);
+			if (!entry) return;
+			const saved = await updateLearning(
 				action === 'remove'
-					? current.filter((e) => e.id !== id)
-					: current.map((e) =>
-							e.id === id
-								? {
-										...e,
-										...(action === 'review'
-											? {
-													reviewedAt: e.reviewedAt
-														? null
-														: new Date().toISOString(),
-												}
-											: { english }),
-									}
-								: e,
-						);
-			writeVocabulary(localStorage, next);
-			entries = next;
+					? { type: 'vocabulary.delete', id }
+					: {
+							type: 'vocabulary.patch',
+							id,
+							patch:
+								action === 'review'
+									? {
+											reviewedAt: entry.reviewedAt
+												? null
+												: new Date().toISOString(),
+										}
+									: { english },
+						},
+			);
+			entries = saved.vocabulary;
 			message =
 				action === 'remove'
 					? 'Vocabulary entry removed.'
-					: 'Vocabulary saved in this browser.';
+					: 'Vocabulary saved on this server.';
 		} catch {
-			message =
-				'Could not save your vocabulary. Please check browser storage and try again.';
+			message = 'Could not save vocabulary. Please retry.';
 		}
 	}
 </script>
@@ -124,8 +117,8 @@
 	</div>
 </div>
 <p class="fineprint">
-	Saved in this browser, separately for each learning language. Clearing browser
-	data removes your vocabulary. Export a text backup in My learning profile.
+	Saved on this server, separately for each learning language. Export a text
+	backup in My learning profile.
 </p>
 <div class="flex flex-wrap items-end gap-3 my-4">
 	<Label
@@ -151,7 +144,7 @@
 	<p class="fineprint">
 		Only selected vocabulary and your learning profile are sent to the
 		configured AI model. Meanings, review history and the rest of your word list
-		stay in this browser. Limit: 200 characters per entry and 1,000 characters
+		stay on this server. Limit: 200 characters per entry and 1,000 characters
 		total.
 	</p>
 	<Label class="block my-3"

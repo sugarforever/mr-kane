@@ -35,12 +35,9 @@
 	import type { AISettings } from '#lib/ai-types';
 	import {
 		defaultProfile,
-		legacyAgeGroup,
-		profileSchema,
 		requestSchema,
 		practiceSchema,
 		feedbackSchema,
-		restoreNotebook,
 		addAttempt,
 		languageNames,
 		type Profile,
@@ -48,7 +45,9 @@
 		type Attempt,
 		type Notebook,
 	} from '#lib/domain';
-	import { demoPractice } from '#lib/demo';
+	import { readLearningRecords, updateLearning } from '$lib/client/learning';
+	import { createNotebookWriter } from '$lib/client/notebook-writer';
+	import { pendingAISchema, type PendingAI } from '$lib/learning-records';
 	let { data } = $props();
 	type Tab =
 		| 'today'
@@ -86,15 +85,14 @@
 		{ id: 'vocabulary', icon: BookOpen, label: 'Vocabulary' },
 		{ id: 'providers', icon: Settings, label: 'Settings' },
 	];
-	type PendingAI = {
-		id: string;
-		path: string;
-		body: unknown;
-		attemptId?: string;
-	};
 	let pendingAI: PendingAI | null = $state(null);
-	function clearPending() {
-		localStorage.removeItem('mr-kane-pending-ai');
+	let drafts: Record<string, string> = {};
+	let draftWrites = Promise.resolve();
+	let draftSaving = $state(0);
+	let draftSaveFailed = $state(false);
+	async function clearPending() {
+		if (pendingAI)
+			await updateLearning({ type: 'pending.clear', id: pendingAI.id });
 		pendingAI = null;
 	}
 	async function sendAI(p: PendingAI) {
@@ -105,7 +103,7 @@
 		});
 		const result = await response.json();
 		if (!response.ok) {
-			if (response.status < 500) clearPending();
+			if (response.status < 500) await clearPending();
 			throw new Error(result.message ?? 'The request did not finish.');
 		}
 		return result;
@@ -118,7 +116,7 @@
 			const result = await sendAI(p);
 			if (p.path === '/api/practice') {
 				const practice = practiceSchema.parse(result);
-				save({
+				await save({
 					...notebook,
 					practices: [
 						practice,
@@ -132,7 +130,7 @@
 				const feedback = feedbackSchema.parse(result);
 				if (!notebook.attempts.some((a) => a.id === p.attemptId))
 					throw new Error('The saved writing version could not be found.');
-				save({
+				await save({
 					...notebook,
 					attempts: notebook.attempts.map((a) =>
 						a.id === p.attemptId ? { ...a, feedback } : a,
@@ -140,7 +138,7 @@
 				});
 				tab = 'review';
 			}
-			clearPending();
+			await clearPending();
 			notice = 'Your AI result has been recovered and saved.';
 		} catch (e) {
 			notice =
@@ -207,82 +205,60 @@
 	onMount(() => {
 		if (new URLSearchParams(location.search).get('tab') === 'providers')
 			tab = 'providers';
-		try {
-			notebook = restoreNotebook(localStorage.getItem('mr-kane-notebook'));
-			const pendingRaw = localStorage.getItem('mr-kane-pending-ai');
-			if (pendingRaw) {
-				const p = JSON.parse(pendingRaw);
-				if (
-					typeof p.id === 'string' &&
-					['/api/practice', '/api/feedback'].includes(p.path) &&
-					p.body
-				)
-					pendingAI = p;
+		const guard = (event: BeforeUnloadEvent) => {
+			if (draftSaving) {
+				event.preventDefault();
+				event.returnValue = '';
 			}
-			notebook.practices = notebook.practices.map((p) => {
-				if (p.origin !== 'demo' || !/[\u4e00-\u9fff]/.test(p.title)) return p;
-				if (p.title.includes('\u6211\u7684\u5199\u4f5c'))
-					return {
-						...p,
-						title: 'My writing',
-						origin: 'user',
-						sourceNote: 'From your own writing.',
-					};
-				return {
-					...p,
-					...demoPractice({
-						profile: p.profile,
-						mode: p.mode,
-						sourceType: p.title.includes('\u690d\u7269') ? 'science' : 'daily',
-						material: '',
-						research: false,
-					}),
-				};
-			});
-			const raw = localStorage.getItem('mr-kane-profiles');
-			if (raw) {
-				const saved = JSON.parse(raw);
-				for (const lang of languages.map((entry) => entry.value)) {
-					if (saved[lang])
-						profiles[lang] = profileSchema.parse({
-							...saved[lang],
-							ageGroup: legacyAgeGroup(saved[lang].ageGroup),
-						});
-				}
+		};
+		window.addEventListener('beforeunload', guard);
+		void (async () => {
+			try {
+				const saved = await readLearningRecords();
+				notebook = saved.notebook;
+				profiles = saved.profiles;
+				drafts = saved.drafts;
+				pendingAI = saved.pending;
 				profile = profiles.es ?? { ...defaultProfile };
-				if (
-					profile.interests ===
-					'\u81ea\u7136\u3001\u8fd0\u52a8\u3001\u8eab\u8fb9\u7684\u751f\u6d3b'
-				)
-					profile.interests = defaultProfile.interests;
+				selectedId =
+					notebook.practices.find(
+						(p) => p.profile.language === profile.language,
+					)?.id ?? '';
+				loadDraft();
+			} catch {
+				storageBroken = true;
+				notice = 'Learning records could not be loaded. Reload to retry.';
+			} finally {
+				ready = true;
 			}
-			selectedId =
-				notebook.practices.find((p) => p.profile.language === profile.language)
-					?.id ?? '';
-			loadDraft();
-		} catch {
-			storageBroken = true;
-			notice =
-				'Local records could not be read. Saving is paused to protect your data. Export a backup before checking browser storage.';
-		} finally {
-			ready = true;
-		}
+		})();
+		return () => window.removeEventListener('beforeunload', guard);
 	});
-	function save(next: Notebook) {
+	const writeNotebook = createNotebookWriter(
+		() => notebook,
+		(saved) => {
+			notebook = saved;
+		},
+	);
+	async function save(next: Notebook) {
 		if (storageBroken)
 			throw new Error(
-				'Saving is paused because local records could not be read.',
+				'Saving is paused because learning records could not be loaded.',
 			);
-		localStorage.setItem('mr-kane-notebook', JSON.stringify(next));
-		notebook = next;
+		await writeNotebook(next);
 	}
-	function saveProfile() {
+	async function saveProfile() {
 		try {
-			profiles[profile.language] = $state.snapshot(profile);
-			localStorage.setItem('mr-kane-profiles', JSON.stringify(profiles));
+			const saved = await updateLearning({
+				type: 'profile.put',
+				profile: $state.snapshot(profile),
+			});
+			profiles = saved.profiles;
 			notice = 'Profile saved. Your next practice will use these preferences.';
+			return true;
 		} catch {
-			notice = 'Your profile could not be saved. Check browser storage.';
+			notice = 'Your profile could not be saved. Please retry.';
+			return false;
 		}
 	}
 	function changeLanguage(language: Language) {
@@ -293,17 +269,26 @@
 		notice = '';
 	}
 	function loadDraft() {
-		draft = selectedId
-			? (localStorage.getItem(`mr-kane-draft:${selectedId}`) ?? '')
-			: '';
+		draft = drafts[selectedId] ?? '';
 	}
 	function edit(value: string) {
 		draft = value;
-		try {
-			localStorage.setItem(`mr-kane-draft:${selectedId}`, value);
-		} catch {
-			notice = 'Autosave failed. Copy your writing somewhere safe.';
-		}
+		const practiceId = selectedId;
+		drafts[practiceId] = value;
+		draftSaving++;
+		draftSaveFailed = false;
+		draftWrites = draftWrites
+			.then(async () => {
+				await updateLearning({ type: 'draft.put', practiceId, text: value });
+			})
+			.catch(() => {
+				draftSaveFailed = true;
+				notice =
+					'Autosave failed. Your current text is still on screen. Edit again to retry saving.';
+			})
+			.finally(() => {
+				draftSaving--;
+			});
 	}
 	function choose(p: Practice) {
 		selectedId = p.id;
@@ -323,8 +308,13 @@
 	async function api(path: string, body: unknown, attemptId?: string) {
 		if (pendingAI)
 			throw new Error('Resume or dismiss the unfinished AI request first.');
-		const pending = { id: crypto.randomUUID(), path, body, attemptId };
-		localStorage.setItem('mr-kane-pending-ai', JSON.stringify(pending));
+		const pending = pendingAISchema.parse({
+			id: crypto.randomUUID(),
+			path,
+			body,
+			attemptId,
+		});
+		await updateLearning({ type: 'pending.put', pending });
 		pendingAI = pending;
 		return sendAI(pending);
 	}
@@ -360,18 +350,18 @@
 		}
 		busy = true;
 		try {
-			saveProfile();
+			if (!(await saveProfile())) return;
 			const result = practiceSchema.parse(
 				await api('/api/practice', parsed.data),
 			);
-			save({
+			await save({
 				...notebook,
 				practices: [
 					result,
 					...notebook.practices.filter((p) => p.id !== result.id),
 				],
 			});
-			clearPending();
+			await clearPending();
 			choose(result);
 			tab = result.mode;
 			notice =
@@ -397,10 +387,10 @@
 			createdAt: new Date().toISOString(),
 		};
 	}
-	function archive() {
+	async function archive() {
 		try {
 			const a = makeAttempt();
-			save({ ...notebook, attempts: addAttempt(notebook.attempts, a) });
+			await save({ ...notebook, attempts: addAttempt(notebook.attempts, a) });
 			notice = 'This version is saved. Keep exploring your ideas.';
 		} catch (e) {
 			notice =
@@ -412,21 +402,17 @@
 		busy = true;
 		try {
 			const a = makeAttempt();
-			save({ ...notebook, attempts: addAttempt(notebook.attempts, a) });
+			await save({ ...notebook, attempts: addAttempt(notebook.attempts, a) });
 			const result = feedbackSchema.parse(
-				await api(
-					'/api/feedback',
-					{ practice: a.practice, text: a.text },
-					a.id,
-				),
+				await api('/api/feedback', { attemptId: a.id }, a.id),
 			);
-			save({
+			await save({
 				...notebook,
 				attempts: notebook.attempts.map((x) =>
 					x.id === a.id ? { ...x, feedback: result } : x,
 				),
 			});
-			clearPending();
+			await clearPending();
 			notice =
 				'Feedback saved. Start with a hint and try making your own revision.';
 		} catch (e) {
@@ -438,9 +424,9 @@
 			busy = false;
 		}
 	}
-	function toggleReview(key: string) {
+	async function toggleReview(key: string) {
 		try {
-			save({
+			await save({
 				...notebook,
 				reviews: { ...notebook.reviews, [key]: !notebook.reviews[key] },
 			});
@@ -448,7 +434,7 @@
 			notice = 'Your review status could not be saved.';
 		}
 	}
-	function useWriting() {
+	async function useWriting() {
 		if (!current || !draft.trim()) return;
 		try {
 			const p: Practice = {
@@ -461,34 +447,20 @@
 				script: draft.trim(),
 				createdAt: new Date().toISOString(),
 			};
-			save({ ...notebook, practices: [p, ...notebook.practices] });
+			await save({ ...notebook, practices: [p, ...notebook.practices] });
 			choose(p);
 			tab = 'speaking';
 		} catch {
 			notice = 'The reading script could not be saved. Please try again.';
 		}
 	}
-	function exportData() {
+	async function exportData() {
 		try {
-			const blob = new Blob(
-				[
-					JSON.stringify(
-						{
-							notebook: localStorage.getItem('mr-kane-notebook'),
-							vocabulary: localStorage.getItem('mr-kane-vocabulary'),
-							profiles: localStorage.getItem('mr-kane-profiles'),
-							drafts: Object.fromEntries(
-								Object.keys(localStorage)
-									.filter((k) => k.startsWith('mr-kane-draft:'))
-									.map((k) => [k, localStorage.getItem(k)]),
-							),
-						},
-						null,
-						2,
-					),
-				],
-				{ type: 'application/json' },
-			);
+			await draftWrites;
+			const saved = await readLearningRecords();
+			const blob = new Blob([JSON.stringify(saved, null, 2)], {
+				type: 'application/json',
+			});
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = url;
@@ -498,7 +470,8 @@
 			notice =
 				'Text backup exported. Download your audio separately in the Reading room.';
 		} catch {
-			notice = 'Export failed. Check your browser download permission.';
+			notice =
+				'Export failed. Check the server connection and download permission.';
 		}
 	}
 </script>
@@ -622,7 +595,7 @@
 					<p>
 						{busy
 							? 'Your AI request is being processed.'
-							: 'An unfinished AI request is saved. Resume it without creating a duplicate task.'}
+							: 'A saved AI request needs attention. Continue it or dismiss it.'}
 					</p>
 					<Button
 						variant="outline"
@@ -633,7 +606,11 @@
 					><Button
 						variant="ghost"
 						class="text-button"
-						onclick={clearPending}
+						onclick={() => {
+							void clearPending().catch(() => {
+								notice = 'Could not dismiss the saved request. Please retry.';
+							});
+						}}
 						disabled={busy}
 						size="icon"
 						title="Dismiss"
@@ -860,8 +837,15 @@
 									(entry) => entry.value === profile.language,
 								)?.placeholder}
 							></Textarea>
+							<p class="fineprint" role="status">
+								{draftSaving
+									? 'Saving draft…'
+									: draftSaveFailed
+										? 'Draft has not been saved. Edit again to retry.'
+										: 'Draft saved on this server.'}
+							</p>
 							<div class="spread wrap">
-								<span class="fineprint">Draft saved in this browser</span>
+								<span class="fineprint">Draft saved on this server</span>
 								<div class="button-row">
 									<Button
 										variant="outline"
@@ -1148,20 +1132,21 @@
 				<Card.Root class="panel storage-panel">
 					<h3>Your records, your learning</h3>
 					<p>
-						Drafts stay in this browser. Clearing browser data removes them.
-						Recordings, practice scripts, notes and reading feedback are saved
-						on this server in Reading history. Writing submitted for AI feedback
-						is sent to the configured model provider. AI requests and responses
-						are also saved privately on this server for recovery. Requesting a
-						reading check sends the recording and language to your selected
-						speech provider through this server. Remote reading voices send
-						learning text to your selected TTS provider.
+						Drafts are saved on this server. Wait for saving to finish before
+						closing the page. Recordings, practice scripts, notes and reading
+						feedback are saved on this server in Reading history. Writing
+						submitted for AI feedback is sent to the configured model provider.
+						AI requests and responses are also saved privately on this server
+						for recovery. Requesting a reading check sends the recording and
+						language to your selected speech provider through this server.
+						Remote reading voices send learning text to your selected TTS
+						provider.
 					</p>
 					<Button variant="outline" class="secondary" onclick={exportData}
 						><Icons.Download aria-hidden="true" />Export text backup</Button
 					>
 					<p class="fineprint">
-						Download audio in Reading history. This local prototype has no
+						Download audio in Reading history. This single-user app has no
 						accounts and is not ready for public multi-user hosting.
 					</p>
 				</Card.Root>
