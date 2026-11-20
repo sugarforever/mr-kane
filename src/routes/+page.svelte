@@ -47,7 +47,6 @@
 	} from '#lib/domain';
 	import { readLearningRecords, updateLearning } from '$lib/client/learning';
 	import { createNotebookWriter } from '$lib/client/notebook-writer';
-	import { importBrowserLearning } from '$lib/client/learning-migration';
 	import { pendingAISchema, type PendingAI } from '$lib/learning-records';
 	let { data } = $props();
 	type Tab =
@@ -215,7 +214,7 @@
 		window.addEventListener('beforeunload', guard);
 		void (async () => {
 			try {
-				const saved = await importBrowserLearning();
+				const saved = await readLearningRecords();
 				notebook = saved.notebook;
 				profiles = saved.profiles;
 				drafts = saved.drafts;
@@ -228,8 +227,7 @@
 				loadDraft();
 			} catch {
 				storageBroken = true;
-				notice =
-					'Learning records could not be loaded or imported. Existing data has been kept. Reload to retry.';
+				notice = 'Learning records could not be loaded. Reload to retry.';
 			} finally {
 				ready = true;
 			}

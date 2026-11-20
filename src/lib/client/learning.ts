@@ -16,7 +16,6 @@ export async function updateLearning(
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			...(command.type === 'legacy.import' ? { 'x-learning-import': '1' } : {}),
 		},
 		body: JSON.stringify(command),
 	});

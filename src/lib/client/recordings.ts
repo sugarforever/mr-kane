@@ -3,7 +3,6 @@ import {
 	recordingDetailsSchema,
 	type RecordingDetails,
 } from '#lib/recording-details';
-import { listRecordings as listLegacyRecordings } from './legacy-recordings';
 export type Recording = RecordingDetails & { blob: Blob };
 export function recordingAudioUrl(id: string) {
 	return `/api/recordings/${encodeURIComponent(id)}/audio`;
@@ -73,24 +72,4 @@ export async function patchRecording(
 		await (await checked(response)).json(),
 	);
 	return details;
-}
-export async function importBrowserRecordings() {
-	const originals = await listLegacyRecordings();
-	const result = {
-		saved: 0,
-		failed: [] as { id: string; title: string; message: string }[],
-	};
-	for (const original of originals) {
-		try {
-			await saveRecording(original);
-			result.saved++;
-		} catch (e) {
-			result.failed.push({
-				id: original.id,
-				title: original.practice.title,
-				message: e instanceof Error ? e.message : 'Import failed.',
-			});
-		}
-	}
-	return result;
 }

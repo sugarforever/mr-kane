@@ -48,38 +48,20 @@ it('persists independent records across reopened harnesses without replacing unr
 	expect(state.drafts.practice).toBe('Hola');
 	expect(state.profiles.es).toEqual(defaultProfile);
 });
-it('validates before mutation and imports each browser snapshot only once without overwriting server data', async () => {
+it('rejects invalid records without changing saved data', async () => {
 	setup();
 	await learningCommand({
-		type: 'profile.put',
-		profile: { ...defaultProfile, interests: 'Server preference' },
+		type: 'draft.put',
+		practiceId: 'draft',
+		text: 'Saved',
 	});
-	const payload = {
-		profiles: { es: defaultProfile },
-		drafts: { old: 'legacy' },
-		notebook: { version: 1, practices: [], attempts: [], reviews: {} },
-		vocabulary: [],
-		pending: null,
-	};
-	await learningCommand({
-		type: 'legacy.import',
-		receipt: 'browser-snapshot',
-		data: payload,
-	});
-	await learningCommand({ type: 'draft.put', practiceId: 'old', text: 'new' });
-	await learningCommand({
-		type: 'legacy.import',
-		receipt: 'browser-snapshot',
-		data: payload,
-	});
-	expect((await readLearning()).drafts.old).toBe('new');
-	expect((await readLearning()).profiles.es?.interests).toBe(
-		'Server preference',
-	);
 	await expect(
 		learningCommand({ type: 'profile.put', profile: { language: 'invalid' } }),
 	).rejects.toThrow();
-	expect((await readLearning()).drafts.old).toBe('new');
+	await expect(
+		learningCommand({ type: 'legacy.import', receipt: 'old', data: {} }),
+	).rejects.toThrow();
+	expect((await readLearning()).drafts.draft).toBe('Saved');
 });
 it('deduplicates vocabulary, updates review state and deletes entries', async () => {
 	setup();

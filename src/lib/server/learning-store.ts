@@ -13,7 +13,6 @@ import {
 } from '../learning-records';
 const Records = defineDoc<{
 	value: string;
-	receipts: string[];
 	results: string;
 }>({
 	kind: 'app.learning-records',
@@ -21,7 +20,6 @@ const Records = defineDoc<{
 	scope: 'session',
 	initial: () => ({
 		value: JSON.stringify(emptyLearningRecords()),
-		receipts: [],
 		results: '{}',
 	}),
 	checkpointWhen: () => true,
@@ -29,7 +27,6 @@ const Records = defineDoc<{
 async function access<T>(
 	work: (
 		state: LearningRecords,
-		receipts: string[],
 		results: Record<string, { hash: string; response: string }>,
 	) => T | Promise<T>,
 	write: boolean,
@@ -44,7 +41,6 @@ async function access<T>(
 					doc
 						? learningRecordsSchema.parse(JSON.parse(doc.value))
 						: emptyLearningRecords(),
-					doc?.receipts ?? [],
 					JSON.parse(doc?.results ?? '{}'),
 				);
 			}
@@ -53,7 +49,7 @@ async function access<T>(
 				const doc = await tx.doc(Records);
 				const state = learningRecordsSchema.parse(JSON.parse(doc.value));
 				const results = JSON.parse(doc.results ?? '{}');
-				result = await work(state, doc.receipts, results);
+				result = await work(state, results);
 				doc.results = JSON.stringify(results);
 				doc.value = JSON.stringify(learningRecordsSchema.parse(state));
 			}, context);
@@ -70,7 +66,7 @@ const wordKey = (text: string, language: string) =>
 	text.normalize('NFC').replace(/\s+/g, ' ').trim().toLocaleLowerCase(language);
 export async function learningCommand(input: unknown) {
 	const command = learningCommandSchema.parse(input);
-	return access((state, receipts) => {
+	return access((state) => {
 		switch (command.type) {
 			case 'profile.put':
 				state.profiles[command.profile.language] = command.profile;
@@ -135,42 +131,6 @@ export async function learningCommand(input: unknown) {
 			case 'vocabulary.delete':
 				state.vocabulary = state.vocabulary.filter((v) => v.id !== command.id);
 				break;
-			case 'legacy.import': {
-				if (receipts.includes(command.receipt)) break;
-				const old = command.data;
-				for (const p of old.notebook.practices)
-					if (!state.notebook.practices.some((v) => v.id === p.id))
-						state.notebook.practices.push(p);
-				for (const a of old.notebook.attempts)
-					if (!state.notebook.attempts.some((v) => v.id === a.id))
-						state.notebook.attempts.push(a);
-				for (const [key, value] of Object.entries(old.notebook.reviews))
-					if (!(key in state.notebook.reviews))
-						state.notebook.reviews[key] = value;
-				for (const [key, value] of Object.entries(old.drafts))
-					if (!(key in state.drafts)) state.drafts[key] = value;
-				for (const profile of Object.values(old.profiles))
-					if (profile && !state.profiles[profile.language])
-						state.profiles[profile.language] = profile;
-				for (const v of old.vocabulary)
-					if (
-						!state.vocabulary.some(
-							(e) =>
-								e.id === v.id ||
-								(e.language === v.language &&
-									wordKey(e.text, e.language) === wordKey(v.text, v.language)),
-						)
-					)
-						state.vocabulary.push(v);
-				// Keep conflicting pending requests in the browser until explicitly resolved.
-				if (old.pending && state.pending && state.pending.id !== old.pending.id)
-					throw new Error(
-						'Another saved request must be resolved before importing browser records.',
-					);
-				state.pending ??= old.pending;
-				receipts.push(command.receipt);
-				break;
-			}
 		}
 		return state;
 	}, true);
@@ -183,7 +143,7 @@ export function savedLearningResponse(
 	path: string,
 	input: unknown,
 ) {
-	return access((_state, _receipts, results) => {
+	return access((_state, results) => {
 		const saved = results[id];
 		if (!saved) return undefined;
 		if (saved.hash !== requestHash(path, input))
@@ -200,7 +160,7 @@ export function saveLearningResponse(
 	response: unknown,
 	save: (state: LearningRecords) => void,
 ) {
-	return access((state, _receipts, results) => {
+	return access((state, results) => {
 		const hash = requestHash(path, input);
 		if (results[id]) {
 			if (results[id].hash !== hash)

@@ -85,10 +85,5 @@ export const learningCommandSchema = z.discriminatedUnion('type', [
 			.partial(),
 	}),
 	z.object({ type: z.literal('vocabulary.delete'), id: z.string() }),
-	z.object({
-		type: z.literal('legacy.import'),
-		receipt: z.string().min(1).max(100),
-		data: learningRecordsSchema,
-	}),
 ]);
 export type LearningCommand = z.infer<typeof learningCommandSchema>;

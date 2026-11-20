@@ -15,36 +15,26 @@
 		recordingBlob,
 		patchRecording,
 		deleteRecording,
-		importBrowserRecordings,
 	} from '$lib/client/recordings';
-	import {
-		listRecordings as listBrowserRecordings,
-		type Recording,
-	} from '$lib/client/legacy-recordings';
 	import { transcribeSpeech } from '$lib/client/speech-service';
 	let recordings: RecordingDetails[] = $state([]);
-	let browserRecordings: Recording[] = $state([]);
-	let browserUrls: Record<string, string> = $state({});
 	let language = $state('all');
-	let source = $state('server');
 	let selectedId = $state('');
 	let loading = $state(true);
 	let busy = $state(false);
 	let checking = $state(false);
 	let message = $state('');
-	let importMessage = $state('');
-	let failures: { id: string; title: string; message: string }[] = $state([]);
 	let note = $state('');
 	let deleteReady = $state(false);
 	let controller: AbortController | undefined;
 	let disposed = false;
 	const visible = $derived(
-		(source === 'server' ? recordings : browserRecordings).filter(
+		recordings.filter(
 			(r) => language === 'all' || r.practice.profile.language === language,
 		),
 	);
 	const selected = $derived(visible.find((r) => r.id === selectedId));
-	const selectionKey = $derived(`${source}:${selected?.id ?? ''}`);
+	const selectionKey = $derived(selected?.id ?? '');
 	$effect(() => {
 		void selectionKey;
 		untrack(() => {
@@ -69,45 +59,11 @@
 	}
 	onMount(() => {
 		void refresh();
-		void listBrowserRecordings()
-			.then((list) => {
-				if (disposed) return;
-				browserRecordings = list;
-				browserUrls = Object.fromEntries(
-					list.map((r) => [r.id, URL.createObjectURL(r.blob)]),
-				);
-			})
-			.catch(() => {
-				if (!disposed)
-					importMessage =
-						'Browser backups could not be opened. Check browser storage permissions and try again.';
-			});
 	});
 	onDestroy(() => {
 		disposed = true;
 		controller?.abort();
-		Object.values(browserUrls).forEach(URL.revokeObjectURL);
 	});
-	async function importOld() {
-		busy = true;
-		importMessage = 'Importing browser recordings…';
-		failures = [];
-		try {
-			const result = await importBrowserRecordings();
-			if (disposed) return;
-			failures = result.failed;
-			importMessage = `${result.saved} recording(s) saved or already imported. ${result.failed.length} could not be imported. Browser originals are kept.`;
-			await refresh();
-		} catch (e) {
-			if (!disposed)
-				importMessage =
-					e instanceof Error
-						? e.message
-						: 'Import failed. Browser originals are kept.';
-		} finally {
-			if (!disposed) busy = false;
-		}
-	}
 	async function saveNote(item: RecordingDetails) {
 		busy = true;
 		message = '';
@@ -129,8 +85,7 @@
 			await deleteRecording(item.id);
 			recordings = recordings.filter((r) => r.id !== item.id);
 			selectedId = '';
-			message =
-				'Recording and audio deleted from server history. Any browser backup remains.';
+			message = 'Recording and audio deleted from server history.';
 		} catch (e) {
 			message = e instanceof Error ? e.message : 'Could not delete recording.';
 		} finally {
@@ -190,25 +145,6 @@
 			them.
 		</p>
 	</header>
-	{#if browserRecordings.length || importMessage}
-		<Card.Root class="p-5 space-y-3"
-			><h2 class="font-semibold">Browser recording backups</h2>
-			<p>
-				{browserRecordings.length} recording(s) available in this browser. Import
-				them to keep them on the server. Repeating an import preserves saved server
-				notes and feedback. Browser originals remain available below.
-			</p>
-			<Button
-				variant="outline"
-				onclick={importOld}
-				disabled={busy || !browserRecordings.length}
-				><Icons.Mic aria-hidden="true" />Import browser recordings</Button
-			>
-			{#if importMessage}<p role="status">{importMessage}</p>{/if}
-			{#each failures as failure}<p class="text-sm" role="alert">
-					{failure.title}: {failure.message}
-				</p>{/each}
-		</Card.Root>{/if}
 	<div class="flex flex-wrap gap-4">
 		<Label
 			>Language<NativeSelect bind:value={language} disabled={busy}
@@ -216,13 +152,6 @@
 				>{#each languages as entry}<option value={entry.value}
 						>{languageNames[entry.value]}</option
 					>{/each}</NativeSelect
-			></Label
-		>
-		<Label
-			>Storage<NativeSelect bind:value={source} disabled={busy}
-				><option value="server">Server history</option><option value="browser"
-					>Browser backups ({browserRecordings.length})</option
-				></NativeSelect
 			></Label
 		>
 		<Button
@@ -244,9 +173,7 @@
 		>{/if}
 	<div class="grid gap-6 md:grid-cols-[minmax(16rem,1fr)_minmax(0,2fr)]">
 		<section aria-label="Past reading practices" class="space-y-3">
-			{#if loading && source === 'server'}<p role="status">
-					Loading history…
-				</p>{/if}
+			{#if loading}<p role="status">Loading history…</p>{/if}
 			{#each visible as item (item.id)}
 				<button
 					class="w-full rounded-lg border p-4 text-left hover:bg-muted disabled:opacity-60"
@@ -269,9 +196,7 @@
 							: 'Recording saved'}{item.note ? ' · Listening note' : ''}</span
 					>
 				</button>
-			{:else}{#if !loading || source === 'browser'}<p
-						class="rounded-lg border p-6"
-					>
+			{:else}{#if !loading}<p class="rounded-lg border p-6">
 						No recordings here yet. <a href="/" class="underline"
 							>Choose a script and record a practice.</a
 						>
@@ -286,19 +211,15 @@
 							item.duration,
 						)} · {item.practice.profile.level}
 					</p>
-					{#key `${source}-${item.id}`}<audio
+					{#key item.id}<audio
 							class="w-full"
 							controls
 							preload="metadata"
-							src={source === 'browser'
-								? browserUrls[item.id]
-								: recordingAudioUrl(item.id)}
+							src={recordingAudioUrl(item.id)}
 						></audio>{/key}
 					<a
 						class="underline"
-						href={source === 'browser'
-							? browserUrls[item.id]
-							: recordingAudioUrl(item.id)}
+						href={recordingAudioUrl(item.id)}
 						download={`mr-kane-${item.id}`}>Download audio</a
 					>
 					<div>
@@ -324,67 +245,55 @@
 							expected={item.targetText ?? item.practice.script}
 							language={item.practice.profile.language}
 						/>{/if}
-					{#if source === 'server'}
-						<Button
-							variant="outline"
-							onclick={() => check(item)}
+					<Button variant="outline" onclick={() => check(item)} disabled={busy}
+						><Icons.RefreshCw aria-hidden="true" />{item.speechCheck
+							? 'Check reading again'
+							: 'Check reading with speech recognition'}</Button
+					>
+					<p class="text-sm text-muted-foreground">
+						Reading checks send audio to your selected speech provider and may
+						incur usage charges. Feedback compares recognised words, not
+						pronunciation quality.
+					</p>
+					<Label
+						>Listening note<Input
+							bind:value={note}
+							maxlength={1000}
 							disabled={busy}
-							><Icons.RefreshCw aria-hidden="true" />{item.speechCheck
-								? 'Check reading again'
-								: 'Check reading with speech recognition'}</Button
-						>
-						<p class="text-sm text-muted-foreground">
-							Reading checks send audio to your selected speech provider and may
-							incur usage charges. Feedback compares recognised words, not
-							pronunciation quality.
-						</p>
-						<Label
-							>Listening note<Input
-								bind:value={note}
-								maxlength={1000}
+							placeholder="What would you like to practise next?"
+						/></Label
+					>
+					<Button
+						onclick={() => saveNote(item)}
+						disabled={busy || note === item.note}
+						><Icons.Save aria-hidden="true" />Save note</Button
+					>
+					<div class="border-t pt-4">
+						{#if deleteReady}<p class="mb-3">
+								Delete this recording, its audio and saved feedback from the
+								server?
+							</p>
+							<Button
+								variant="destructive"
 								disabled={busy}
-								placeholder="What would you like to practise next?"
-							/></Label
-						>
-						<Button
-							onclick={() => saveNote(item)}
-							disabled={busy || note === item.note}
-							><Icons.Save aria-hidden="true" />Save note</Button
-						>
-						<div class="border-t pt-4">
-							{#if deleteReady}<p class="mb-3">
-									Delete this recording, its audio and saved feedback from the
-									server?
-								</p>
-								<Button
-									variant="destructive"
-									disabled={busy}
-									onclick={() => remove(item)}
-									><Icons.Trash2 aria-hidden="true" />Confirm delete</Button
-								>
-								<Button
-									variant="outline"
-									disabled={busy}
-									onclick={() => (deleteReady = false)}
-									><Icons.Check aria-hidden="true" />Keep recording</Button
-								>{:else}<Button
-									variant="destructive"
-									disabled={busy}
-									onclick={() => (deleteReady = true)}
-									size="icon"
-									title="Delete recording"
-									aria-label="Delete recording"
-									><Icons.Trash2 aria-hidden="true" /></Button
-								>{/if}
-						</div>
-					{:else}<div>
-							<h3 class="font-semibold">Listening note</h3>
-							<p class="whitespace-pre-wrap">{item.note || 'No note saved.'}</p>
-						</div>
-						<p class="text-sm">
-							This browser backup is read-only. Import it to edit notes and
-							feedback in server history.
-						</p>{/if}
+								onclick={() => remove(item)}
+								><Icons.Trash2 aria-hidden="true" />Confirm delete</Button
+							>
+							<Button
+								variant="outline"
+								disabled={busy}
+								onclick={() => (deleteReady = false)}
+								><Icons.Check aria-hidden="true" />Keep recording</Button
+							>{:else}<Button
+								variant="destructive"
+								disabled={busy}
+								onclick={() => (deleteReady = true)}
+								size="icon"
+								title="Delete recording"
+								aria-label="Delete recording"
+								><Icons.Trash2 aria-hidden="true" /></Button
+							>{/if}
+					</div>
 				</Card.Root>
 			{:else}<p class="rounded-lg border p-6 text-muted-foreground">
 					Select a past practice to replay your recording and review its

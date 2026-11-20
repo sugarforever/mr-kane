@@ -70,29 +70,7 @@
 				'I want to learn number theory. Help me work out what I already know and where to begin.',
 		},
 	];
-	async function restorePending() {
-		if (!session) return;
-		const id = session.id;
-		try {
-			// Legacy import only. New turns use the existing Pi-backed server state.
-			const key = `kane-math-pending:${id}`;
-			const raw = localStorage.getItem(key);
-			if (!raw) return;
-			const old = JSON.parse(raw);
-			const saved = await api(`/api/math/sessions/${id}`, {
-				action: 'import-pending',
-				requestId: old.id,
-				message: old.message,
-			});
-			if (session?.id === id) session = saved;
-			if (localStorage.getItem(key) === raw) localStorage.removeItem(key);
-		} catch {
-			notice =
-				'An old browser request could not be imported. Its original has been kept.';
-		}
-	}
 	onMount(() => {
-		void restorePending();
 		if (session?.messages.length || session?.pending) void scroll();
 	});
 	async function scroll() {
@@ -144,7 +122,6 @@
 		if (busy) return;
 		try {
 			session = await api(`/api/math/sessions/${id}`);
-			await restorePending();
 			draft = '';
 			notice = '';
 			await goto(`/math?session=${id}`, {
