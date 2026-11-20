@@ -349,7 +349,7 @@
 		justify-content: center;
 		gap: 6px;
 		min-width: 64px;
-		min-height: 42px;
+		min-height: 44px;
 		padding: 0 12px;
 		font-size: 14px;
 		font-weight: 600;
