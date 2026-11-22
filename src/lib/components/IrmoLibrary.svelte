@@ -244,11 +244,19 @@
 
 <style>
 	.irmo-library {
+		min-height: 0;
 		padding: 28px 36px 40px;
 		max-width: 1000px;
 		width: 100%;
 		margin: 0 auto;
 		overflow: auto;
+		overscroll-behavior: contain;
+	}
+	@media (max-width: 700px) {
+		.irmo-library {
+			overflow: visible;
+			overscroll-behavior: auto;
+		}
 	}
 	.library-top,
 	.library-actions {

@@ -1,6 +1,6 @@
 # Proposal: predictable scrolling in Math
 
-Status: proposed for review, 22 November 2026. This PR changes documentation only.
+Status: scroll-container fixes implemented for review, 22 November 2026. The broader interaction proposals below remain separate follow-up work.
 
 ## Problem and evidence
 
@@ -12,6 +12,12 @@ The live Math page was inspected with an existing long conversation and populate
 | Narrow-screen profile drawer | Its internal scrollbar reached the bottom, but the fixed drawer began at 100px while the responsive header ended around 395px. It covered the profile toggle; a hit test confirmed the toggle's center was intercepted by the drawer. The existing internal “Close profile” button works, but Escape does not dismiss the drawer. | Medium |
 | Narrow-screen conversations | Six conversations wrapped into multiple rows: 122px of content inside a 45px-high area. This produces a cramped vertical scrollbar. | Medium |
 | Reply following | Source inspection shows unconditional smooth scrolling for progress events and completion. This can pull readers away from earlier messages. This interaction was not reproduced by submitting a new AI request. | Medium |
+
+## Implemented scope
+
+At the user's request, this PR now implements only scrolling and layout fixes. Desktop Math uses the viewport height with independently scrolling transcript/library and learner profile. The composer stays visible. Short windows can scroll the sidebar when its controls cannot fit. At intermediate widths the header wraps within the available width. On mobile, conversation history is a single horizontal strip, the transcript/library retain document scrolling, and the profile starts at the viewport top rather than an assumed header offset.
+
+The learner profile's information organization and growth are being considered in a separate chat. Reply-following changes and full modal drawer behavior are not implemented here.
 
 Desktop conversation history, transcript, and IrMO library all reached both ends when their scroll positions were exercised. A long draft gained an internal textarea scrollbar and stayed capped at 160px. Mobile transcript content intentionally uses document scrolling, with a sticky composer. Tables and displayed equations should keep horizontal overflow for wide content.
 
@@ -93,4 +99,19 @@ Tested the current application at `http://127.0.0.1:5173/math` with the existing
 | Mobile IrMO library | Library used document flow without horizontal document overflow. Opening the last listed 2026 question loaded its preview successfully. |
 | Long draft | Textarea stayed at 158px client height (160px including borders), with 1,816px content height; its internal scrollbar reached the 1,658px maximum. The original draft value was restored. |
 
-Still pending: physical-device keyboard and touch behavior, complete focus traversal and restoration, wheel/trackpad edge chaining, all intermediate widths, and mocked streaming interactions. The reply-following finding remains source-based. No code fix is included in this proposal PR.
+Still pending from this baseline inspection: physical-device keyboard and touch behavior, complete focus traversal and restoration, wheel/trackpad edge chaining, all intermediate widths, and mocked streaming interactions. The reply-following finding remains source-based.
+
+## Verification after the scroll fixes
+
+The desktop overflow assertion failed before the fix (`2423 > 900`) and passed afterward. The mobile conversation-strip assertion also failed before the fix (`249 > 45`) and passed afterward.
+
+| Viewport | Result after the fix |
+| --- | --- |
+| 1440 × 900 | Document height 900px; profile viewport 800px with 2,323px content. Transcript and profile reached their scroll ends independently; composer bottom stayed at 900px. |
+| 1280 × 600 | Document height 600px; profile viewport 500px. Composer bottom stayed at 600px. |
+| 1280 × 400 | Document height 400px; profile viewport 300px. Composer bottom stayed at 400px; sidebar has an overflow fallback. |
+| 768 × 600 | Header wrapped within the available 524px main column, with no document overflow. Composer bottom stayed at 600px. |
+| 390 × 844 | Conversation strip had 37px client/content height and 1,230px content width within 354px. No vertical strip overflow or horizontal document overflow. Composer bottom stayed at 844px. Profile viewport began at 0px and scrolled independently. |
+| Desktop/mobile library | Desktop library fit its 800px track and scrolled to its last content. Mobile library remained in document flow without horizontal document overflow. |
+
+Repository validation: `npm run check` passed without Svelte errors or warnings; `npm test` passed all 168 tests in 42 files; production build passed. Browser checks used the existing local session without submitting AI requests or changing saved data. Physical-device gestures and virtual-keyboard behavior remain unverified.
