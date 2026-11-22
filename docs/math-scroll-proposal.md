@@ -4,12 +4,12 @@ Status: proposed for review, 22 November 2026. This PR changes documentation onl
 
 ## Problem and evidence
 
-The live Math page was inspected with an existing long conversation and populated learner profile. Browser measurements used actual viewports of 1440 × 707 and 500 × 707 CSS pixels; the browser did not honor the requested smaller phone width. Smaller phones, touch gestures, virtual keyboards, and keyboard-only navigation still need validation.
+The live Math page was inspected with an existing long conversation and populated learner profile. Initial browser measurements used actual viewports of 1440 × 707 and 500 × 707 CSS pixels. A follow-up local-dev-server test used explicit viewport emulation, including an actual 390 × 844 CSS-pixel mobile viewport. Physical touch gestures, virtual keyboards, and full keyboard-only navigation still need validation.
 
 | Area | Observed behavior | Priority |
 | --- | --- | --- |
 | Desktop profile and page | The profile expanded the document to about 2,423px, while the chat column remained 607px tall. Scrolling the document moved the chat, header, and composer off-screen and left a large blank center column. | High |
-| Narrow-screen profile drawer | Its internal scrollbar reached the bottom, but the fixed drawer began at 100px while the responsive header ended around 395px. It covered the profile toggle; a hit test confirmed the toggle's center was intercepted by the drawer. No close control exists inside it. | High |
+| Narrow-screen profile drawer | Its internal scrollbar reached the bottom, but the fixed drawer began at 100px while the responsive header ended around 395px. It covered the profile toggle; a hit test confirmed the toggle's center was intercepted by the drawer. The existing internal “Close profile” button works, but Escape does not dismiss the drawer. | Medium |
 | Narrow-screen conversations | Six conversations wrapped into multiple rows: 122px of content inside a 45px-high area. This produces a cramped vertical scrollbar. | Medium |
 | Reply following | Source inspection shows unconditional smooth scrolling for progress events and completion. This can pull readers away from earlier messages. This interaction was not reproduced by submitting a new AI request. | Medium |
 
@@ -44,7 +44,7 @@ Keep document scrolling for the transcript and library, plus the sticky chat com
 
 Use a single, non-wrapping horizontal conversation strip, with horizontal overflow and no vertical scrolling. Explicitly override the global `nav` wrapping and child flex rules for this module. Preserve truncated titles and accessible full names.
 
-Present the profile as a modal drawer with an internal close button, accessible name, Escape dismissal, focus containment, and focus restoration to its trigger. Lock background scrolling while open. Its body scrolls independently, and its close control stays visible. Anchor the drawer to the viewport rather than a fixed 100px header assumption. Use the same accessible drawer behavior at intermediate widths where the profile is hidden by default.
+Present the profile as a modal drawer, retaining its existing internal close button and adding an accessible name, Escape dismissal, focus containment, and focus restoration to its trigger. Lock background scrolling while open. Its body scrolls independently, and its close control stays visible. Anchor the drawer to the viewport rather than a fixed 100px header assumption. Use the same accessible drawer behavior at intermediate widths where the profile is hidden by default.
 
 ### Follow replies without interrupting reading
 
@@ -77,3 +77,20 @@ For implementation, add focused browser regressions for panel bounds, drawer dis
 ## Review decisions
 
 The proposed defaults are independent desktop panel scrolling, document scrolling on mobile, a horizontal mobile conversation strip, a modal profile drawer, and an 80px follow threshold. Review these behaviors before implementation.
+
+## Local dev-server retest, 22 November 2026
+
+Tested the current application at `http://127.0.0.1:5173/math` with the existing long session. These results describe the current behavior, not implemented fixes. No AI requests were submitted or saved conversation content modified. Scroll limits were exercised through browser JavaScript; this does not establish wheel, touch, or keyboard scrolling behavior.
+
+| Check | Result |
+| --- | --- |
+| Desktop 1440 × 900 | Confirmed failure: document height 2,423px, profile height 2,323px, and chat height 800px. At document bottom the composer's bottom was approximately −624px, completely above the viewport. |
+| Short desktop 1280 × 600 | Confirmed failure: document still 2,423px tall, with a 500px chat column. Conversation list had 321px of content in a 100px viewport. |
+| Mobile emulation 390 × 844 | Confirmed failure: conversations wrapped to 249px of content inside a 45px viewport. Document width stayed at 390px; no horizontal document overflow was measured. |
+| Mobile transcript and composer | Transcript used document flow; the sticky composer's bottom aligned with the 844px viewport bottom while the document was scrolled. |
+| Mobile profile | Independent scrolling reached its 1,213px maximum. The drawer started at 100px and covered the trigger in a header ending near 395px. Escape left it open. |
+| Existing close control | Correction to the initial review: an internal “Close profile” button already exists. At 390px its bounds were within the viewport, a hit test reached it, and activating it closed the drawer. |
+| Mobile IrMO library | Library used document flow without horizontal document overflow. Opening the last listed 2026 question loaded its preview successfully. |
+| Long draft | Textarea stayed at 158px client height (160px including borders), with 1,816px content height; its internal scrollbar reached the 1,658px maximum. The original draft value was restored. |
+
+Still pending: physical-device keyboard and touch behavior, complete focus traversal and restoration, wheel/trackpad edge chaining, all intermediate widths, and mocked streaming interactions. The reply-following finding remains source-based. No code fix is included in this proposal PR.
