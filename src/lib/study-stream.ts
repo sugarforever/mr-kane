@@ -1,7 +1,7 @@
 export type StudyProgress = {
 	type: 'progress';
 	reply: string;
-	status: 'thinking' | 'reading' | 'writing';
+	status: 'thinking' | 'reading' | 'writing' | 'finishing' | 'saving';
 };
 export type StudyStreamEvent<Session> =
 	| StudyProgress

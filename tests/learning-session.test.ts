@@ -79,6 +79,7 @@ it('reuses durable turns for another learner schema and isolates subjects while 
 	expect(progress).toEqual([
 		{ type: 'progress', reply: '', status: 'reading' },
 		{ type: 'progress', reply: 'Consider Rome', status: 'writing' },
+		{ type: 'progress', reply: 'Consider Rome.', status: 'saving' },
 	]);
 	expect(saved.learner).toEqual({ era: 'Roman' });
 	expect(saved.messages).toHaveLength(2);
