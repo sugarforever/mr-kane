@@ -195,6 +195,7 @@ it('streams only the top-level reply across partial JSON, escapes and source loo
 		{ type: 'progress', reply: 'Try $x', status: 'writing' },
 		{ type: 'progress', reply: '', status: 'reading' },
 		{ type: 'progress', reply: 'Line 1\n"Hi" π', status: 'writing' },
+		{ type: 'progress', reply: 'Line 1\n"Hi" π', status: 'saving' },
 	]);
 	expect((await getMathSession(session.id)).messages.at(-1)?.content).toBe(
 		'Line 1\n"Hi" π',

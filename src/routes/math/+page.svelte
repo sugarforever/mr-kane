@@ -34,7 +34,16 @@
 	let progress: StudyProgress | null = $state(null);
 	let activeReply: AbortController | undefined;
 	onDestroy(() => activeReply?.abort());
-	let bottom = $state<HTMLDivElement>();
+	let transcript = $state<HTMLDivElement>();
+	let following = $state(true);
+	function trackScroll() {
+		if (transcript)
+			following =
+				transcript.scrollHeight -
+					transcript.scrollTop -
+					transcript.clientHeight <
+				80;
+	}
 	let showProfile = $state(false);
 	let showLibrary = $state(false);
 	async function studyIrmo(message: string) {
@@ -73,9 +82,11 @@
 	onMount(() => {
 		if (session?.messages.length || session?.pending) void scroll();
 	});
-	async function scroll() {
+	async function scroll(force = true) {
 		await tick();
-		bottom?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		if (!force && !following) return;
+		if (force) following = true;
+		if (transcript) transcript.scrollTop = transcript.scrollHeight;
 	}
 	async function api(path: string, body?: unknown) {
 		const response = await fetch(
@@ -92,8 +103,9 @@
 		if (!response.ok) throw new Error(result.message ?? 'Please try again.');
 		return result;
 	}
-	async function newChat() {
+	async function newChat(clearDraft = true) {
 		if (busy) return;
+		if (clearDraft) draft = '';
 		busy = true;
 		try {
 			session = await api('/api/math/sessions', {});
@@ -106,7 +118,6 @@
 				...sessions,
 			];
 			notice = '';
-			draft = '';
 			await goto(`/math?session=${session!.id}`, {
 				replace: true,
 				shallow: true,
@@ -172,9 +183,14 @@
 		const message = text.trim();
 		if (!message) return;
 		notice = '';
+		const retrying = !!session?.pending;
+		if (!retrying) draft = '';
 		if (!session) {
-			await newChat();
-			if (!session) return;
+			await newChat(false);
+			if (!session) {
+				if (!draft) draft = message;
+				return;
+			}
 		}
 		const pending = session.pending ?? { id: crypto.randomUUID(), message };
 		session = { ...session, pending };
@@ -182,7 +198,6 @@
 		busy = true;
 		progress = null;
 		activeReply = new AbortController();
-		draft = '';
 		void scroll();
 		try {
 			const response = await fetch(`/api/math/chat/${id}`, {
@@ -198,8 +213,9 @@
 				signal: activeReply.signal,
 			});
 			session = await readStudyStream<MathSession>(response, (event) => {
+				const changed = event.reply !== progress?.reply;
 				progress = event;
-				void scroll();
+				if (changed) void scroll(false);
 			});
 			sessions = [
 				{
@@ -215,7 +231,7 @@
 			busy = false;
 			progress = null;
 			activeReply = undefined;
-			void scroll();
+			void scroll(false);
 		}
 	}
 </script>
@@ -235,8 +251,11 @@
 		<div class="math-current">
 			<Calculator class="size-4" /> Math <span>AoPS · IrMO</span>
 		</div>
-		<Button variant="outline" onclick={newChat} disabled={busy} class="w-full"
-			><Plus class="size-4" /> New conversation</Button
+		<Button
+			variant="outline"
+			onclick={() => newChat()}
+			disabled={busy}
+			class="w-full"><Plus class="size-4" /> New conversation</Button
 		>
 		<p class="sidebar-label">YOUR CONVERSATIONS</p>
 		<nav aria-label="Math conversations" class="math-conversations">
@@ -303,7 +322,13 @@
 						onClose={() => (showLibrary = false)}
 					/>
 				{:else}
-					<div class="math-transcript" aria-live="polite" aria-busy={busy}>
+					<div
+						class="math-transcript"
+						bind:this={transcript}
+						onscroll={trackScroll}
+						aria-live="polite"
+						aria-busy={busy}
+					>
 						{#if !session?.messages.length}
 							<div class="math-welcome">
 								<div class="welcome-mark"><Calculator size={28} /></div>
@@ -375,11 +400,15 @@
 							</article>{/if}
 						{#if busy}<p class="math-thinking" role="status">
 								<Sparkles class="size-4" />
-								{progress?.status === 'reading'
-									? 'Reading the source material…'
-									: progress?.reply
-										? 'Writing your reply…'
-										: 'Thinking it through…'}
+								{progress?.status === 'saving'
+									? 'Saving conversation…'
+									: progress?.status === 'finishing'
+										? 'Updating your learning profile…'
+										: progress?.status === 'reading'
+											? 'Reading the source material…'
+											: progress?.reply
+												? 'Writing your reply…'
+												: 'Thinking it through…'}
 							</p>{/if}
 						{#if notice || (session?.pending && !busy)}<div
 								class="math-notice"
@@ -398,8 +427,10 @@
 										>Edit message</Button
 									>{/if}
 							</div>{/if}
-						<div bind:this={bottom}></div>
 					</div>
+					{#if !following}<Button variant="outline" onclick={() => scroll()}
+							>Jump to latest</Button
+						>{/if}
 					<form
 						class="math-composer"
 						onsubmit={(e) => {
@@ -415,11 +446,11 @@
 								maxlength={6000}
 								rows={2}
 								placeholder="Ask a question, share what you’ve tried, or tell me about your goals…"
-								disabled={busy || !!session?.pending || !configured}
+								disabled={!configured}
 								onkeydown={(e) => {
 									if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
 										e.preventDefault();
-										void send();
+										if (!busy && !session?.pending) void send();
 									}
 								}}
 							/><Button
@@ -681,7 +712,6 @@
 		overflow: auto;
 		overscroll-behavior: contain;
 		padding: 36px max(24px, calc((100% - 740px) / 2));
-		scroll-behavior: smooth;
 	}
 	.math-welcome {
 		text-align: center;

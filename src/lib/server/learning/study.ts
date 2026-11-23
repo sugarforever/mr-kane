@@ -11,7 +11,7 @@ import {
 	type ConversationId,
 	type SubmissionId,
 } from '@earendil-works/pi-durable';
-import { parseStreamingJson } from '@earendil-works/pi-ai';
+import { studyProgress } from '$lib/study-progress';
 import { database, locked, dataDir } from '../providers-store';
 import {
 	runAgent,
@@ -275,18 +275,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 	): AgentOptions['onProgress'] {
 		return onProgress
 			? ({ text, reading }) => {
-					const partial = parseStreamingJson<{ reply?: unknown }>(
-						text.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, ''),
-					);
-					const reply =
-						typeof partial?.reply === 'string'
-							? partial.reply.slice(0, 20000)
-							: '';
-					onProgress({
-						type: 'progress',
-						reply,
-						status: reading ? 'reading' : reply ? 'writing' : 'thinking',
-					});
+					onProgress(studyProgress(text, reading));
 				}
 			: undefined;
 	}
@@ -461,6 +450,11 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					502,
 					'The coach response was incomplete. Retry this message.',
 				);
+			onProgress?.({
+				type: 'progress',
+				reply: answer.data.reply,
+				status: 'saving',
+			});
 			const now = new Date().toISOString();
 			session = {
 				...session,
