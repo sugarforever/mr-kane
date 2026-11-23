@@ -154,7 +154,10 @@ MiniMax speech supports International (`api.minimax.io`) and Mainland China (`ap
 
 The math coach has source-independent `exercise_sources`, `exercise_search`, and
 `exercise_read` tools covering registered book and competition datasets, alongside the existing source-specific tools. During a lesson,
-ask for relevant practice or an independent test; the coach can search by topic,
+the coach proactively assigns relevant practice after explanations and worked
+examples, waits for the student’s attempt, and adapts from feedback. Students
+can also explicitly request practice or an independent test, or skip practice.
+The coach can search by topic,
 keywords or suggested AoPS prerequisite chapter, read the original statement,
 and cite its source. Practice uses progressive hints; tests request an independent
 attempt before feedback. Previously assigned IDs can be excluded using the current

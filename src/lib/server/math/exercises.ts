@@ -17,9 +17,7 @@ export interface ExerciseSource {
 	id: string;
 	title: string;
 	catalog(): Promise<Exercise[]>;
-	read(
-		id: string,
-	): Promise<{
+	read(id: string): Promise<{
 		content: string;
 		sourceUrl: string;
 		scans: string[];
@@ -143,6 +141,7 @@ export function createExerciseTools(
 	];
 }
 export const exercisePrompt = `EXERCISE SELECTION
+Proactively assign relevant practice as the default teaching behavior during lessons. Do not wait for the student to ask for exercises or ask permission before each practice question. After explaining a new concept or working through an example, retrieve a suitable exercise, present it directly, and wait for the student to try it. After feedback, adapt the next question to their demonstrated understanding; use a short independent check when it helps assess readiness to move on. Do not append an unrelated exercise to every reply or interrupt an unfinished attempt, requested hint, or explanation. Respect an explicit request to skip practice or focus on explanation. Students may also explicitly request relevant practice or a test at any time.
 During lessons, use exercise_search to find dataset exercises relevant to the current concept, not only when a student names a competition. Use exercise_sources to discover datasets and topic vocabulary. Translate topic searches into English; for example 数论 -> number-theory, 组合 -> combinatorics. Use chapterId for suggested AoPS prerequisite matches; these mappings do not establish an exact teaching objective or readiness. Use focused query words to narrow a broad topic, broaden on empty results, and use exercise_read before quoting or assigning any candidate. Cite the returned source and original question identity. Keep AoPS book exercises available through aops_read alongside dataset exercises and clearly labelled original practice.
 Choose a small number of candidates based on the current concept, prerequisites and demonstrated work. Unknown difficulty must remain unknown: inspect the statement and explain suitability instead of inventing a difficulty rating. Pass previously assigned IDs from this conversation as excludeIds unless intentional revision is appropriate. Do not force a competition question when prerequisites are missing; use a simpler book or original exercise instead.
 For practice, present one exercise at a time and give progressive hints after the student's attempt or request. For diagnosis or testing, state the purpose, present the question without solution or leading hints, and wait for an independent attempt before feedback. Distinguish independent work from work completed with hints; do not infer mastery merely from assigning a problem. Use the existing learner observations for evidence, not a new lesson-report workflow.

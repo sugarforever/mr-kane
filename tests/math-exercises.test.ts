@@ -52,6 +52,11 @@ it('instructs the coach to retrieve exercises for practice and withhold solution
 	expect(prompt).toContain('exercise_search');
 	expect(prompt).toContain('independent attempt');
 	expect(prompt).toContain('Unknown difficulty');
+	expect(prompt).toContain(
+		'Proactively assign relevant practice as the default teaching behavior',
+	);
+	expect(prompt).toContain('Do not wait for the student to ask for exercises');
+	expect(prompt).toContain('Respect an explicit request to skip practice');
 });
 
 it('accepts an additional dataset without changing the agent tools', async () => {
