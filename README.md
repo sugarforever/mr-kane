@@ -149,3 +149,27 @@ Audio artifacts are private server files (20 MB maximum), scoped to an applicati
 Server workflows opt into the tool-enabled coach with `runCoach(operation, data, outputSchema, requestId, { speechTools: true })`. Include uploaded artifact IDs in `data` using that same `requestId`. Tool-enabled requests allow up to four model turns; existing text-only workflows keep their single-turn behavior. For direct programmatic use, install `createSpeechTools(requestId)` into a Pi registry and pass the returned tool objects to the agent. Audio bytes never enter the model transcript. Tool artifacts must already use a format accepted by the selected STT model; WAV-only models reject WebM/MP4 uploads with conversion guidance.
 
 MiniMax speech supports International (`api.minimax.io`) and Mainland China (`api.minimaxi.com`) regions in Speech settings. The selected region applies to STT, TTS and voice discovery; each region stores its own dedicated key. Existing settings and keys remain international. Mainland China environment fallback uses `MINIMAX_CN_API_KEY`; international uses `MINIMAX_API_KEY`. [MiniMax mainland API console](https://solutions.minimaxi.com/debug/speech).
+
+### Course-related dataset exercises
+
+The math coach has source-independent `exercise_sources`, `exercise_search`, and
+`exercise_read` tools covering registered book and competition datasets, alongside the existing source-specific tools. During a lesson,
+the coach proactively assigns relevant practice after explanations and worked
+examples, waits for the student’s attempt, and adapts from feedback. Students
+can also explicitly request practice or an independent test, or skip practice.
+The coach can search by topic,
+keywords or suggested AoPS prerequisite chapter, read the original statement,
+and cite its source. Practice uses progressive hints; tests request an independent
+attempt before feedback. Previously assigned IDs can be excluded using the current
+conversation history (this is not a cross-conversation attempt database).
+
+The registered adapters cover AoPS numbered exercises and the collected IrMO
+questions. Unfiltered search interleaves sources so one large catalog does not
+hide the others. To add another local dataset, implement `ExerciseSource` and
+register it in `src/lib/server/math/exercise-sources.ts`; keep globally unique,
+stable exercise IDs.
+Adapters provide topic/chapter metadata, bounded statements and source/scan URLs.
+Suggested prerequisites are candidate matches, not verified difficulty ratings.
+No verified answer key or calibrated difficulty is assumed. Selection is currently
+lexical with topic/chapter filtering, not semantic search. No lesson completion or
+report generation is added by this feature.
