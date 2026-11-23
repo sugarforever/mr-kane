@@ -2,6 +2,7 @@
 	import Brand from '$lib/Brand.svelte';
 	import ChatAvatar from '$lib/ChatAvatar.svelte';
 	import { onMount, onDestroy, tick, untrack } from 'svelte';
+	import MathLearningProfile from '$lib/components/MathLearningProfile.svelte';
 	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
 	import { goto } from '$app/navigation';
 	import {
@@ -288,7 +289,7 @@
 					class="profile-toggle"
 					aria-expanded={showProfile}
 					onclick={() => (showProfile = !showProfile)}
-					><UserRound class="size-4" /> Your starting point</Button
+					><UserRound class="size-4" /> Your learning profile</Button
 				>
 			</div>
 		</header>
@@ -448,38 +449,9 @@
 					class="profile-toggle"
 					onclick={() => (showProfile = false)}>Close profile</Button
 				>
-				<div class="learner-title">
-					<UserRound class="size-4" />
-					<h2>Your starting point</h2>
-				</div>
-				<p class="learner-intro">
-					A picture that grows as we learn together. You can correct it in the
-					chat at any time.
-				</p>
-				{#if session?.learner.background || session?.learner.goal}<dl>
-						{#if session.learner.background}<dt>Background</dt>
-							<dd>
-								{session.learner.background}
-							</dd>{/if}{#if session.learner.goal}<dt>Working toward</dt>
-							<dd>
-								{session.learner.goal}
-							</dd>{/if}{#if session.learner.weeklyTime}<dt>Study time</dt>
-							<dd>{session.learner.weeklyTime}</dd>{/if}
-					</dl>{:else}<div class="learner-empty">
-						<span>01</span>
-						<p>Share where you are now.</p>
-						<span>02</span>
-						<p>Explore a few ideas together.</p>
-						<span>03</span>
-						<p>Find your next step.</p>
-					</div>{/if}
-				{#each [{ title: 'What you’ve studied', items: session?.learner.reportedKnowledge ?? [] }, { title: 'Strengths shown so far', items: session?.learner.strengths ?? [] }, { title: 'Ideas to work on', items: session?.learner.gaps ?? [] }] as group}{#if group.items.length}<h3
-						>
-							{group.title}
-						</h3>
-						<ul>
-							{#each group.items as item}<li>{item}</li>{/each}
-						</ul>{/if}{/each}
+				{#key session?.id}
+					<MathLearningProfile learner={session?.learner} />
+				{/key}
 				<div class="math-library-note">
 					<BookOpen class="size-4" /><strong>Your study library</strong>
 					<p>
@@ -873,57 +845,6 @@
 		border-left: 1px solid var(--border);
 		padding: 30px 24px;
 		background: var(--learner-panel-background);
-	}
-	.learner-title {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-	.learner-title h2 {
-		font-size: 13px;
-		font-weight: 600;
-	}
-	.learner-intro {
-		font-size: 11px;
-		color: var(--math-muted-foreground);
-		line-height: 1.8;
-		margin: 14px 0 26px;
-	}
-	.learner-empty {
-		display: grid;
-		grid-template-columns: 24px 1fr;
-		gap: 16px 10px;
-		align-items: center;
-		font-size: 11px;
-		color: var(--math-description);
-		margin-bottom: 35px;
-	}
-	.learner-empty span {
-		font-family: var(--font-heading);
-		font-size: 18px;
-		color: var(--learner-empty-span-foreground);
-	}
-	.learner-empty p {
-		margin: 0;
-	}
-	.learner-panel dt,
-	.learner-panel h3 {
-		font-size: 10px;
-		text-transform: uppercase;
-		letter-spacing: 1px;
-		color: var(--math-description);
-		margin: 22px 0 7px;
-	}
-	.learner-panel dd,
-	.learner-panel li {
-		font-size: 12px;
-		line-height: 1.8;
-		margin: 0;
-		overflow-wrap: anywhere;
-	}
-	.learner-panel ul {
-		padding-left: 15px;
-		list-style: disc;
 	}
 	.math-library-note {
 		border-top: 1px solid var(--border);

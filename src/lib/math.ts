@@ -1,5 +1,12 @@
 import { z } from 'zod';
 export const learnerSchema = z.object({
+	summary: z
+		.object({
+			goal: z.string().max(180),
+			currentLevel: z.string().max(180),
+			nextStep: z.string().max(180),
+		})
+		.optional(),
 	background: z.string().max(1200),
 	goal: z.string().max(1200),
 	weeklyTime: z.string().max(300),
