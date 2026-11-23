@@ -527,7 +527,9 @@
 	.math-shell {
 		display: grid;
 		grid-template-columns: 244px minmax(0, 1fr);
-		min-height: 100dvh;
+		height: 100dvh;
+		min-height: 0;
+		overflow: hidden;
 		background: var(--background);
 	}
 	.math-sidebar {
@@ -536,10 +538,16 @@
 		flex-direction: column;
 		border-right: 1px solid var(--border);
 		gap: 18px;
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior-y: contain;
 		background: var(--math-sidebar);
 		position: sticky;
 		top: 0;
 		height: 100dvh;
+	}
+	.math-sidebar > :not(.math-conversations) {
+		flex-shrink: 0;
 	}
 	.math-current {
 		display: flex;
@@ -568,8 +576,9 @@
 	}
 	.math-conversations {
 		overflow: auto;
+		overscroll-behavior: contain;
 		flex: 1;
-		min-height: 100px;
+		min-height: 48px;
 	}
 	.math-conversations button {
 		display: flex;
@@ -617,6 +626,9 @@
 	}
 	.math-main {
 		min-width: 0;
+		min-height: 0;
+		display: grid;
+		grid-template-rows: auto minmax(0, 1fr);
 	}
 	.math-header {
 		height: 100px;
@@ -654,17 +666,20 @@
 	.math-workspace {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 270px;
-		min-height: calc(100dvh - 100px);
+		grid-template-rows: minmax(0, 1fr);
+		min-height: 0;
 	}
 	.chat-column {
 		min-width: 0;
+		min-height: 0;
 		display: flex;
 		flex-direction: column;
-		max-height: calc(100dvh - 100px);
 	}
 	.math-transcript {
 		flex: 1;
+		min-height: 0;
 		overflow: auto;
+		overscroll-behavior: contain;
 		padding: 36px max(24px, calc((100% - 740px) / 2));
 		scroll-behavior: smooth;
 	}
@@ -822,6 +837,7 @@
 		border: 1px solid var(--border);
 	}
 	.math-composer {
+		flex-shrink: 0;
 		border-top: 1px solid var(--border);
 		padding: 18px 28px 20px;
 		background: var(--background);
@@ -851,6 +867,9 @@
 		line-height: 1.5;
 	}
 	.learner-panel {
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior-y: contain;
 		border-left: 1px solid var(--border);
 		padding: 30px 24px;
 		background: var(--learner-panel-background);
@@ -955,7 +974,7 @@
 			display: block;
 			position: fixed;
 			right: 0;
-			top: 100px;
+			top: 0;
 			bottom: 0;
 			width: min(320px, 90vw);
 			z-index: 20;
@@ -973,11 +992,28 @@
 		}
 		.math-header {
 			padding: 20px 24px;
+			height: auto;
+			min-height: 100px;
+			min-width: 0;
+		}
+		.math-connection {
+			min-width: 0;
+			flex-wrap: wrap;
+			justify-content: flex-end;
 		}
 	}
 	@media (max-width: 700px) {
 		.math-shell {
 			grid-template-columns: 1fr;
+			height: auto;
+			min-height: 100dvh;
+			overflow: visible;
+		}
+		.math-main {
+			display: block;
+		}
+		.math-workspace {
+			min-height: calc(100dvh - 190px);
 		}
 		.math-sidebar {
 			position: static;
@@ -998,14 +1034,16 @@
 		.math-sidebar > .math-conversations {
 			flex-basis: 100%;
 			display: flex;
+			flex-wrap: nowrap;
 			gap: 6px;
 			min-height: 0;
-			max-height: 45px;
+			overflow-x: auto;
+			overflow-y: hidden;
 		}
 		.math-conversations button {
 			width: auto;
 			max-width: 200px;
-			flex-shrink: 0;
+			flex: 0 0 auto;
 			padding: 8px;
 			font-size: 11px;
 		}
@@ -1030,6 +1068,7 @@
 		.math-transcript {
 			padding: 24px 20px;
 			overflow: visible;
+			overscroll-behavior: auto;
 		}
 		.math-welcome {
 			margin-top: 0;
