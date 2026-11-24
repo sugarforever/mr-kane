@@ -5,6 +5,7 @@
 	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
 	import { goto } from '$app/navigation';
 	import {
+		ArrowDown,
 		ArrowLeft,
 		ArrowUp,
 		BookOpen,
@@ -428,9 +429,6 @@
 									>{/if}
 							</div>{/if}
 					</div>
-					{#if !following}<Button variant="outline" onclick={() => scroll()}
-							>Jump to latest</Button
-						>{/if}
 					<form
 						class="math-composer"
 						onsubmit={(e) => {
@@ -438,6 +436,16 @@
 							void send();
 						}}
 					>
+						{#if !following}
+							<Button
+								variant="outline"
+								size="icon"
+								class="jump-to-latest rounded-full shadow-sm"
+								aria-label="Jump to latest"
+								title="Jump to latest"
+								onclick={() => scroll()}
+							><ArrowDown class="size-4" /></Button>
+						{/if}
 						<label for="math-message">What would you like to work on?</label>
 						<div>
 							<Textarea
@@ -867,10 +875,17 @@
 		border: 1px solid var(--border);
 	}
 	.math-composer {
+		position: relative;
 		flex-shrink: 0;
 		border-top: 1px solid var(--border);
 		padding: 18px 28px 20px;
 		background: var(--background);
+	}
+	.math-composer :global(.jump-to-latest) {
+		position: absolute;
+		bottom: calc(100% + 12px);
+		left: calc(50% - 16px);
+		z-index: 1;
 	}
 	.math-composer label {
 		display: block;
