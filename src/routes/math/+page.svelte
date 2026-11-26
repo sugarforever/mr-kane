@@ -3,6 +3,7 @@
 	import ChatAvatar from '$lib/ChatAvatar.svelte';
 	import { onMount, onDestroy, tick, untrack } from 'svelte';
 	import IrmoLibrary from '$lib/components/IrmoLibrary.svelte';
+	import MathCoursePlans from '$lib/components/MathCoursePlans.svelte';
 	import { goto } from '$app/navigation';
 	import {
 		ArrowDown,
@@ -308,7 +309,7 @@
 					class="profile-toggle"
 					aria-expanded={showProfile}
 					onclick={() => (showProfile = !showProfile)}
-					><UserRound class="size-4" /> Your starting point</Button
+					><UserRound class="size-4" /> Learning plan</Button
 				>
 			</div>
 		</header>
@@ -443,8 +444,8 @@
 								class="jump-to-latest rounded-full shadow-sm"
 								aria-label="Jump to latest"
 								title="Jump to latest"
-								onclick={() => scroll()}
-							><ArrowDown class="size-4" /></Button>
+								onclick={() => scroll()}><ArrowDown class="size-4" /></Button
+							>
 						{/if}
 						<label for="math-message">What would you like to work on?</label>
 						<div>
@@ -480,13 +481,21 @@
 			<aside
 				class="learner-panel"
 				class:profile-open={showProfile}
-				aria-label="Your math learning profile"
+				aria-label="Your math learning plan and profile"
 			>
 				<Button
 					variant="ghost"
 					class="profile-toggle"
 					onclick={() => (showProfile = false)}>Close profile</Button
 				>
+				<MathCoursePlans
+					plans={session?.learner.coursePlans}
+					disabled={busy || !!session?.pending || !configured}
+					onStudy={(message) => {
+						showProfile = false;
+						void send(message);
+					}}
+				/>
 				<div class="learner-title">
 					<UserRound class="size-4" />
 					<h2>Your starting point</h2>

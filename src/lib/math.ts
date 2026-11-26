@@ -1,5 +1,7 @@
 import { z } from 'zod';
+import { coursePlansSchema } from './math-courses';
 export const learnerSchema = z.object({
+	coursePlans: coursePlansSchema.optional(),
 	background: z.string().max(1200),
 	goal: z.string().max(1200),
 	weeklyTime: z.string().max(300),

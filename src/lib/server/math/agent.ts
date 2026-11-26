@@ -8,5 +8,5 @@ export const mathAgent: AgentDefinition = {
 	loadPrompt: mathSystemPrompt,
 	createTools: ({ connection }) =>
 		createMathTools(modelFor(connection).input.includes('image')),
-	execution: { maxTurns: 6, streamTimeoutMs: 120000, timeoutMs: 180000 },
+	execution: { maxTurns: 12, streamTimeoutMs: 120000, timeoutMs: 180000 },
 };
