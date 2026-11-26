@@ -4,12 +4,14 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { z } from 'zod';
-import { defineTool } from '@earendil-works/pi-durable';
+import { BACKGROUND_CONTEXT } from '@earendil-works/chord/context';
+import { defineTool, type ToolExecutionApi } from '@earendil-works/pi-durable';
 import type { AgentDefinition } from '../src/lib/server/agent';
 import {
 	saveConnection,
 	selectConnection,
 	database,
+	readConnection,
 } from '../src/lib/server/providers-store';
 import { createStudy } from '../src/lib/server/learning/study';
 import { readStudyStream } from '../src/lib/study-stream';
@@ -63,6 +65,7 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 		expect(system).not.toMatch(/AoPS|Irish and Spanish/);
 		expect(input.tools.map((t: any) => t.function.name)).toEqual([
 			'archive_read',
+			'start_new_session',
 		]);
 		if (calls === 3) {
 			const users = input.messages.filter((m: any) => m.role === 'user');
@@ -81,10 +84,23 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 			]);
 			expect(current.data.learner).toEqual({ era: 'Roman' });
 		}
-		if (calls === 2)
+		if (calls === 2) {
+			const created = JSON.parse(
+				input.messages.find(
+					(m: any) =>
+						m.role === 'tool' && m.tool_call_id === 'new-session-call',
+				).content,
+			);
+			expect(created.sessionId).not.toBe(session.id);
+			expect((await study.getSession(created.sessionId)).messages).toEqual([]);
+			expect((await study.getSession(created.sessionId)).learner).toEqual({
+				era: '',
+			});
+			expect(await study.listSessions()).toHaveLength(2);
 			expect(
 				input.messages.find((m: any) => m.role === 'tool').content,
 			).toContain('509 BCE');
+		}
 		if (calls === 5) {
 			expect(
 				input.messages.some((m: any) => m.content?.includes('private invalid')),
@@ -107,6 +123,12 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 								id: 'private-archive-call',
 								type: 'function',
 								function: { name: 'archive_read', arguments: '{}' },
+							},
+							{
+								index: 1,
+								id: 'new-session-call',
+								type: 'function',
+								function: { name: 'start_new_session', arguments: '{}' },
 							},
 						],
 					}
@@ -184,6 +206,7 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 	expect(toolCalls).toBe(1);
 	await study.runTurn(session.id, requestId, 'Teach me Rome');
 	expect(calls).toBe(2);
+	expect(await study.listSessions()).toHaveLength(2);
 	await study.runTurn(session.id, randomUUID(), 'What changed next?');
 	expect(calls).toBe(3);
 	const failedId = randomUUID();
@@ -200,6 +223,28 @@ it('runs a non-math subject through the real runtime, tools, sessions and stream
 	await study.discardTurn(session.id, failedId);
 	await study.runTurn(session.id, randomUUID(), 'Try a new question');
 	expect(calls).toBe(5);
+	await study.runTurn(
+		session.id,
+		randomUUID(),
+		'Open another conversation',
+		async (_op, _data, _schema, requestId, options) => {
+			const tool = options.agent
+				.createTools({ requestId, connection: readConnection(connection.id)! })
+				.find((t) => t.name === 'start_new_session')!;
+			const api = { callId: 'recovered-call' } as ToolExecutionApi;
+			const first = await tool.execute!({}, api, BACKGROUND_CONTEXT);
+			const replay = await tool.execute!({}, api, BACKGROUND_CONTEXT);
+			expect(replay).toEqual(first);
+			expect(await study.listSessions()).toHaveLength(3);
+			await expect(
+				tool.execute!({ sessionId: session.id }, api, BACKGROUND_CONTEXT),
+			).rejects.toThrow();
+			expect(await study.listSessions()).toHaveLength(3);
+			return '{"reply":"New conversation ready.","learner":{"era":"Roman"}}';
+		},
+	);
+	expect((await study.getSession(session.id)).messages).toHaveLength(8);
+
 	const db = database();
 	try {
 		expect(

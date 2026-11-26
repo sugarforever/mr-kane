@@ -201,3 +201,18 @@ it('streams only the top-level reply across partial JSON, escapes and source loo
 		'Line 1\n"Hi" π',
 	);
 });
+
+it('renders new conversation links in a separate tab and rejects invalid local routes', () => {
+	const path = '/math?session=12345678-1234-4234-8234-123456789abc';
+	expect(renderMathMarkdown(`[Open conversation](${path})`)).toContain(
+		`<a href="${path}" target="_blank" rel="noopener noreferrer">Open conversation</a>`,
+	);
+	for (const path of [
+		'/math?session=invalid',
+		'/math?session=12345678-1234-4234-8234-123456789abc&redirect=https://example.com',
+		'//example.com',
+		'javascript:alert(1)',
+	]) {
+		expect(renderMathMarkdown(`[Open](${path})`)).not.toContain('<a ');
+	}
+});

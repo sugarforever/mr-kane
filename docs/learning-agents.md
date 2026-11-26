@@ -6,6 +6,7 @@ Pi Durable owns conversations, transcripts, submission idempotency, execution re
 
 `createStudy` in `server/learning/study.ts` supplies application rules around native Pi primitives:
 
+- Every study agent loads `start_new_session` alongside its subject tools. It creates an empty conversation in the same subject and returns its ID/title without switching or copying the current learner/history. Stable request/call identities make recovery idempotent. The math coach links to `/math?session=<sessionId>` so the student can open it.
 - A persistent Pi conversation holds each study session's model transcript. Subsequent turns send the current question and learner state; Pi supplies prior conversation context and compacts it when needed.
 - A Pi document holds the public session/profile and turn outcomes. A separate Pi index store maps public request IDs to sessions, preserving the app's subject-wide ownership checks beyond Pi's conversation-scoped request IDs.
 - One Pi commit admits a submission and the pending application state. After schema validation, another commits the reply, learner and completed turn together.
