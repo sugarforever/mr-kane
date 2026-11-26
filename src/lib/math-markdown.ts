@@ -12,6 +12,9 @@ function escape(s: string) {
 function safeLink(href: string) {
 	return (
 		/^https?:\/\//i.test(href) ||
+		/^\/math\?session=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+			href,
+		) ||
 		/^\/api\/math\/library\/[\w/.-]+\.png$/.test(href)
 	);
 }

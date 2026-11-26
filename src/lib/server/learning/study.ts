@@ -1,9 +1,10 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import {
+	defineTool,
 	defineDoc,
 	defineDocFamily,
 	type Harness,
@@ -102,6 +103,41 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 	const validId = (id: string) => {
 		if (!z.string().uuid().safeParse(id).success)
 			throw new StudyError(400, 'Invalid conversation ID.');
+	};
+
+	const studyAgent: AgentDefinition = {
+		...config.agent,
+		createTools: (toolContext) => [
+			...config.agent.createTools(toolContext),
+			defineTool({
+				name: 'start_new_session',
+				description:
+					'Create a separate, empty study conversation for this subject when the student asks to start a new conversation. Return its sessionId to the student; the current conversation stays active. Do not copy learner records or messages.',
+				parameters: z.toJSONSchema(z.object({}).strict()),
+				replay: 'safe',
+				async execute(args, api, ctx) {
+					z.object({}).strict().parse(args);
+					ctx.abortSignal?.throwIfAborted();
+					// Stable across tool recovery, distinct for separate calls and requests.
+					const hex = createHash('sha256')
+						.update(
+							JSON.stringify([
+								config.namespace,
+								toolContext.requestId,
+								api.callId,
+							]),
+						)
+						.digest('hex');
+					const id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-8${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+					const session = await ensureSession(id);
+					const value = { sessionId: session.id, title: session.title };
+					return {
+						output: [{ type: 'text', text: JSON.stringify(value) }],
+						structuredOutput: value,
+					};
+				},
+			}),
+		],
 	};
 
 	// Compatibility import only. New sessions and turns never write the old SQL tables.
@@ -211,27 +247,32 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 		return record;
 	}
 	async function createSession(): Promise<Session> {
-		await readIndex();
-		const session: Session = {
-			id: randomUUID(),
-			title: config.title,
-			updatedAt: new Date().toISOString(),
-			learner: config.emptyLearner(),
-			messages: [],
-			pending: null,
-		};
-		await write(session.id, async ({ harness }) => {
-			await harness.commit(async (tx) => {
-				await tx.doc(Study, session.id, JSON.stringify(session));
-			}, context);
-		});
-		await writeIndex(async (harness) => {
-			await harness.commit(async (tx) => {
-				(await tx.doc(Index)).sessions.push(session.id);
-			}, context);
-		});
-		return session;
+		return ensureSession(randomUUID());
 	}
+	async function ensureSession(id: string): Promise<Session> {
+		return writeIndex(async (harness) => {
+			const index = await harness.snapshot(Index, context);
+			if (index!.sessions.includes(id)) return getSession(id);
+			const session: Session = {
+				id,
+				title: config.title,
+				updatedAt: new Date().toISOString(),
+				learner: config.emptyLearner(),
+				messages: [],
+				pending: null,
+			};
+			await write(id, async ({ harness: store }) => {
+				await store.commit(async (tx) => {
+					await tx.doc(Study, id, JSON.stringify(session));
+				}, context);
+			});
+			await harness.commit(async (tx) => {
+				(await tx.doc(Index)).sessions.push(id);
+			}, context);
+			return session;
+		});
+	}
+
 	async function getSession(id: string): Promise<Session> {
 		validId(id);
 		if (!(await readIndex()).sessions.includes(id))
@@ -325,9 +366,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			const onAgentProgress = progressSink(onProgress);
 			let conversation: Conversation | undefined;
 			if (!turn) {
-				const snapshot = generate
-					? undefined
-					: await snapshotAgent(config.agent);
+				const snapshot = generate ? undefined : await snapshotAgent(studyAgent);
 				const content = JSON.stringify({
 					operation: config.operation,
 					data: {
@@ -340,7 +379,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				if (snapshot) {
 					const agent = configure(
 						snapshot,
-						config.agent,
+						studyAgent,
 						`${config.namespace}-${requestId}`,
 					);
 					conversation = record.conversationId
@@ -393,18 +432,18 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					data,
 					z.toJSONSchema(config.answerSchema),
 					`${config.namespace}-${input.requestId}`,
-					{ agent: config.agent, onProgress: onAgentProgress },
+					{ agent: studyAgent, onProgress: onAgentProgress },
 				);
 			} else {
 				const snapshot = JSON.parse(turn.snapshot) as AgentSnapshot;
-				if (snapshot.agentId !== config.agent.id)
+				if (snapshot.agentId !== studyAgent.id)
 					throw new StudyError(
 						409,
 						'This request belongs to a different agent.',
 					);
 				const agent = configure(
 					snapshot,
-					config.agent,
+					studyAgent,
 					`${config.namespace}-${requestId}`,
 				);
 				conversation ??= (await harness.conversation(
@@ -523,7 +562,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			if (pending?.snapshot)
 				configure(
 					JSON.parse(pending.snapshot),
-					config.agent,
+					studyAgent,
 					`${config.namespace}-${requestId}`,
 				);
 			await conversation?.abort(context);
