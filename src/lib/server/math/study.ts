@@ -1,5 +1,6 @@
 import { createStudy } from '../learning/study';
 import { mathAgent } from './agent';
+import { validateCourseUpdate } from './course-validation';
 import { emptyLearner, mathAnswerSchema } from '$lib/math';
 export { StudyError as MathStudyError } from '../learning/study';
 const study = createStudy({
@@ -9,6 +10,7 @@ const study = createStudy({
 	agent: mathAgent,
 	emptyLearner,
 	answerSchema: mathAnswerSchema,
+	validateLearner: validateCourseUpdate,
 });
 export const createMathSession = study.createSession;
 export const listMathSessions = study.listSessions;

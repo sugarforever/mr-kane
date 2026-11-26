@@ -25,6 +25,7 @@ import {
 import {
 	studyTurnSchema,
 	type StudySession,
+	type StudyMessage,
 	type StudySummary,
 } from '$lib/learning';
 import type { StudyProgress } from '$lib/study-stream';
@@ -44,6 +45,11 @@ export type StudyConfig<Learner> = {
 	agent: AgentDefinition;
 	emptyLearner: () => Learner;
 	answerSchema: z.ZodType<{ reply: string; learner: Learner }>;
+	validateLearner?: (
+		next: Learner,
+		previous: Learner,
+		messages: StudyMessage[],
+	) => void;
 };
 type Turn = {
 	message: string;
@@ -450,6 +456,21 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					502,
 					'The coach response was incomplete. Retry this message.',
 				);
+			try {
+				config.validateLearner?.(answer.data.learner, session.learner, [
+					...session.messages,
+					{
+						role: 'user',
+						content: input.message,
+						createdAt: new Date().toISOString(),
+					},
+				]);
+			} catch {
+				throw new StudyError(
+					502,
+					'The coach returned an invalid learning record. Retry this message.',
+				);
+			}
 			onProgress?.({
 				type: 'progress',
 				reply: answer.data.reply,
