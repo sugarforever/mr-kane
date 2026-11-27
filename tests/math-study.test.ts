@@ -53,7 +53,7 @@ it('loads the requested module with working web source links and rejects paths o
 		readMathPassage({ chapterId: 'V2-C18', problem: 301 }),
 	).rejects.toThrow();
 });
-it('retains learner background and conversation across turns and replays without another generation', async () => {
+it('keeps profile unchanged between completed lessons and replays without another generation', async () => {
 	setup();
 	const session = await createMathSession();
 	const firstId = randomUUID();
@@ -61,19 +61,20 @@ it('retains learner background and conversation across turns and replays without
 	const generate = async (_op: string, data: any) => {
 		calls++;
 		if (calls === 2) {
-			expect(data.learner.background).toBe('Grade 10');
+			expect(data.learner.background).toBe('');
 			expect(
 				data.messages.some((m: any) => m.content === 'What is a residue?'),
 			).toBe(true);
 		}
-		return JSON.stringify({ reply: 'Let us try residues modulo 5.', learner });
+		return 'Let us try residues modulo 5.';
 	};
 	await runMathTurn(session.id, firstId, 'I am in Grade 10.', generate);
 	await runMathTurn(session.id, firstId, 'I am in Grade 10.', generate);
 	expect(calls).toBe(1);
 	await runMathTurn(session.id, randomUUID(), 'What is a residue?', generate);
 	const saved = await getMathSession(session.id);
-	expect(saved.learner).toEqual(learner);
+	expect(saved.learner.background).toBe('');
+	expect(saved.messages[0].content).toBe('I am in Grade 10.');
 	expect(saved.messages.filter((m) => m.role === 'user')).toHaveLength(2);
 	expect(calls).toBe(2);
 });
@@ -88,12 +89,13 @@ it('keeps failed turns retryable with original context and rejects conflicting f
 	).rejects.toThrow('offline');
 	expect((await getMathSession(session.id)).learner.background).toBe('');
 	await expect(
-		runMathTurn(session.id, randomUUID(), 'Another question', async () =>
-			JSON.stringify({ reply: 'ok', learner }),
-		),
+		runMathTurn(session.id, randomUUID(), 'Another question', async () => 'ok'),
 	).rejects.toThrow(/pending|retry/i);
-	await runMathTurn(session.id, id, 'Help with algebra', async () =>
-		JSON.stringify({ reply: 'What have you tried?', learner }),
+	await runMathTurn(
+		session.id,
+		id,
+		'Help with algebra',
+		async () => 'What have you tried?',
 	);
 	expect(
 		(await getMathSession(session.id)).messages.filter(
@@ -147,15 +149,18 @@ it('allows editing a failed turn without replaying its invalid cached answer', a
 	const session = await createMathSession();
 	const id = randomUUID();
 	await expect(
-		runMathTurn(session.id, id, 'Teach me', async () => '{bad json'),
+		runMathTurn(session.id, id, 'Teach me', async () => ''),
 	).rejects.toThrow();
 	await discardMathTurn(session.id, id);
 	expect((await getMathSession(session.id)).pending).toBeNull();
 	await expect(
 		runMathTurn(session.id, id, 'Teach me', async () => ''),
 	).rejects.toThrow(/discarded/i);
-	await runMathTurn(session.id, randomUUID(), 'Teach me algebra', async () =>
-		JSON.stringify({ reply: 'Let us start with equations.', learner }),
+	await runMathTurn(
+		session.id,
+		randomUUID(),
+		'Teach me algebra',
+		async () => 'Let us start with equations.',
 	);
 	expect(
 		(await getMathSession(session.id)).messages.filter(
@@ -164,7 +169,7 @@ it('allows editing a failed turn without replaying its invalid cached answer', a
 	).toHaveLength(1);
 });
 
-it('streams only the top-level reply across partial JSON, escapes and source lookup rounds', async () => {
+it('streams Markdown across source lookup rounds without a JSON envelope', async () => {
 	setup();
 	const session = await createMathSession();
 	const progress: unknown[] = [];
@@ -172,26 +177,16 @@ it('streams only the top-level reply across partial JSON, escapes and source loo
 		session.id,
 		randomUUID(),
 		'Help me',
-		async (_op, _data, _schema, _id, options) => {
-			options.onProgress?.({
-				text: '{"learner":{"reply":"private nested value"}',
-				reading: false,
-			});
-			options.onProgress?.({
-				text: '```json\n{"reply":"Try $x',
-				reading: false,
-			});
+		async (_op, _data, schema, _id, options) => {
+			expect(schema).toBeUndefined();
+			options.onProgress?.({ text: 'Try $x', reading: false });
 			options.onProgress?.({ text: '', reading: true });
-			options.onProgress?.({
-				text: '{"reply":"Line 1\\n\\"Hi\\" \\u03c0',
-				reading: false,
-			});
-			return JSON.stringify({ reply: 'Line 1\n"Hi" π', learner });
+			options.onProgress?.({ text: 'Line 1\n"Hi" π', reading: false });
+			return 'Line 1\n"Hi" π';
 		},
 		(event) => progress.push(event),
 	);
 	expect(progress).toEqual([
-		{ type: 'progress', reply: '', status: 'thinking' },
 		{ type: 'progress', reply: 'Try $x', status: 'writing' },
 		{ type: 'progress', reply: '', status: 'reading' },
 		{ type: 'progress', reply: 'Line 1\n"Hi" π', status: 'writing' },

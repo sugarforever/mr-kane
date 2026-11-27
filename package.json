@@ -12,7 +12,8 @@
 		"start": "node --env-file-if-exists=.env scripts/start.mjs",
 		"test:smoke:recordings": "npm run build && node scripts/smoke-recordings.mjs",
 		"test:smoke:ai": "npm run build && node scripts/smoke-ai.mjs",
-		"test:smoke:math": "npm run build && node scripts/smoke-math.mjs"
+		"test:smoke:math": "npm run build && node scripts/smoke-math.mjs",
+		"test:eval:math": "node scripts/evals/run.mjs"
 	},
 	"dependencies": {
 		"@earendil-works/chord": "^1.5.2",

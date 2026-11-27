@@ -56,7 +56,8 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 			const input = JSON.parse(
 				parsed.messages.filter((m: any) => m.role === 'user').at(-1).content,
 			);
-			expect(input.data.learner.background).toBe('Grade 10');
+			expect(input.data.learner.background).toBe('');
+			expect(input).not.toHaveProperty('outputSchema');
 			expect(
 				parsed.messages.some(
 					(m: any) =>
@@ -82,11 +83,8 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 					}
 				: {
 						role: 'assistant',
-						content: JSON.stringify({
-							reply:
-								'A residue is a remainder. What is the remainder of 12 divided by 5?',
-							learner,
-						}),
+						content:
+							'A residue is a remainder. What is the remainder of 12 divided by 5?',
 					};
 		res.writeHead(200, { 'Content-Type': 'text/event-stream' });
 		const chunk = (delta: unknown, finish_reason: string | null) => ({
@@ -127,7 +125,7 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 	);
 	expect(progress.some((event) => event.status === 'reading')).toBe(true);
 	expect(progress.every((event) => !event.reply.includes('read-1'))).toBe(true);
-	expect(first.learner.background).toBe('Grade 10');
+	expect(first.learner.background).toBe('');
 	expect(first.messages.at(-1)?.content).toContain('remainder');
 	await runMathTurn(session.id, id, 'I am in Grade 10');
 	expect(requests).toBe(2);

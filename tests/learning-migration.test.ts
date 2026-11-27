@@ -50,8 +50,24 @@ it('imports saved SQL conversations and pending context once, retaining request 
 		],
 		historyOmitted: false,
 	};
+	const archivedSchema = {
+		type: 'object',
+		properties: { reply: { type: 'string' }, learner: { type: 'object' } },
+		required: ['reply', 'learner'],
+	};
 	const db = database();
 	try {
+		db.prepare('INSERT INTO jobs VALUES (?,?,?)').run(
+			`math-${pendingId}`,
+			'fixture-hash',
+			JSON.stringify({
+				content: JSON.stringify({
+					operation: 'math-chat',
+					data: frozen,
+					outputSchema: archivedSchema,
+				}),
+			}),
+		);
 		db.exec(
 			'CREATE TABLE math_sessions(id TEXT PRIMARY KEY,value TEXT NOT NULL);CREATE TABLE math_turns(id TEXT PRIMARY KEY,session_id TEXT NOT NULL,message TEXT NOT NULL,context TEXT NOT NULL,complete INTEGER NOT NULL DEFAULT 0)',
 		);
@@ -96,7 +112,11 @@ it('imports saved SQL conversations and pending context once, retaining request 
 		session.id,
 		pendingId,
 		'Frozen question',
-		async (_op, data) => {
+		async (_op, data, schema, _request, options) => {
+			expect(schema).toEqual(archivedSchema);
+			expect(await options.agent.loadPrompt()).toContain(
+				'LEGACY RESPONSE CONTRACT',
+			);
 			expect(data).toEqual(frozen);
 			return JSON.stringify({
 				reply: 'Resumed reply',
@@ -105,7 +125,7 @@ it('imports saved SQL conversations and pending context once, retaining request 
 		},
 	);
 	expect(saved.messages).toHaveLength(4);
-	expect(saved.learner.goal).toBe('Algebra');
+	expect(saved.learner).toEqual(session.learner);
 	expect(saved.pending).toBeNull();
 	// Reopening the native store must not re-import stale SQL state.
 	expect(await getMathSession(session.id)).toEqual(saved);

@@ -1,0 +1,154 @@
+{
+	"version": 1,
+	"adapter": "math-profile",
+	"defaults": {
+		"initial": {
+			"learner": {
+				"background": "Grade 10",
+				"goal": "Study number theory",
+				"weeklyTime": "3 hours",
+				"reportedKnowledge": [],
+				"strengths": [],
+				"gaps": [],
+				"observations": [],
+				"coursePlans": [
+					{
+						"id": "integer-foundations",
+						"domain": "number-theory",
+						"title": "Using the Integers: remainders",
+						"revision": 1,
+						"changeReason": "Agreed chapter objectives",
+						"lessons": [
+							{
+								"courseId": "V1-C05",
+								"title": "Using the Integers",
+								"status": "in-progress",
+								"phase": "independent-check",
+								"objectives": [
+									{
+										"id": "remainders",
+										"description": "Use quotient-remainder representation to compute remainders and explain its consequences."
+									}
+								],
+								"attempts": [],
+								"report": null
+							}
+						]
+					}
+				]
+			}
+		}
+	},
+	"cases": [
+		{
+			"id": "independent-completion",
+			"description": "Independent routine and transfer evidence cover the agreed chapter objective.",
+			"initial": {
+				"messages": [
+					{
+						"role": "assistant",
+						"content": "Our plan integer-foundations has one current chapter lesson: AoPS V1-C05, Using the Integers. Its agreed objective is to use quotient-remainder representation to compute remainders and explain its consequences. We are at the independent check. I will give no hints or solutions during this check."
+					},
+					{
+						"role": "assistant",
+						"content": "What is the remainder when 29 is divided by 7? Explain your calculation."
+					},
+					{
+						"role": "user",
+						"content": "29 = 4 times 7 plus 1. Therefore the remainder is 1."
+					},
+					{
+						"role": "assistant",
+						"content": "A different task: n has remainder 3 when divided by 7. What is the remainder of 2n+1? Explain why it works for every such integer n."
+					}
+				]
+			},
+			"turns": [
+				"Write n = 7k + 3 for an integer k. Then 2n + 1 = 14k + 7 = 7(2k + 1), so it is divisible by 7 and the remainder is 0. This works for every integer k."
+			],
+			"expected": {
+				"completion": true,
+				"profileChanged": true,
+				"planId": "integer-foundations",
+				"courseId": "V1-C05"
+			}
+		},
+		{
+			"id": "hinted-transfer",
+			"description": "A demonstrated transfer solution must not count as independent evidence.",
+			"initial": {
+				"messages": [
+					{
+						"role": "assistant",
+						"content": "Our plan integer-foundations has one current chapter lesson: AoPS V1-C05, Using the Integers. Its agreed objective is to use quotient-remainder representation to compute remainders and explain its consequences. We are at the independent check. I will give no hints or solutions during this check."
+					},
+					{
+						"role": "assistant",
+						"content": "What is the remainder when 29 is divided by 7? Explain your calculation."
+					},
+					{
+						"role": "user",
+						"content": "29 = 4 times 7 plus 1. Therefore the remainder is 1."
+					},
+					{
+						"role": "assistant",
+						"content": "A different task: n has remainder 3 when divided by 7. What is the remainder of 2n+1? Explain why it works for every such integer n."
+					},
+					{
+						"role": "user",
+						"content": "I do not know how to start."
+					},
+					{
+						"role": "assistant",
+						"content": "Use n = 7k+3. Then 2n+1 = 14k+7 = 7(2k+1), so the remainder is 0."
+					}
+				]
+			},
+			"turns": [
+				"I follow your hint: n=7k+3 gives 2n+1=7(2k+1), so the remainder is 0."
+			],
+			"expected": {
+				"completion": false,
+				"profileChanged": false
+			}
+		},
+		{
+			"id": "self-report",
+			"description": "Claiming understanding without task evidence must not complete a chapter.",
+			"initial": {
+				"messages": [
+					{
+						"role": "assistant",
+						"content": "Our plan integer-foundations has one current chapter lesson: AoPS V1-C05, Using the Integers. Its agreed objective is to use quotient-remainder representation to compute remainders and explain its consequences. We are at the independent check. I will give no hints or solutions during this check."
+					}
+				]
+			},
+			"turns": [
+				"I understand all of this already. Can we mark this chapter finished?"
+			],
+			"expected": {
+				"completion": false,
+				"profileChanged": false
+			}
+		},
+		{
+			"id": "pause",
+			"description": "Stopping a visit must not complete a chapter.",
+			"initial": {
+				"messages": [
+					{
+						"role": "assistant",
+						"content": "Our plan integer-foundations has one current chapter lesson: AoPS V1-C05, Using the Integers. Its agreed objective is to use quotient-remainder representation to compute remainders and explain its consequences. We are at the independent check. I will give no hints or solutions during this check."
+					}
+				]
+			},
+			"turns": [
+				"I need to stop studying for today. Let us continue next time."
+			],
+			"expected": {
+				"completion": false,
+				"profileChanged": false
+			}
+		}
+	]
+}

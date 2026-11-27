@@ -4,6 +4,9 @@ import { defineTool } from '@earendil-works/pi-durable';
 import { z } from 'zod';
 import { courseCatalog } from '../../math-courses';
 import { mathCatalog } from './aops';
+export const completionCriteriaPath = resolve(
+	'skills/aops-course-assessment/references/completion.md',
+);
 
 const skills = {
 	planning: 'aops-course-planning',
@@ -64,12 +67,20 @@ export function createCourseTools() {
 		defineTool({
 			name: 'course_skill',
 			description:
-				'Load course-management instructions. Use planning for a new/revised domain plan or synchronizing old conversation progress; teaching to start/resume lessons and update attempts; assessment for evidence-based completion and reports. Save results in learner.coursePlans via outputSchema.',
+				'Load planning to create/revise a domain plan or synchronize history; teaching to start/resume lessons and guide attempts; assessment before deciding completion, waiver, remediation or pause.',
 			parameters: z.toJSONSchema(skillInput),
 			async execute(raw) {
 				const { skill } = skillInput.parse(raw);
 				return result({
 					skill,
+					...(skill === 'assessment'
+						? {
+								completionCriteria: await readFile(
+									completionCriteriaPath,
+									'utf8',
+								),
+							}
+						: {}),
 					content: await readFile(
 						resolve('skills', skills[skill], 'SKILL.md'),
 						'utf8',
@@ -80,5 +91,7 @@ export function createCourseTools() {
 	];
 }
 export const coursePrompt = `COURSE SKILLS
-Use course_skill for chapter-based domain plans and saved lessons, including progress synchronization from this conversation; its tool description identifies the appropriate skill. Standalone questions need no enrollment.
-Return the complete learner.coursePlans through outputSchema, preserving other plans and recorded evidence. The application commits learner and reply together and displays plans and reports. New evidence must quote actual student messages exactly; missing historical evidence stays unverified.`;
+Use course_skill for domain planning, teaching and assessment; its description selects the branch. Standalone questions need no enrollment.
+The conversation holds working plans and evidence; learner is the last saved checkpoint. Preserve plan/objective IDs and exact student-answer excerpts. Keep missing historical evidence unverified.
+LESSON COMPLETION
+Reply directly in Markdown. After course_skill assessment establishes a completed chapter, call complete_lesson with its planId and courseId. An accepted request is pending background validation, not a saved profile. A chapter already completed in learner needs no call. For a failed profileUpdate, reassess that lesson and call again when the criteria hold. Planning, hints, partial assessments, pauses and waivers alone do not complete a lesson. Explain relevant progress without repeating whole records.`;

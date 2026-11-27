@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import {
 	defineDoc,
+	defineTool,
 	defineDocFamily,
 	type Harness,
 	type Conversation,
@@ -42,14 +43,35 @@ export type StudyConfig<Learner> = {
 	namespace: string;
 	title: string;
 	operation: string;
+	replyFormat?: 'markdown';
 	agent: AgentDefinition;
 	emptyLearner: () => Learner;
-	answerSchema: z.ZodType<{ reply: string; learner: Learner }>;
+	answerSchema: z.ZodType<{
+		reply: string;
+		learner?: Learner;
+	}>;
+	checkpoint?: {
+		completionSchema: z.ZodType<LessonCompletion>;
+		generate: (
+			session: StudySession<Learner>,
+			completion: LessonCompletion,
+			requestId: string,
+		) => Promise<Learner>;
+		isComplete: (learner: Learner, completion: LessonCompletion) => boolean;
+	};
 	validateLearner?: (
 		next: Learner,
 		previous: Learner,
 		messages: StudyMessage[],
 	) => void;
+};
+export type LessonCompletion = { planId: string; courseId: string };
+type ProfileJob = {
+	completion: LessonCompletion;
+	through: number;
+	attempts: number;
+	done: boolean;
+	input?: string;
 };
 type Turn = {
 	message: string;
@@ -58,6 +80,9 @@ type Turn = {
 	snapshot: string;
 	submissionId: number | null;
 	legacy: boolean;
+	profile?: ProfileJob;
+	completionRequested?: LessonCompletion;
+	replyFormat?: 'markdown';
 };
 // Session JSON preserves the public, subject-specific learner shape without constraining it to a shared profile.
 const Study = defineDocFamily<
@@ -92,6 +117,9 @@ type Generate = (
 	requestId: string,
 	options: AgentOptions & { agent: AgentDefinition },
 ) => Promise<string>;
+
+const profileWorkers = new Map<string, Promise<void>>();
+const profileQueues = new Map<string, Promise<void>>();
 
 export function createStudy<Learner>(config: StudyConfig<Learner>) {
 	if (!/^[a-z][a-z0-9]{0,39}$/.test(config.namespace))
@@ -238,7 +266,11 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			throw new StudyError(404, 'Conversation not found.');
 		const { harness } = await openAgentHarness(file(id), { readOnly: true });
 		try {
-			return JSON.parse((await recordFor(harness, id)).session);
+			const session = JSON.parse(
+				(await recordFor(harness, id)).session,
+			) as Session;
+			if (session.profileUpdate === 'pending') scheduleProfileUpdate(id);
+			return session;
 		} finally {
 			await harness.close(context);
 		}
@@ -281,7 +313,13 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 	): AgentOptions['onProgress'] {
 		return onProgress
 			? ({ text, reading }) => {
-					onProgress(studyProgress(text, reading));
+					if (config.replyFormat === 'markdown') {
+						onProgress({
+							type: 'progress',
+							reply: text.slice(0, 20000),
+							status: reading ? 'reading' : text ? 'writing' : 'thinking',
+						});
+					} else onProgress(studyProgress(text, reading));
 				}
 			: undefined;
 	}
@@ -299,7 +337,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 		const input = studyTurnSchema.parse({ requestId, message });
 		if (!(await readIndex()).sessions.includes(sessionId))
 			throw new StudyError(404, 'Conversation not found.');
-		return write(sessionId, async ({ harness, configure }) => {
+		const result = await write(sessionId, async ({ harness, configure }) => {
 			const record = await recordFor(harness, sessionId);
 			let session = JSON.parse(record.session) as Session;
 			let turn = record.turns[input.requestId];
@@ -322,25 +360,94 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					'Start a new conversation to continue studying.',
 				);
 			await reserveRequest(sessionId, input.requestId, input.message);
+			const turnAgent: AgentDefinition = !config.checkpoint
+				? config.agent
+				: {
+						...config.agent,
+						createTools: (toolContext) => [
+							...config.agent.createTools(toolContext),
+							defineTool({
+								name: 'complete_lesson',
+								description:
+									'Request background profile consolidation after assessment establishes a completed chapter lesson. Use its saved planId and courseId. Acceptance records the request, not verified mastery or a saved profile. Runs after this reply is saved.',
+								parameters: z.toJSONSchema(config.checkpoint!.completionSchema),
+								replay: 'safe',
+								async execute(args) {
+									const completion =
+										config.checkpoint!.completionSchema.parse(args);
+									const current = await recordFor(harness, sessionId);
+									const saved = JSON.parse(current.session) as Session;
+									if (saved.pending?.id !== input.requestId)
+										throw new Error('This turn is no longer pending.');
+									let status: 'accepted' | 'pending' | 'already-completed' =
+										'accepted';
+									if (config.checkpoint!.isComplete(saved.learner, completion))
+										status = 'already-completed';
+									else if (
+										Object.values(current.turns).some(
+											(t) =>
+												t.profile &&
+												!t.profile.done &&
+												t.profile.attempts < 3 &&
+												t.profile.completion.planId === completion.planId &&
+												t.profile.completion.courseId === completion.courseId,
+										)
+									)
+										status = 'pending';
+									else {
+										const previous =
+											current.turns[input.requestId].completionRequested;
+										if (
+											previous &&
+											(previous.planId !== completion.planId ||
+												previous.courseId !== completion.courseId)
+										)
+											throw new Error('Complete one chapter per turn.');
+										await harness.commit(async (tx) => {
+											(await tx.doc(Study, sessionId, '')).turns[
+												input.requestId
+											].completionRequested = completion;
+										}, context);
+									}
+									return {
+										output: [
+											{
+												type: 'text',
+												text: JSON.stringify({
+													status,
+													...completion,
+													message:
+														'The saved profile changes only after background validation succeeds.',
+												}),
+											},
+										],
+									};
+								},
+							}),
+						],
+					};
 			const onAgentProgress = progressSink(onProgress);
 			let conversation: Conversation | undefined;
 			if (!turn) {
-				const snapshot = generate
-					? undefined
-					: await snapshotAgent(config.agent);
+				const snapshot = generate ? undefined : await snapshotAgent(turnAgent);
 				const content = JSON.stringify({
 					operation: config.operation,
 					data: {
 						learner: session.learner,
+						...(config.checkpoint
+							? { profileUpdate: session.profileUpdate ?? null }
+							: {}),
 						messages: [{ role: 'user', content: input.message }],
 						historyOmitted: false,
 					},
-					outputSchema: z.toJSONSchema(config.answerSchema),
+					...(config.replyFormat !== 'markdown'
+						? { outputSchema: z.toJSONSchema(config.answerSchema) }
+						: {}),
 				});
 				if (snapshot) {
 					const agent = configure(
 						snapshot,
-						config.agent,
+						turnAgent,
 						`${config.namespace}-${requestId}`,
 					);
 					conversation = record.conversationId
@@ -363,6 +470,9 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					snapshot: snapshot ? JSON.stringify(snapshot) : '',
 					submissionId: null,
 					legacy: false,
+					...(config.replyFormat === 'markdown'
+						? { replyFormat: 'markdown' as const }
+						: {}),
 				};
 				session.pending = { id: input.requestId, message: input.message };
 				await harness.commit(async (tx) => {
@@ -384,6 +494,30 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				const data = turn.legacy
 					? JSON.parse(turn.content)
 					: JSON.parse(turn.content).data;
+				let responseSchema: unknown =
+					config.replyFormat === 'markdown'
+						? undefined
+						: z.toJSONSchema(config.answerSchema);
+				let executionAgent = turnAgent;
+				if (turn.legacy) {
+					const db = database();
+					try {
+						const archived = db
+							.prepare('SELECT snapshot FROM jobs WHERE id=?')
+							.get(`${config.namespace}-${input.requestId}`) as
+							{ snapshot: string } | undefined;
+						responseSchema = archived
+							? JSON.parse(JSON.parse(archived.snapshot).content).outputSchema
+							: z.toJSONSchema(config.answerSchema);
+					} finally {
+						db.close();
+					}
+					executionAgent = {
+						...turnAgent,
+						loadPrompt: async () =>
+							`${await turnAgent.loadPrompt()}\n\nLEGACY RESPONSE CONTRACT\nThis request was admitted with a JSON response contract. Return one JSON object matching outputSchema, with student-facing Markdown in reply.`,
+					};
+				}
 				raw = await (
 					generate ??
 					((op, data, schema, id, options) =>
@@ -391,9 +525,9 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				)(
 					config.operation,
 					data,
-					z.toJSONSchema(config.answerSchema),
+					responseSchema,
 					`${config.namespace}-${input.requestId}`,
-					{ agent: config.agent, onProgress: onAgentProgress },
+					{ agent: executionAgent, onProgress: onAgentProgress },
 				);
 			} else {
 				const snapshot = JSON.parse(turn.snapshot) as AgentSnapshot;
@@ -404,7 +538,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					);
 				const agent = configure(
 					snapshot,
-					config.agent,
+					turnAgent,
 					`${config.namespace}-${requestId}`,
 				);
 				conversation ??= (await harness.conversation(
@@ -441,9 +575,14 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			}
 			let parsed: unknown;
 			try {
-				parsed = JSON.parse(
-					raw.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, ''),
-				);
+				parsed =
+					config.replyFormat === 'markdown' && turn.replyFormat === 'markdown'
+						? { reply: raw }
+						: JSON.parse(
+								raw
+									.replace(/^\s*```(?:json)?\s*/, '')
+									.replace(/\s*```\s*$/, ''),
+							);
 			} catch {
 				throw new StudyError(
 					502,
@@ -457,14 +596,15 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					'The coach response was incomplete. Retry this message.',
 				);
 			try {
-				config.validateLearner?.(answer.data.learner, session.learner, [
-					...session.messages,
-					{
-						role: 'user',
-						content: input.message,
-						createdAt: new Date().toISOString(),
-					},
-				]);
+				if (answer.data.learner !== undefined && !config.checkpoint)
+					config.validateLearner?.(answer.data.learner, session.learner, [
+						...session.messages,
+						{
+							role: 'user',
+							content: input.message,
+							createdAt: new Date().toISOString(),
+						},
+					]);
 			} catch {
 				throw new StudyError(
 					502,
@@ -482,7 +622,9 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				title: session.messages.length
 					? session.title
 					: input.message.slice(0, 70),
-				learner: answer.data.learner,
+				learner: config.checkpoint
+					? session.learner
+					: (answer.data.learner ?? session.learner),
 				messages: [
 					...session.messages,
 					{ role: 'user', content: input.message, createdAt: now },
@@ -491,8 +633,52 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				updatedAt: now,
 				pending: null,
 			};
+			const latest = await recordFor(harness, sessionId);
+			const legacyCompletion =
+				config.checkpoint && turn.replyFormat !== 'markdown'
+					? config.checkpoint.completionSchema.safeParse(
+							(parsed as { lessonCompletion?: unknown })?.lessonCompletion,
+						)
+					: undefined;
+			const completion =
+				latest.turns[input.requestId].completionRequested ??
+				(legacyCompletion?.success ? legacyCompletion.data : undefined);
+			const needsProfile =
+				config.checkpoint &&
+				completion &&
+				!config.checkpoint.isComplete(session.learner, completion) &&
+				!Object.values(latest.turns).some(
+					(t) =>
+						t.profile &&
+						!t.profile.done &&
+						t.profile.attempts < 3 &&
+						t.profile.completion.planId === completion.planId &&
+						t.profile.completion.courseId === completion.courseId,
+				);
+			if (needsProfile) session.profileUpdate = 'pending';
 			await harness.commit(async (tx) => {
 				const state = await tx.doc(Study, sessionId, '');
+				if (needsProfile) {
+					// A new completion assessment supersedes exhausted work for this lesson.
+					for (const old of Object.values(state.turns)) {
+						if (
+							old.profile &&
+							!old.profile.done &&
+							old.profile.attempts >= 3 &&
+							old.profile.completion.planId === completion.planId &&
+							old.profile.completion.courseId === completion.courseId
+						) {
+							old.profile.done = true;
+							delete old.profile.input;
+						}
+					}
+					state.turns[input.requestId].profile = {
+						completion,
+						through: session.messages.length,
+						attempts: 0,
+						done: false,
+					};
+				}
 				state.session = JSON.stringify(session);
 				state.turns[input.requestId].status = 1;
 				state.turns[input.requestId].snapshot = '';
@@ -500,6 +686,107 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			}, context);
 			return session;
 		});
+		if (result.profileUpdate === 'pending') scheduleProfileUpdate(sessionId);
+		return result;
+	}
+
+	function scheduleProfileUpdate(id: string) {
+		if (!config.checkpoint) return;
+		const key = file(id);
+		if (profileWorkers.has(key)) return;
+		// A separate lease serializes consolidation without holding the chat write lock.
+		const root = dataDir();
+		const previous = profileQueues.get(root) ?? Promise.resolve();
+		const worker = previous
+			.then(() => locked(`profile:${key}`, () => updateProfiles(id)))
+			.catch((error) =>
+				console.error(
+					'Profile consolidation failed:',
+					error instanceof Error ? error.message : 'unknown error',
+				),
+			)
+			.finally(() => {
+				profileWorkers.delete(key);
+				if (profileQueues.get(root) === worker) profileQueues.delete(root);
+			});
+		profileWorkers.set(key, worker);
+		profileQueues.set(root, worker);
+	}
+	async function updateProfiles(id: string) {
+		for (;;) {
+			const claimed = await write(id, async ({ harness }) => {
+				const record = await recordFor(harness, id);
+				const item = Object.entries(record.turns).find(
+					([, t]) => t.profile && !t.profile.done && t.profile.attempts < 3,
+				);
+				if (!item) return;
+				const [requestId, turn] = item;
+				const job = turn.profile!;
+				const current = JSON.parse(record.session) as Session;
+				const input =
+					job.input ??
+					JSON.stringify({
+						...current,
+						pending: null,
+						messages: current.messages.slice(0, job.through),
+					});
+				await harness.commit(async (tx) => {
+					const saved = (await tx.doc(Study, id, '')).turns[requestId].profile!;
+					saved.input = input;
+				}, context);
+				return {
+					requestId,
+					job,
+					session: JSON.parse(input) as Session,
+					attempt: job.attempts + 1,
+				};
+			});
+			if (!claimed) return;
+			let learner: Learner | undefined;
+			let failed = false;
+			try {
+				learner = await config.checkpoint!.generate(
+					claimed.session,
+					claimed.job.completion,
+					`profile-${claimed.requestId}-${claimed.attempt}`,
+				);
+				config.validateLearner?.(
+					learner,
+					claimed.session.learner,
+					claimed.session.messages,
+				);
+				if (!config.checkpoint!.isComplete(learner, claimed.job.completion))
+					throw new Error('Requested lesson is not complete.');
+			} catch {
+				failed = true;
+			}
+			await write(id, async ({ harness }) => {
+				const record = await recordFor(harness, id);
+				const current = JSON.parse(record.session) as Session;
+				await harness.commit(async (tx) => {
+					const state = await tx.doc(Study, id, '');
+					const job = state.turns[claimed.requestId].profile!;
+					if (failed) job.attempts++;
+					if (!failed) {
+						// Merge into the latest session, retaining messages and any pending chat.
+						current.learner = learner!;
+						job.done = true;
+						delete job.input;
+					}
+					const outstanding = Object.values(state.turns).filter(
+						(t) => t.profile && !t.profile.done,
+					);
+					current.profileUpdate = outstanding.some(
+						(t) => t.profile!.attempts < 3,
+					)
+						? 'pending'
+						: outstanding.length
+							? 'failed'
+							: undefined;
+					state.session = JSON.stringify(current);
+				}, context);
+			});
+		}
 	}
 	async function discardTurn(
 		sessionId: string,
@@ -558,5 +845,8 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 		runTurn,
 		discardTurn,
 		hasRequest,
+		resumeProfileUpdates: async () => {
+			await listSessions();
+		},
 	};
 }

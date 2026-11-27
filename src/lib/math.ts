@@ -20,9 +20,12 @@ export const emptyLearner = () =>
 		gaps: [],
 		observations: [],
 	});
+export const lessonCompletionSchema = z.object({
+	planId: z.string().trim().min(1).max(1600),
+	courseId: z.string().regex(/^V[12]-C\d{2}$/),
+});
 export const mathAnswerSchema = z.object({
 	reply: z.string().trim().min(1).max(20000),
-	learner: learnerSchema,
 });
 export { studyTurnSchema as mathTurnSchema } from './learning';
 export type Learner = z.infer<typeof learnerSchema>;

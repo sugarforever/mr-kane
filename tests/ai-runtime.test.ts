@@ -41,7 +41,7 @@ function setup() {
 	vi.stubEnv('MR_KANE_DATA_DIR', d);
 	vi.stubEnv('PI_API_KEY', '');
 }
-async function mockProvider() {
+async function mockProvider(gate?: Promise<void>) {
 	let turns = 0;
 	let authorization = '';
 	const server = createServer(async (req, res) => {
@@ -68,6 +68,7 @@ async function mockProvider() {
 			let body = '';
 			for await (const c of req) body += c;
 			const parsed = JSON.parse(body);
+			if (gate) await gate;
 			expect(
 				parsed.messages.some((m: any) => m.content?.includes('language coach')),
 			).toBe(true);
@@ -314,3 +315,49 @@ it('grounds a news request before generation and replays its original sources wi
 	expect(searches).toBe(1);
 	expect(server.turns()).toBe(1);
 }, 20000);
+
+it('lets background agent work wait for capacity without failing its request', async () => {
+	setup();
+	let release!: () => void;
+	const gate = new Promise<void>((r) => {
+		release = r;
+	});
+	const server = await mockProvider(gate);
+	const p = saveConnection(
+		{
+			name: 'Capacity fixture',
+			service: 'custom',
+			authMode: 'api_key',
+			baseUrl: server.baseUrl,
+			modelId: 'fixture',
+			models: ['fixture'],
+			protocol: 'openai-completions',
+		},
+		'fixture-key',
+	);
+	selectConnection(p.id);
+	const first = runCoach('feedback', {}, { type: 'object' }, 'capacity-one');
+	const second = runCoach('feedback', {}, { type: 'object' }, 'capacity-two');
+	try {
+		await vi.waitFor(() => expect(server.turns()).toBe(2));
+		const background = runCoach(
+			'feedback',
+			{},
+			{ type: 'object' },
+			'capacity-background',
+			{ waitForCapacity: true },
+		);
+		const observed = background.then(
+			(value) => ({ value, error: null }),
+			(error) => ({ value: null, error }),
+		);
+		expect(server.turns()).toBe(2);
+		release();
+		expect((await observed).error).toBeNull();
+		expect(server.turns()).toBe(3);
+		await Promise.all([first, second]);
+	} finally {
+		release();
+		await Promise.allSettled([first, second]);
+	}
+});

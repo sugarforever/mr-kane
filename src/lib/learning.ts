@@ -15,6 +15,7 @@ export type StudySession<Learner> = {
 	title: string;
 	updatedAt: string;
 	learner: Learner;
+	profileUpdate?: 'pending' | 'failed';
 	messages: StudyMessage[];
 	pending: { id: string; message: string } | null;
 };

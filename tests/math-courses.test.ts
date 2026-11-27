@@ -98,7 +98,7 @@ it('rejects duplicate lessons and chapters outside the selected route', () => {
 	p.lessons = [{ ...p.lessons[0], courseId: 'V1-C09' }];
 	expect(coursePlanSchema.safeParse(p).success).toBe(false);
 });
-it('persists a course plan across turns without altering legacy learner records', async () => {
+it('keeps proposed plans in the conversation until a lesson completes', async () => {
 	const dir = mkdtempSync(join(tmpdir(), 'kane-courses-'));
 	vi.stubEnv('MR_KANE_DATA_DIR', dir);
 	try {
@@ -109,12 +109,11 @@ it('persists a course plan across turns without altering legacy learner records'
 			session.id,
 			randomUUID(),
 			'Please organize my number theory plan',
-			async () => JSON.stringify({ reply: 'Here is your plan.', learner }),
+			async () => 'Here is your plan.',
 		);
-		expect(
-			(await getMathSession(session.id)).learner.coursePlans?.[0].lessons[0]
-				.phase,
-		).toBe('report');
+		const saved = await getMathSession(session.id);
+		expect(saved.learner.coursePlans).toBeUndefined();
+		expect(saved.messages.at(-1)?.content).toBe('Here is your plan.');
 	} finally {
 		vi.unstubAllEnvs();
 		rmSync(dir, { recursive: true, force: true });
@@ -162,9 +161,11 @@ it('exposes course routes and loads each skill through the real agent tools', as
 		const result = await tools
 			.find((t) => t.name === 'course_skill')!
 			.execute({ skill }, api, BACKGROUND_CONTEXT);
-		expect(
-			JSON.parse((result.output![0] as { text: string }).text).content,
-		).toContain('name: aops-course-');
+		const loaded = JSON.parse((result.output![0] as { text: string }).text);
+		expect(loaded.content).toContain('name: aops-course-');
+		if (skill === 'assessment') {
+			expect(loaded.completionCriteria).toContain('For every objective');
+		}
 	}
 	const result = await tools
 		.find((t) => t.name === 'course_catalog')!
@@ -175,40 +176,6 @@ it('exposes course routes and loads each skill through the real agent tools', as
 			.find((c: any) => c.courseId === 'V1-C05')
 			.sections.some((s: any) => s.id === '5.4'),
 	).toBe(true);
-});
-it('blocks ungrounded progress before committing the reply or learner', async () => {
-	const dir = mkdtempSync(join(tmpdir(), 'kane-course-guard-'));
-	vi.stubEnv('MR_KANE_DATA_DIR', dir);
-	try {
-		const session = await createMathSession();
-		const p = plan();
-		p.lessons[0].attempts = [
-			{
-				id: 'fake',
-				objectiveIds: ['residues'],
-				exercise: '2^10 mod 3',
-				studentAnswer: 'I independently found the power cycle',
-				support: 'independent',
-				kind: 'routine',
-				result: 'correct',
-				feedback: 'Correct',
-			},
-		];
-		await expect(
-			runMathTurn(session.id, randomUUID(), 'Sync my progress', async () =>
-				JSON.stringify({
-					reply: 'You have mastered this.',
-					learner: { ...emptyLearner(), coursePlans: [p] },
-				}),
-			),
-		).rejects.toThrow('invalid learning record');
-		const saved = await getMathSession(session.id);
-		expect(saved.messages).toEqual([]);
-		expect(saved.learner.coursePlans).toBeUndefined();
-	} finally {
-		vi.unstubAllEnvs();
-		rmSync(dir, { recursive: true, force: true });
-	}
 });
 it('requires a new revision for changed scope and retains historical reports', async () => {
 	const { validateCourseUpdate } =

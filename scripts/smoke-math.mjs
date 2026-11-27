@@ -10,6 +10,9 @@ const root = 'http://127.0.0.1:4182';
 let app;
 let calls = 0;
 let releaseReply;
+let releaseProfile;
+let profileCalls = 0;
+const completion = { planId: 'integers', courseId: 'V1-C05' };
 const learner = {
 	background: 'Grade 10',
 	goal: 'Build confidence in algebra and number theory',
@@ -32,6 +35,83 @@ const model = createServer(async (req, res) => {
 	const context = JSON.parse(
 		parsed.messages.filter((m) => m.role === 'user').at(-1).content,
 	).data;
+	const isProfile = !!context.completion;
+	if (isProfile) {
+		profileCalls++;
+		const completed = {
+			...learner,
+			coursePlans: [
+				{
+					id: 'integers',
+					domain: 'number-theory',
+					title: 'Integers',
+					revision: 1,
+					changeReason: 'Initial plan',
+					lessons: [
+						{
+							courseId: 'V1-C05',
+							title: 'Integers',
+							status: 'completed',
+							phase: 'report',
+							objectives: [
+								{
+									id: 'residues',
+									description: 'Compute and explain remainders',
+								},
+							],
+							attempts: [
+								{
+									id: 'a1',
+									objectiveIds: ['residues'],
+									exercise: '12 mod 5',
+									studentAnswer: 'The remainder is 2.',
+									support: 'independent',
+									kind: 'routine',
+									result: 'correct',
+									feedback: 'Correct',
+								},
+								{
+									id: 'a2',
+									objectiveIds: ['residues'],
+									exercise: 'Explain 17 mod 5',
+									studentAnswer: '17 = 3 times 5 plus 2.',
+									support: 'independent',
+									kind: 'explanation',
+									result: 'correct',
+									feedback: 'Correct',
+								},
+							],
+							report: {
+								summary: 'Independent application and explanation.',
+								nextStep: 'Congruences',
+							},
+						},
+					],
+				},
+			],
+		};
+		const answer = JSON.stringify({ learner: completed });
+		const chunk = (content, finish_reason = null) => ({
+			id: 'profile-smoke',
+			object: 'chat.completion.chunk',
+			created: 1,
+			model: 'fixture',
+			choices: [{ index: 0, delta: { content }, finish_reason }],
+		});
+		res.writeHead(200, { 'Content-Type': 'text/event-stream' });
+		res.write(`data: ${JSON.stringify(chunk(answer.slice(0, 20)))}\n\n`);
+		if (profileCalls === 1)
+			await new Promise((resolve) => {
+				releaseProfile = resolve;
+			});
+		res.end(
+			`data: ${JSON.stringify(chunk(answer.slice(20)))}\n\ndata: ${JSON.stringify(chunk('', 'stop'))}\n\ndata: [DONE]\n\n`,
+		);
+		return;
+	}
+	const isCompletion = context.messages
+		.at(-1)
+		?.content.includes('__complete_lesson__');
 	const isIrmo = context.messages
 		.filter((m) => m.role === 'user')
 		.at(-1)
@@ -41,6 +121,15 @@ const model = createServer(async (req, res) => {
 		.filter((m) => m.role === 'tool')
 		.map((m) => m.content)
 		.join('\n');
+	const needCompletion =
+		isCompletion &&
+		!parsed.messages
+			.slice(parsed.messages.findLastIndex((m) => m.role === 'user') + 1)
+			.some(
+				(m) =>
+					m.role === 'assistant' &&
+					m.tool_calls?.some((t) => t.function.name === 'complete_lesson'),
+			);
 	const needIrmo = isIrmo && !toolText.includes('IRMO-2024-P2-Q6');
 	const needAops = isIrmo && !needIrmo && !toolText.includes('pdf-page-');
 	const first = parsed.messages.filter((m) => m.role === 'user').length === 1;
@@ -60,15 +149,18 @@ const model = createServer(async (req, res) => {
 				: {}),
 		},
 	};
+	if (isCompletion) {
+		answer.reply = 'Lesson complete.';
+	}
+	delete answer.learner;
 	if (isIrmo) {
 		assert.ok(parsed.tools.some((t) => t.function.name === 'irmo_read'));
 		assert.ok(parsed.tools.some((t) => t.function.name === 'aops_read'));
 		answer.reply =
 			'Let’s work on **IrMO 2024, Paper 2, Question 6**.\n\n$$\\binom{n}{1}+\\binom{n}{3}=2^m.$$\n\nThe binomial coefficient $\\binom{n}{3}$ counts ways to choose three objects from $n$. Start by writing it as $n(n-1)(n-2)/6$. What happens when you try $n=3$ and $n=4$?\n\nFor the foundations, we can revisit **AoPS Volume 1, section 5.1 (Divisibility)** and then binomial coefficients. [Original question](https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=81).';
-		answer.learner.goal = 'Prepare for Irish Mathematical Olympiad Round 2';
 	}
 	const delta =
-		calls === 1 || needIrmo || needAops
+		calls === 1 || needIrmo || needAops || needCompletion
 			? {
 					role: 'assistant',
 					tool_calls: [
@@ -77,17 +169,23 @@ const model = createServer(async (req, res) => {
 							id: 'read-math',
 							type: 'function',
 							function: {
-								name: needIrmo ? 'irmo_read' : 'aops_read',
-								arguments: needIrmo
-									? JSON.stringify({ id: 'IRMO-2024-P2-Q6' })
-									: needAops
-										? JSON.stringify({ chapterId: 'V1-C05', section: '5.1' })
-										: '{"chapterId":"V1-C03","section":"3.2"}',
+								name: needCompletion
+									? 'complete_lesson'
+									: needIrmo
+										? 'irmo_read'
+										: 'aops_read',
+								arguments: needCompletion
+									? JSON.stringify(completion)
+									: needIrmo
+										? JSON.stringify({ id: 'IRMO-2024-P2-Q6' })
+										: needAops
+											? JSON.stringify({ chapterId: 'V1-C05', section: '5.1' })
+											: '{"chapterId":"V1-C03","section":"3.2"}',
 							},
 						},
 					],
 				}
-			: { role: 'assistant', content: JSON.stringify(answer) };
+			: { role: 'assistant', content: answer.reply };
 	res.writeHead(200, { 'Content-Type': 'text/event-stream' });
 	const chunk = (delta, finish_reason) => ({
 		id: 'math-smoke',
@@ -100,7 +198,7 @@ const model = createServer(async (req, res) => {
 		const gate = new Promise((resolve) => {
 			releaseReply = resolve;
 		});
-		const text = JSON.stringify(answer);
+		const text = answer.reply;
 		res.write(
 			`data: ${JSON.stringify(chunk({ role: 'assistant', content: text.slice(0, 60) }, null))}\n\n`,
 		);
@@ -111,7 +209,7 @@ const model = createServer(async (req, res) => {
 		return;
 	}
 	res.end(
-		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 || needIrmo || needAops ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
+		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 || needIrmo || needAops || needCompletion ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
 	);
 });
 await new Promise((r) => model.listen(0, '127.0.0.1', r));
@@ -145,10 +243,10 @@ async function launch() {
 		});
 	});
 }
-async function stop() {
+async function stop(signal = 'SIGTERM') {
 	if (app && app.exitCode === null) {
 		const p = new Promise((r) => app.once('exit', r));
-		app.kill();
+		app.kill(signal);
 		await p;
 	}
 }
@@ -230,7 +328,7 @@ try {
 			'I am in Grade 10. I know linear equations and want a plan for algebra and number theory. I can study 3 hours a week.',
 	};
 	const first = await streamPost(`/api/math/chat/${session.id}`, turn);
-	assert.equal(first.learner.background, 'Grade 10');
+	assert.equal(first.learner.background, '');
 	assert.equal(first.messages.length, 2);
 	assert.equal(calls, 2);
 	await stop();
@@ -243,7 +341,7 @@ try {
 		message: 'Subtract 3 from both sides, then divide by 2. x = 4.',
 	});
 	assert.equal(next.messages.length, 4);
-	assert.equal(next.learner.strengths.length, 1);
+	assert.equal(next.learner.strengths.length, 0);
 	assert.equal(calls, 3);
 	const foreign = await fetch(root + '/api/math/sessions', {
 		headers: { origin: 'https://foreign.test' },
@@ -274,8 +372,40 @@ try {
 		headers: { origin: 'https://foreign.test' },
 	});
 	assert.equal(blocked.status, 403);
+	const completedTurn = await post(`/api/math/chat/${session.id}`, {
+		requestId: randomUUID(),
+		message: '__complete_lesson__ The remainder is 2. 17 = 3 times 5 plus 2.',
+	});
+	assert.equal(completedTurn.pending, null);
+	assert.equal(completedTurn.profileUpdate, 'pending');
+	assert.equal(completedTurn.learner.background, '');
+	for (let n = 0; !releaseProfile && n < 100; n++)
+		await new Promise((r) => setTimeout(r, 50));
+	assert.ok(releaseProfile, 'Background generation must start');
+	const concurrent = await post(`/api/math/chat/${session.id}`, {
+		requestId: randomUUID(),
+		message: 'Next lesson please',
+	});
+	assert.equal(concurrent.pending, null);
+	assert.equal(concurrent.profileUpdate, 'pending');
+	// Terminate during generation: the durable job must resume after restart.
+	await stop('SIGKILL');
+	releaseProfile();
+	await launch();
+	let recovered;
+	for (let n = 0; n < 400; n++) {
+		recovered = await (
+			await fetch(`${root}/api/math/sessions/${session.id}`)
+		).json();
+		if (!recovered.profileUpdate) break;
+		await new Promise((r) => setTimeout(r, 100));
+	}
+	assert.equal(recovered.profileUpdate, undefined);
+	assert.equal(recovered.learner.coursePlans[0].lessons[0].status, 'completed');
+	assert.deepEqual(recovered.messages, concurrent.messages);
+	assert.ok(profileCalls >= 2, 'Restart must resume generation');
 	console.log(
-		'Math production smoke: incremental HTTP streaming, AoPS and IrMO tools, question browsing, profile, restart, replay, source images and access checks passed.',
+		'Math production smoke: incremental HTTP streaming, AoPS and IrMO tools, question browsing, completion-only profile updates, concurrent chat, interrupted consolidation recovery, replay, source images and access checks passed.',
 	);
 	if (process.argv.includes('--serve')) {
 		console.log(`Local UI fixture: ${root}/math?session=${session.id}`);
@@ -285,6 +415,7 @@ try {
 		});
 	}
 } finally {
+	releaseProfile?.();
 	await stop();
 	model.closeAllConnections();
 	await new Promise((r) => model.close(r));
