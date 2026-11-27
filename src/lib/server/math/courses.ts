@@ -4,6 +4,9 @@ import { defineTool } from '@earendil-works/pi-durable';
 import { z } from 'zod';
 import { courseCatalog } from '../../math-courses';
 import { mathCatalog } from './aops';
+export const completionCriteriaPath = resolve(
+	'skills/aops-course-assessment/references/completion.md',
+);
 
 const skills = {
 	planning: 'aops-course-planning',
@@ -64,12 +67,20 @@ export function createCourseTools() {
 		defineTool({
 			name: 'course_skill',
 			description:
-				'Load course-management instructions. Use planning for a new/revised domain plan or synchronizing old conversation progress; teaching to start/resume lessons and update attempts; assessment for evidence-based completion and reports. Keep intermediate plans and evidence in the conversation. Signal lessonCompletion only after successful assessment.',
+				'Load planning to create/revise a domain plan or synchronize history; teaching to start/resume lessons and guide attempts; assessment before deciding completion, waiver, remediation or pause.',
 			parameters: z.toJSONSchema(skillInput),
 			async execute(raw) {
 				const { skill } = skillInput.parse(raw);
 				return result({
 					skill,
+					...(skill === 'assessment'
+						? {
+								completionCriteria: await readFile(
+									completionCriteriaPath,
+									'utf8',
+								),
+							}
+						: {}),
 					content: await readFile(
 						resolve('skills', skills[skill], 'SKILL.md'),
 						'utf8',
@@ -80,5 +91,7 @@ export function createCourseTools() {
 	];
 }
 export const coursePrompt = `COURSE SKILLS
-Use course_skill for chapter-based domain plans and saved lessons, including progress synchronization from this conversation; its tool description identifies the appropriate skill. Standalone questions need no enrollment.
-The conversation is the working record for plans, objectives, phases and attempts between completed lessons; use it alongside the last saved learner. Explain relevant progress in the reply without repeating entire records. A newly completed lesson is the sole profile-update checkpoint: return lessonCompletion with its stable planId and courseId after assessment. The host validates and consolidates learner.coursePlans in the background. If profileUpdate is failed, a new assessment of that same lesson may signal completion again using newer evidence. Other turns return lessonCompletion null and no learner. Planning, synchronization requests, pauses and waivers alone do not trigger consolidation. Preserve plan/objective IDs in the conversation. New evidence must quote actual student messages exactly; missing historical evidence stays unverified.`;
+Use course_skill for domain planning, teaching and assessment; its description selects the branch. Standalone questions need no enrollment.
+The conversation holds working plans and evidence; learner is the last saved checkpoint. Preserve plan/objective IDs and exact student-answer excerpts. Keep missing historical evidence unverified.
+RESPONSE CONTRACT
+Return reply as student-facing Markdown and lessonCompletion as null by default. After course_skill assessment establishes a completed chapter, return lessonCompletion: {planId, courseId}. A chapter already completed in learner needs no signal. For a failed profileUpdate, reassess that lesson and signal again when the criteria hold. All other activity, including planning, hints, partial assessments, pauses and waivers, keeps lessonCompletion null. Return only these response fields. The host consolidates the profile in the background; explain relevant progress without repeating whole records.`;

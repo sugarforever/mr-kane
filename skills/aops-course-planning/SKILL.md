@@ -11,7 +11,7 @@ Use `course_catalog` for domains, recommended chapter routes and section locator
 
 1. Resolve the domain from the student's request. If unclear, list the domains and ask one question. Reuse the saved background, goal and time budget; diagnose only prerequisites that affect placement.
 2. Choose a relevant chapter sequence. One chapter is one lesson and may span visits. Retrieve the source before defining each lesson's observable objectives. A foundation block is sufficient when clearly labelled; state which extensions remain outside the plan.
-3. Give each plan and objective a stable ID. New lessons start as planned, phase orientation, with empty attempts and null reports. Show the stable plan and objective IDs, chapter names, objectives, order and scope in the reply. This conversation holds the working plan until a lesson completes.
+3. Reuse saved plan and objective IDs. Show chapter names, objectives, order and scope in the reply.
 4. If the student also asked to begin, load `course_skill` teaching and start. Otherwise end with the proposed starting point.
 
 ## Revise or synchronize
@@ -24,4 +24,4 @@ Retain the outstanding task as the next action. Synchronizing a plan does not it
 
 Keep different domains in separate plans. Resolve the intended plan from context, asking only when ambiguous. Reuse evidence across plans only for equivalent objectives, retaining the original answer and assistance level.
 
-Show the revised plan, recovered progress, current target and next action. Teaching tracks that plan in the conversation as the student works; a separate sync request is unnecessary. Planning or synchronization alone returns lessonCompletion null and no learner record. Only newly completed lesson assessment triggers background profile consolidation.
+Show the revised plan, recovered progress, current target and next action. Keep the working plan in the conversation as teaching progresses.

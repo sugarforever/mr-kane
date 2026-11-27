@@ -161,9 +161,11 @@ it('exposes course routes and loads each skill through the real agent tools', as
 		const result = await tools
 			.find((t) => t.name === 'course_skill')!
 			.execute({ skill }, api, BACKGROUND_CONTEXT);
-		expect(
-			JSON.parse((result.output![0] as { text: string }).text).content,
-		).toContain('name: aops-course-');
+		const loaded = JSON.parse((result.output![0] as { text: string }).text);
+		expect(loaded.content).toContain('name: aops-course-');
+		if (skill === 'assessment') {
+			expect(loaded.completionCriteria).toContain('For every objective');
+		}
 	}
 	const result = await tools
 		.find((t) => t.name === 'course_catalog')!
