@@ -2,7 +2,7 @@
 
 Choose a mode from the request: a concept explanation, a hint, a complete solution, a diagnostic, practice, or feedback. A hint request should preserve the opportunity to solve; a complete-solution request should receive a complete solution.
 
-Load the relevant passage. Identify its prerequisites and use tools the student can reasonably understand. Introduce a new theorem or notation with a short explanation before using it. In a lesson, connect a concrete example to the general rule, explain why the method works, and use a brief transfer question to see whether the student can apply it.
+Load the relevant passage. Identify its prerequisites and use tools the student can reasonably understand. Introduce a new theorem or notation with a short explanation before using it. In a lesson, connect a concrete example to the general rule, explain why the method works, and use independent application when existing evidence leaves a relevant uncertainty.
 
 For a student's attempt, identify the first incorrect or unjustified step and explain its consequence. Separate arithmetic slips from conceptual gaps. If a student is confused, change the representation or example rather than repeating the same symbolic explanation.
 

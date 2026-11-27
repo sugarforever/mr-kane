@@ -115,7 +115,13 @@ export const courseLessonSchema = z
 			'report',
 		]),
 		objectives: z
-			.array(z.object({ id: text, description: text }))
+			.array(
+				z.object({
+					id: text,
+					description: text,
+					masteryCriteria: text.optional(),
+				}),
+			)
 			.min(1)
 			.max(30),
 		attempts: z
@@ -157,6 +163,15 @@ export const courseLessonSchema = z
 						a.support === 'independent' &&
 						a.result === 'correct',
 				);
+				// Declared criteria are assessed mathematically by the agent; the server
+				// still requires independently correct, source-checked student evidence.
+				if (lesson.objectives.find((o) => o.id === id)?.masteryCriteria) {
+					if (!evidence.length)
+						issue(
+							`Objective ${id} needs independently correct evidence for its declared criteria.`,
+						);
+					continue;
+				}
 				if (
 					!evidence.some((a) => a.kind === 'routine') ||
 					!evidence.some(

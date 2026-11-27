@@ -164,7 +164,7 @@ it('exposes course routes and loads each skill through the real agent tools', as
 		const loaded = JSON.parse((result.output![0] as { text: string }).text);
 		expect(loaded.content).toContain('name: aops-course-');
 		if (skill === 'assessment') {
-			expect(loaded.completionCriteria).toContain('For every objective');
+			expect(loaded.completionCriteria).toContain('masteryCriteria');
 		}
 	}
 	const result = await tools
@@ -195,4 +195,50 @@ it('requires a new revision for changed scope and retains historical reports', a
 	next.coursePlans[0].revision = 2;
 	next.coursePlans[0].changeReason = 'Narrow the target after diagnosis';
 	expect(() => validateCourseUpdate(next, previous, [])).not.toThrow();
+});
+
+it('uses declared mastery criteria with independent evidence and preserves the legacy default', () => {
+	const p: any = plan();
+	const l = p.lessons[0];
+	l.status = 'completed';
+	l.report = {
+		summary: 'Independent complete solution covers the target',
+		nextStep: 'Delayed review',
+	};
+	l.attempts = [
+		{
+			id: 'integrated',
+			objectiveIds: ['residues'],
+			exercise: 'Integrated cycle problem',
+			studentAnswer: 'Cycle and reduction with justification',
+			support: 'independent',
+			kind: 'transfer',
+			result: 'correct',
+			feedback: 'Meets the declared criterion',
+		},
+	];
+	expect(coursePlanSchema.safeParse(p).success).toBe(false);
+	l.objectives[0].masteryCriteria =
+		'Independently solve and justify an unfamiliar power-cycle problem.';
+	const parsed = coursePlanSchema.safeParse(p);
+	expect(parsed.success).toBe(true);
+	if (parsed.success)
+		expect(parsed.data.lessons[0].objectives[0].masteryCriteria).toBe(
+			l.objectives[0].masteryCriteria,
+		);
+	l.objectives.push({
+		id: 'explanation',
+		description: 'Explain the reduction',
+		masteryCriteria: 'Justify the reduction independently',
+	});
+	expect(coursePlanSchema.safeParse(p).success).toBe(false);
+	l.attempts[0].objectiveIds.push('explanation');
+	expect(coursePlanSchema.safeParse(p).success).toBe(true);
+	l.attempts[0].support = 'hinted';
+	expect(coursePlanSchema.safeParse(p).success).toBe(false);
+	l.attempts[0].support = 'independent';
+	l.attempts[0].result = 'partial';
+	expect(coursePlanSchema.safeParse(p).success).toBe(false);
+	l.attempts = [];
+	expect(coursePlanSchema.safeParse(p).success).toBe(false);
 });
