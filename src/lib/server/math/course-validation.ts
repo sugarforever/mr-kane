@@ -1,3 +1,4 @@
+import { isDeepStrictEqual } from 'node:util';
 import type { Learner } from '../../math';
 import type { StudyMessage } from '../../learning';
 const normalize = (text: string) =>
@@ -25,9 +26,10 @@ export function validateCourseUpdate(
 
 		const scope = (plan: NonNullable<Learner['coursePlans']>[number]) =>
 			JSON.stringify(
-				plan.lessons.map(({ courseId, objectives }) => ({
+				plan.lessons.map(({ courseId, objectives, definition }) => ({
 					courseId,
 					objectives,
+					definition,
 				})),
 			);
 		if (
@@ -56,7 +58,10 @@ export function validateCourseUpdate(
 			)
 				fail();
 			for (const attempt of lesson.attempts)
-				if (!retained?.attempts.some((a) => a.id === attempt.id)) fail();
+				if (!retained?.attempts.some((a) => isDeepStrictEqual(a, attempt)))
+					fail();
+			if (lesson.status === 'completed' && retained?.status !== 'completed')
+				fail();
 		}
 	}
 	const answers = messages

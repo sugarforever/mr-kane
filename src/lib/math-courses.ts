@@ -101,9 +101,20 @@ export const courseCatalog = [
 	},
 ] as const;
 const text = z.string().trim().min(1).max(1600);
+// Source-neutral unit metadata; chapter IDs remain the current adapter's stable keys.
+export const lessonDefinitionSchema = z.object({
+	source: z.object({
+		kind: z.enum(['chapter', 'paper', 'problem-set']),
+		reference: text,
+	}),
+	scope: text,
+	prerequisites: z.array(text).max(30),
+	assessment: text,
+});
 export const courseLessonSchema = z
 	.object({
 		title: text,
+		definition: lessonDefinitionSchema.optional(),
 		courseId: z.string().regex(/^V[12]-C\d{2}$/),
 		status: z.enum(['planned', 'in-progress', 'paused', 'completed', 'waived']),
 		phase: z.enum([
