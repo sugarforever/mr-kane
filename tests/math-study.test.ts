@@ -53,7 +53,7 @@ it('loads the requested module with working web source links and rejects paths o
 		readMathPassage({ chapterId: 'V2-C18', problem: 301 }),
 	).rejects.toThrow();
 });
-it('retains learner background and conversation across turns and replays without another generation', async () => {
+it('keeps profile unchanged between completed lessons and replays without another generation', async () => {
 	setup();
 	const session = await createMathSession();
 	const firstId = randomUUID();
@@ -61,7 +61,7 @@ it('retains learner background and conversation across turns and replays without
 	const generate = async (_op: string, data: any) => {
 		calls++;
 		if (calls === 2) {
-			expect(data.learner.background).toBe('Grade 10');
+			expect(data.learner.background).toBe('');
 			expect(
 				data.messages.some((m: any) => m.content === 'What is a residue?'),
 			).toBe(true);
@@ -73,7 +73,8 @@ it('retains learner background and conversation across turns and replays without
 	expect(calls).toBe(1);
 	await runMathTurn(session.id, randomUUID(), 'What is a residue?', generate);
 	const saved = await getMathSession(session.id);
-	expect(saved.learner).toEqual(learner);
+	expect(saved.learner.background).toBe('');
+	expect(saved.messages[0].content).toBe('I am in Grade 10.');
 	expect(saved.messages.filter((m) => m.role === 'user')).toHaveLength(2);
 	expect(calls).toBe(2);
 });

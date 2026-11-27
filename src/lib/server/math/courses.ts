@@ -64,7 +64,7 @@ export function createCourseTools() {
 		defineTool({
 			name: 'course_skill',
 			description:
-				'Load course-management instructions. Use planning for a new/revised domain plan or synchronizing old conversation progress; teaching to start/resume lessons and update attempts; assessment for evidence-based completion and reports. Save results in learner.coursePlans via outputSchema.',
+				'Load course-management instructions. Use planning for a new/revised domain plan or synchronizing old conversation progress; teaching to start/resume lessons and update attempts; assessment for evidence-based completion and reports. Keep intermediate plans and evidence in the conversation. Signal lessonCompletion only after successful assessment.',
 			parameters: z.toJSONSchema(skillInput),
 			async execute(raw) {
 				const { skill } = skillInput.parse(raw);
@@ -81,4 +81,4 @@ export function createCourseTools() {
 }
 export const coursePrompt = `COURSE SKILLS
 Use course_skill for chapter-based domain plans and saved lessons, including progress synchronization from this conversation; its tool description identifies the appropriate skill. Standalone questions need no enrollment.
-Return the complete learner.coursePlans through outputSchema, preserving other plans and recorded evidence. The application commits learner and reply together and displays plans and reports. New evidence must quote actual student messages exactly; missing historical evidence stays unverified.`;
+The conversation is the working record for plans, objectives, phases and attempts between completed lessons; use it alongside the last saved learner. Explain relevant progress in the reply without repeating entire records. A newly completed lesson is the sole profile-update checkpoint: return lessonCompletion with its stable planId and courseId after assessment. The host validates and consolidates learner.coursePlans in the background. If profileUpdate is failed, a new assessment of that same lesson may signal completion again using newer evidence. Other turns return lessonCompletion null and no learner. Planning, synchronization requests, pauses and waivers alone do not trigger consolidation. Preserve plan/objective IDs in the conversation. New evidence must quote actual student messages exactly; missing historical evidence stays unverified.`;

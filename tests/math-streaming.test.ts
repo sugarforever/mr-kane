@@ -147,7 +147,7 @@ it('delivers partial reply before generation finishes, then saves once and suppo
 	}
 }, 10000);
 it('reports invalid completion as a stream error and keeps the turn retryable', async () => {
-	const { session, post } = await setup(' ends here","learner":{}}');
+	const { session, post } = await setup(' ends here","lessonCompletion":{}}');
 	const response = await post();
 	const reader = response.body!.getReader();
 	try {

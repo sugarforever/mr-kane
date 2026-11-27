@@ -105,7 +105,7 @@ it('imports saved SQL conversations and pending context once, retaining request 
 		},
 	);
 	expect(saved.messages).toHaveLength(4);
-	expect(saved.learner.goal).toBe('Algebra');
+	expect(saved.learner).toEqual(session.learner);
 	expect(saved.pending).toBeNull();
 	// Reopening the native store must not re-import stale SQL state.
 	expect(await getMathSession(session.id)).toEqual(saved);

@@ -5,7 +5,7 @@ description: Start or resume a saved AoPS lesson in Mr. Kane, guide practice, an
 
 # Teach a saved lesson
 
-Resolve the plan from the request and `learner.coursePlans`. If a domain course has no plan, load `course_skill` planning first. Standalone math questions use the existing AoPS teaching guidance without enrollment.
+Resolve the plan from the request, the conversation and the last saved `learner.coursePlans` checkpoint. If a domain course has no plan, load `course_skill` planning first. Standalone math questions use the existing AoPS teaching guidance without enrollment.
 
 ## Start or resume
 
@@ -27,6 +27,6 @@ After supported practice, load `course_skill` assessment to select the independe
 
 ## Advance
 
-When assessment supports completion, return the completed status and report together. If the student is continuing, introduce the next planned lesson and its first useful step, leaving one unanswered task. If the plan is finished, report that boundary and offer an extension instead of creating new formal lessons.
+When assessment supports completion, explain the report in the reply and return lessonCompletion with the planId and courseId. All other replies use lessonCompletion null. The host updates the profile in the background only at this boundary. If the student is continuing, introduce the next planned lesson and its first useful step, leaving one unanswered task. If the plan is finished, report that boundary and offer an extension instead of creating new formal lessons.
 
-When the student stops for today, use assessment for a partial summary and mark the lesson paused. Save its current phase and next action for resumption.
+When the student stops for today, use assessment for a partial summary and mark the lesson paused. State its current phase and next action in the conversation for resumption; pausing does not update the saved profile.

@@ -66,7 +66,11 @@ const state = globalThis as typeof globalThis & {
 };
 const jobs = (state.__kaneJobs ??= new Map<string, Promise<string>>());
 export type AgentProgress = { text: string; reading: boolean };
-export type AgentOptions = { onProgress?: (progress: AgentProgress) => void };
+export type AgentOptions = {
+	onProgress?: (progress: AgentProgress) => void;
+	/** Background work waits for capacity rather than exhausting retries before generation. */
+	waitForCapacity?: boolean;
+};
 export async function runAgent(
 	operation: string,
 	data: unknown,
@@ -124,6 +128,13 @@ export async function runAgent(
 	const key = `${dataDir()}:${requestId}`;
 	const existing = jobs.get(key);
 	if (existing) return existing;
+	if (options.waitForCapacity) {
+		while (jobs.size >= 2) {
+			await Promise.race(jobs.values()).catch(() => {});
+			const admitted = jobs.get(key);
+			if (admitted) return admitted;
+		}
+	}
 	if (jobs.size >= 2)
 		throw new Error('Other requests are being prepared. Please retry shortly.');
 	const promise = locked(`job:${key}`, () =>

@@ -55,6 +55,31 @@
 		await tick();
 		document.getElementById('math-message')?.focus();
 	}
+	$effect(() => {
+		const id = session?.id;
+		if (!id || session?.profileUpdate !== 'pending') return;
+		let cancelled = false;
+		const timer = setInterval(async () => {
+			if (busy) return;
+			try {
+				const current = await api(`/api/math/sessions/${id}`);
+				if (!cancelled && session?.id === id && !busy) {
+					// Refresh profile fields only; a polling response must never replace chat.
+					session = {
+						...session,
+						learner: current.learner,
+						profileUpdate: current.profileUpdate,
+					};
+				}
+			} catch {
+				/* A later poll can recover a transient connection failure. */
+			}
+		}, 3000);
+		return () => {
+			cancelled = true;
+			clearInterval(timer);
+		};
+	});
 	const starters = [
 		{
 			title: 'Find my starting point',
@@ -405,7 +430,7 @@
 								{progress?.status === 'saving'
 									? 'Saving conversation…'
 									: progress?.status === 'finishing'
-										? 'Updating your learning profile…'
+										? 'Finishing your reply…'
 										: progress?.status === 'reading'
 											? 'Reading the source material…'
 											: progress?.reply
@@ -488,6 +513,17 @@
 					class="profile-toggle"
 					onclick={() => (showProfile = false)}>Close profile</Button
 				>
+				{#if session?.profileUpdate === 'pending'}
+					<p role="status">
+						Updating your profile after the completed lesson. You can keep
+						chatting.
+					</p>
+				{:else if session?.profileUpdate === 'failed'}
+					<p role="status">
+						The profile update could not finish. Your conversation is saved. Ask
+						to reassess the completed lesson to retry.
+					</p>
+				{/if}
 				<MathCoursePlans
 					plans={session?.learner.coursePlans}
 					disabled={busy || !!session?.pending || !configured}
@@ -501,8 +537,8 @@
 					<h2>Your starting point</h2>
 				</div>
 				<p class="learner-intro">
-					A picture that grows as we learn together. You can correct it in the
-					chat at any time.
+					Your profile is updated after completed lessons. New learning stays in
+					this conversation until the next lesson is complete.
 				</p>
 				{#if session?.learner.background || session?.learner.goal}<dl>
 						{#if session.learner.background}<dt>Background</dt>
