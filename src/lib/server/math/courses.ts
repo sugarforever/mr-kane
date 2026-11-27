@@ -38,7 +38,7 @@ export function createCourseTools() {
 		defineTool({
 			name: 'course_catalog',
 			description:
-				'List AoPS learning domains or retrieve a domain’s recommended chapter route with exact section locators. One chapter is one lesson; proof and extension chapters are optional supporting branches, not a strict dependency chain.',
+				'List AoPS learning domains or retrieve a domain’s recommended chapter route with exact section locators. The current adapter defaults to one selected chapter per lesson; proof and extension chapters are optional supporting branches, not a strict dependency chain.',
 			parameters: z.toJSONSchema(catalogInput),
 			async execute(raw) {
 				const { domain } = catalogInput.parse(raw);
@@ -67,7 +67,7 @@ export function createCourseTools() {
 		defineTool({
 			name: 'course_skill',
 			description:
-				'Load planning to create/revise a domain plan or synchronize history; teaching to start/resume lessons and guide attempts; assessment before deciding completion, waiver, remediation or pause.',
+				'Load planning to create/revise plans, synchronize history or adopt updated rules in an unfinished lesson; teaching to start/resume instruction or repair gaps; assessment to decide completion, readiness, remediation, waiver or pause.',
 			parameters: z.toJSONSchema(skillInput),
 			async execute(raw) {
 				const { skill } = skillInput.parse(raw);
@@ -91,7 +91,7 @@ export function createCourseTools() {
 	];
 }
 export const coursePrompt = `COURSE SKILLS
-Use course_skill for domain planning, teaching and assessment; its description selects the branch. Standalone questions need no enrollment.
+Use course_skill to select planning, teaching or assessment. Reload teaching for each new teaching request, including continue: historical tool results may be outdated. Load assessment before deciding completion. Standalone questions need no enrollment.
 The conversation holds working plans and evidence; learner is the last saved checkpoint. Preserve plan/objective IDs and exact student-answer excerpts. Keep missing historical evidence unverified.
 LESSON COMPLETION
-Reply directly in Markdown. After course_skill assessment establishes a completed chapter, call complete_lesson with its planId and courseId. An accepted request is pending background validation, not a saved profile. A chapter already completed in learner needs no call. For a failed profileUpdate, reassess that lesson and call again when the criteria hold. Planning, hints, partial assessments, pauses and waivers alone do not complete a lesson. Explain relevant progress without repeating whole records.`;
+Reply directly in Markdown. After course_skill assessment establishes a completed lesson, call complete_lesson with its planId and courseId. An accepted request is pending background validation, not a saved profile. A lesson already completed in learner needs no call. For a failed profileUpdate, reassess that lesson and call again when the criteria hold. Planning, hints, partial assessments, pauses and waivers alone do not complete a lesson. Explain relevant progress without repeating whole records.`;

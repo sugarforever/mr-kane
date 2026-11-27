@@ -1,27 +1,28 @@
 ---
 name: aops-course-planning
-description: Create or revise a chapter-based AoPS domain plan in Mr. Kane, or synchronize its progress from an existing conversation.
+description: Create or revise an AoPS learning plan, synchronize historical progress, or adapt an unfinished lesson to updated teaching rules.
 ---
 
-# Plan an AoPS course
+# Plan learning units
 
-Use `course_catalog` for domains, recommended chapter routes and section locators. Use the supplied curriculum for prerequisites; catalog order includes optional branches, not a strict dependency chain.
+A lesson is a unit with its own scope, objectives and completion criteria. Sources may be chapters, selected sections, papers or problem collections. In the current Mr. Kane adapter, use one selected AoPS chapter per lesson and its catalog courseId. Other groupings require adapter support.
 
-## Create
+## Define the plan
 
-1. Resolve the domain from the student's request. If unclear, list the domains and ask one question. Reuse the saved background, goal and time budget; diagnose only prerequisites that affect placement.
-2. Choose a relevant chapter sequence. One chapter is one lesson and may span visits. Retrieve the source before defining each lesson's observable objectives. A foundation block is sufficient when clearly labelled; state which extensions remain outside the plan.
-3. Reuse saved plan and objective IDs. Show chapter names, objectives, order and scope in the reply.
-4. If the student also asked to begin, load `course_skill` teaching and start. Otherwise end with the proposed starting point.
+1. Reuse the student's goal, background, time budget and demonstrated knowledge. Use `course_catalog` for routes and locators; optional branches are not prerequisites. Diagnose only uncertainties affecting placement.
+2. Retrieve sources and define each lesson:
+   - Scope, source locators and exclusions.
+   - Observable objectives and prerequisites, including needed repair.
+   - Assessment task types and `masteryCriteria` for each objective. State what independent work must demonstrate; include reasoning or transfer where the objective requires it.
+3. Put scope in the lesson title/objectives, source and prerequisite details in objective descriptions and the working plan, and completion requirements in each objective's `masteryCriteria`. Show the sequence and personalized coverage: summaries for demonstrated targets, detailed teaching for unfamiliar targets and repair for partial understanding.
+4. If asked to begin, load teaching. Otherwise end with the starting point.
 
 ## Revise or synchronize
 
-Read saved plans and relevant messages. Preserve plan IDs, domain, recorded attempts and existing reports. Increment revision and explain the reason when chapter selection, order or objectives change. Completed objectives stay unchanged; put new targets in a subsequent plan.
+Use the saved checkpoint plus later conversation. Preserve plan/domain IDs, objective IDs, attempts, assistance levels, reports and completed targets. Increment revision and explain changes to scope, order or criteria. Put new targets after completion in a subsequent plan. Keep domains in separate plans.
 
-Map historical work to chapter objectives using identifiable tasks and exact student answer excerpts. Preserve assistance levels. Tutor explanations establish exposure; independent student work supplies mastery evidence. Keep missing or ambiguous evidence unverified. Load `course_skill` assessment before marking a lesson completed or waived.
+Map historical answers to equivalent objectives with exact excerpts and original assistance levels. Mark missing evidence unverified. Load assessment before deciding completion or waiver.
 
-Retain the outstanding task as the next action. Synchronizing a plan does not itself start or resume teaching. Historical lesson headings may cover only part of a chapter; describe recovered progress without inventing chapter completion.
+When adopting updated rules in an unfinished lesson, explicitly revise its criteria and personalized coverage. Reconcile the outstanding task: retain it for an unresolved uncertainty, or explain its replacement or retirement. Plain “continue” resumes teaching without requesting this revision.
 
-Keep different domains in separate plans. Resolve the intended plan from context, asking only when ambiguous. Reuse evidence across plans only for equivalent objectives, retaining the original answer and assistance level.
-
-Show the revised plan, recovered progress, current target and next action. Keep the working plan in the conversation as teaching progresses.
+End with the revised scope, recovered progress and next action. Synchronization alone stops here; if also asked to continue, load teaching. Keep working revisions in the conversation until the host's completion checkpoint persists them; reorganization alone does not trigger `complete_lesson`.

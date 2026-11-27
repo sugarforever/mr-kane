@@ -1,21 +1,22 @@
 ---
 name: aops-course-assessment
-description: Assess AoPS chapter evidence for completion, placement waiver, remediation, pause, or historical synchronization.
+description: Assess lesson completion, readiness for a next activity, remediation, placement waiver, or historical progress.
 ---
 
 # Assess learning evidence
 
-Use the saved learner plus subsequent conversation evidence. Apply [completion criteria](references/completion.md), supplied as `completionCriteria` by `course_skill`.
+Read the saved learner and later conversation. Apply [completion criteria](references/completion.md), supplied as `completionCriteria` by `course_skill`.
+
+For each objective identify the applicable criterion, supporting attempts, assistance and unresolved uncertainty. Distinguish unassessed, partial, assisted and independently demonstrated understanding using the existing support/result fields. Reassess disputed answers without rewriting original attempts.
 
 ## Decide
 
-- Complete: summarize the chapter evidence and next step, then call `complete_lesson` with the planId and courseId. Teaching may advance.
-- Partial: identify the unresolved objective and one targeted check or remediation action. Add a check only for a remaining uncertainty.
-- Waived: explain the placement evidence and rationale for omitting the chapter. Waiver is distinct from completion.
-- Paused: summarize progress, the current phase and the outstanding task for resumption.
+- Complete: all objectives meet the completion criteria. Give a concise summary and next step, then call `complete_lesson` with planId/courseId.
+- Partial: select a check or repair for the unresolved objective.
+- Ready for the next activity: its prerequisites are supported; retain other gaps. This is not a completion status. Pause the current lesson explicitly if moving to another formal lesson.
+- Waived: report the placement rationale for omitting scope. Demonstrated mastery is assessed as completion instead.
+- Paused: retain the phase and outstanding task.
 
 ## Report
 
-Identify the source chapter, each objective's evidence status, and the relevant attempts with a short interpretation. Distinguish independent, hinted, demonstrated and unverified work. Recommend the next chapter, targeted remediation or delayed review; state uncertainty where evidence is missing.
-
-Apply the same criteria to historical synchronization and disputed assessments. Re-evaluate the cited attempt while preserving the student's original answer and assistance level.
+Identify source scope and each objective's criterion, exact evidence excerpts, assistance and uncertainty. Explain the decision and recommend the next task, repair or delayed review. Use the same criteria for historical synchronization; load planning if the unfinished plan needs revision.

@@ -1,32 +1,34 @@
 ---
 name: aops-course-teaching
-description: Start or resume a saved AoPS lesson in Mr. Kane, guide practice, and update its phase and student evidence.
+description: Start or resume an AoPS lesson, adapt teaching depth to demonstrated knowledge, or repair a specific learning gap.
 ---
 
-# Teach a saved lesson
+# Teach a personalized lesson
 
-Resolve the working plan from the request, conversation and saved `learner.coursePlans`. If a domain course has no plan, load `course_skill` planning first. Standalone math questions use the existing AoPS teaching guidance without enrollment.
+Resolve the working plan from the request, saved learner and later conversation. Load planning if no plan exists or a revision is requested. Standalone questions need no enrollment.
 
-## Start or resume
+## Select content
 
-Continue the in-progress lesson, or reactivate the paused lesson the student chose. If neither applies, start the next planned lesson. Keep at most one in-progress lesson per plan.
+Resume the active lesson, reactivate a chosen paused lesson, or start the next planned lesson. Keep at most one in-progress lesson per plan. Respect pauses and domain switches. Retrieve the relevant source with `aops_read`; narrow truncated results.
 
-Retrieve the relevant section with `aops_read` before teaching. Use `course_catalog` for locators; if output is truncated, request a narrower section or page covering the missing material.
+Choose content for each objective:
+- Unfamiliar: explain concepts and prerequisites, alternate worked examples with independent practice.
+- Demonstrated: summarize and connect to new material; skip immediate drills and recommend delayed mixed review.
+- Partial: teach the missing concept or method, then check it.
+- Uncertain: use a diagnostic that distinguishes the plausible gaps.
 
-On first start, introduce the objectives and place in the plan. On return, resume the saved phase and outstanding task. Describe the current activity and phase in the conversation. Respect an explicit pause or domain switch; closing a page alone changes neither progress nor completion.
+Briefly identify the current focus. Reuse established background and work on return.
 
-## Teach and record
+## Guide the task
 
-Ask one task at a time and wait for the answer. Evaluate reasoning, give a proportional hint or explanation, and choose the next task from the cause of the error. Use explanation, practice, independent-check and remediation as needed.
+Assign a complete task, combining related calculations and justification. Wait for an attempt before evaluating it. Provide targeted hints on request or at a specific impasse, reducing help as understanding improves. When asked to teach, explain a complete example. Use the host's task interface; dialogue supplies clarification and help.
 
-Keep each attempt identifiable in the conversation: objective, exercise/source, student answer, assistance, result and feedback. A correction after a hint remains hinted. Agreement with a demonstration is not an independent attempt.
+Before a follow-up, identify what remains uncertain and how an answer would change the next action. If recent work already answers that question, advance. Retrieve book statements before assigning them; verify and label original practice.
 
-Follow the existing exercise retrieval guidance. Label generated practice and verify it. Use suitable IrMO Round 2/final tasks for consolidation or challenge when prerequisites fit; a whole contest problem is optional for foundation lessons.
+Separate input slips and isolated calculation errors from procedural or conceptual gaps. Correct slips proportionately. For incomplete reasoning, ask for the missing link. If the same error recurs, change the representation, example or prerequisite instruction.
 
-After supported practice, load `course_skill` assessment to select the independent evidence still needed or decide completion. Repeated errors call for a changed explanation, representation or prerequisite task rather than more near-identical questions.
+Record objective IDs, source/task, exact answer, assistance, result and feedback. Load assessment for completion decisions or when remaining evidence is unclear.
 
-## Advance
+## Advance or stop
 
-After assessment confirms completion, if the student is continuing, introduce the next planned lesson and its first useful step, leaving one unanswered task. If the plan is finished, report that boundary and offer an extension instead of creating new formal lessons.
-
-When the student stops, summarize the current phase and outstanding task in the conversation for resumption.
+Advance to activities whose prerequisites are supported; retain unrelated gaps for repair or review. To start another formal lesson, complete, waive or explicitly pause the active lesson through assessment. If continuing after completion, introduce the next lesson's first task. On stopping, retain the current phase and outstanding work for resumption.
