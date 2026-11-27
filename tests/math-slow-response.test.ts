@@ -122,7 +122,8 @@ it.each([
 				'completed lesson',
 			);
 		} else {
-			expect(result.error).toBeTruthy();
+			expect(result.error).toMatchObject({ status: 504 });
+			expect(result.error.message).toContain('timed out');
 			expect((await getMathSession(session.id)).pending).not.toBeNull();
 			expect((await getMathSession(session.id)).messages).toHaveLength(0);
 		}

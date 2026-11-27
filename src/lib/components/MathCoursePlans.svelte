@@ -5,41 +5,46 @@
 		plans = [],
 		disabled = false,
 		onStudy,
+		onLesson,
+		showPlanning = true,
 	}: {
 		plans?: CoursePlan[];
 		disabled?: boolean;
 		onStudy: (message: string) => void;
+		showPlanning?: boolean;
+		onLesson?: (planId: string, courseId: string) => void;
 	} = $props();
 	const label = (value: string) => value.replaceAll('-', ' ');
 </script>
 
 <section aria-label="Learning plans" class="course-plans">
 	<h2>Learning plans</h2>
-	<details open={!plans.length}>
-		<summary>Start a domain plan</summary>
-		<div class="actions">
-			{#each courseCatalog.slice(0, 4) as domain}
-				<Button
-					variant="outline"
-					size="sm"
-					{disabled}
-					onclick={() =>
-						onStudy(
-							`Create an AoPS chapter-based learning plan for ${domain.title}. Use my existing background and progress; show me the plan and help me choose a starting point.`,
-						)}>{domain.title}</Button
-				>
-			{/each}
-		</div>
-	</details>
-	<Button
-		variant="ghost"
-		size="sm"
-		{disabled}
-		onclick={() =>
-			onStudy(
-				'Use the course planning skill to create or update my learning plan from this conversation and synchronize progress. Cite actual attempts, keep hinted work distinct from independent evidence, and show what remains unverified.',
-			)}>Organize plan and sync progress</Button
-	>
+	{#if showPlanning}<details open={!plans.length}>
+			<summary>Start a domain plan</summary>
+			<div class="actions">
+				{#each courseCatalog.slice(0, 4) as domain}
+					<Button
+						variant="outline"
+						size="sm"
+						{disabled}
+						onclick={() =>
+							onStudy(
+								`Create an AoPS chapter-based learning plan for ${domain.title}. Use my existing background and progress; show me the plan and help me choose a starting point.`,
+							)}>{domain.title}</Button
+					>
+				{/each}
+			</div>
+		</details>
+		<Button
+			variant="ghost"
+			size="sm"
+			{disabled}
+			onclick={() =>
+				onStudy(
+					'Use the course planning skill to create or update my learning plan from this conversation and synchronize progress. Cite actual attempts, keep hinted work distinct from independent evidence, and show what remains unverified.',
+				)}>Organize plan and sync progress</Button
+		>
+	{/if}
 	{#each plans as plan (plan.id)}
 		<article>
 			<h3>{plan.title}</h3>
@@ -58,9 +63,17 @@
 					size="sm"
 					{disabled}
 					onclick={() =>
-						onStudy(
-							`Continue the saved learning plan ${plan.id} (${plan.title}). Resume the current lesson and outstanding task; if none is active, start the next planned chapter.`,
-						)}>Continue learning</Button
+						onLesson
+							? onLesson(
+									plan.id,
+									(plan.lessons.find(
+										(l) => l.status === 'in-progress' || l.status === 'paused',
+									) ?? plan.lessons.find((l) => l.status === 'planned'))!
+										.courseId,
+								)
+							: onStudy(
+									`Continue the saved learning plan ${plan.id} (${plan.title}). Resume the current lesson and outstanding task; if none is active, start the next planned chapter.`,
+								)}>Continue learning</Button
 				>
 			{/if}
 			<ol>
@@ -71,9 +84,31 @@
 								>{lesson.title} <small>{label(lesson.status)}</small></summary
 							>
 							<p>{lesson.courseId} · {label(lesson.phase)}</p>
+							{#if lesson.definition}<dl>
+									<dt>Source</dt>
+									<dd>{lesson.definition.source.reference}</dd>
+									<dt>Scope</dt>
+									<dd>{lesson.definition.scope}</dd>
+									<dt>Prerequisites</dt>
+									<dd>
+										{lesson.definition.prerequisites.join(', ') ||
+											'None specified'}
+									</dd>
+									<dt>Assessment</dt>
+									<dd>{lesson.definition.assessment}</dd>
+								</dl>{/if}
+							{#if onLesson}<Button
+									size="sm"
+									{disabled}
+									onclick={() => onLesson?.(plan.id, lesson.courseId)}
+									>Open lesson conversation</Button
+								>{/if}
 							<ul>
 								{#each lesson.objectives as objective}<li>
 										{objective.description}
+										{#if objective.masteryCriteria}<small
+												>Mastery: {objective.masteryCriteria}</small
+											>{/if}
 									</li>{/each}
 							</ul>
 							{#if lesson.attempts.length}

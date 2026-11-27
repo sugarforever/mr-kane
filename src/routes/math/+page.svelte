@@ -27,6 +27,19 @@
 	let session: MathSession | null = $state(untrack(() => data.session));
 	let sessions: MathSummary[] = $state(untrack(() => data.sessions));
 	let configured = $state(untrack(() => data.aiConfigured));
+	$effect(() => {
+		const incoming = data.session;
+		const incomingSessions = data.sessions;
+		untrack(() => {
+			if (!busy && incoming?.id !== session?.id) {
+				session = incoming;
+				sessions = incomingSessions;
+				draft = '';
+				notice = '';
+				void scroll();
+			}
+		});
+	});
 	let connection = $state(
 		untrack(() => data.aiSettings.defaultProviderId ?? ''),
 	);
@@ -48,6 +61,16 @@
 	}
 	let showProfile = $state(false);
 	let showLibrary = $state(false);
+	const boundPlan = $derived(
+		session?.learner.coursePlans?.find(
+			(p) => p.id === session?.lessonContext?.planId,
+		),
+	);
+	const boundLesson = $derived(
+		boundPlan?.lessons.find(
+			(l) => l.courseId === session?.lessonContext?.courseId,
+		),
+	);
 	async function studyIrmo(message: string) {
 		if (busy || session?.pending) return;
 		draft = message;
@@ -108,6 +131,12 @@
 	];
 	onMount(() => {
 		if (session?.messages.length || session?.pending) void scroll();
+		if (new URL(location.href).searchParams.has('planning'))
+			draft =
+				'Use the course planning skill to create or update and save my learning plan. Preserve my background, goals and original evidence; define lesson sources, scope, prerequisites, objectives, assessment and mastery criteria. Save it with save_learning_checkpoint.';
+		else if (session?.lessonContext && !session.messages.length)
+			draft =
+				'Start my bound lesson using my saved plan and learner background. Load the teaching skill and begin with the next useful task.';
 	});
 	async function scroll(force = true) {
 		await tick();
@@ -172,6 +201,30 @@
 			notice = (e as Error).message;
 		}
 	}
+	async function openLesson(planId: string, courseId: string) {
+		if (busy || !session) return;
+		busy = true;
+		notice = '';
+		try {
+			const next = await api('/api/math/plans/lesson', {
+				ownerSessionId: session.lessonContext?.ownerSessionId ?? session.id,
+				planId,
+				courseId,
+			});
+			await goto(`/math?session=${next.id}`);
+			// This route can be reused by SvelteKit; adopt the returned session explicitly.
+			session = next;
+			draft = next.messages.length
+				? ''
+				: 'Start my bound lesson using the saved plan and learner background. Load teaching and begin with the next useful task.';
+			showProfile = false;
+			await scroll();
+		} catch (e) {
+			notice = (e as Error).message;
+		} finally {
+			busy = false;
+		}
+	}
 	async function editPending() {
 		if (busy || !session?.pending) return;
 		busy = true;
@@ -206,7 +259,7 @@
 		}
 	}
 	async function send(text = draft) {
-		if (busy || !configured) return;
+		if (busy || !configured || session?.lessonUnavailable) return;
 		const message = text.trim();
 		if (!message) return;
 		notice = '';
@@ -284,6 +337,7 @@
 			disabled={busy}
 			class="w-full"><Plus class="size-4" /> New conversation</Button
 		>
+		<Button variant="outline" href="/math/plans">Learning plans</Button>
 		<p class="sidebar-label">YOUR CONVERSATIONS</p>
 		<nav aria-label="Math conversations" class="math-conversations">
 			{#each sessions as item}<button
@@ -306,7 +360,11 @@
 		<header class="math-header">
 			<div>
 				<span class="eyebrow">YOUR MATH SPACE</span>
-				<h1>Math</h1>
+				<h1>{session?.lessonContext ? session.title : 'Math'}</h1>
+				{#if session?.lessonContext}<a
+						href={`/math/plans?owner=${session.lessonContext.ownerSessionId}&plan=${encodeURIComponent(session.lessonContext.planId)}`}
+						>← Back to learning plan</a
+					>{/if}
 			</div>
 			<div class="math-connection">
 				<Button
@@ -338,6 +396,10 @@
 				>
 			</div>
 		</header>
+		{#if session?.lessonUnavailable}<p role="status">
+				This lesson was removed from its plan. Its conversation is kept here for
+				reference. Return to Learning plans to choose a current lesson.
+			</p>{/if}
 		<div class="math-workspace">
 			<section class="chat-column" aria-label="Math study chat">
 				<!-- Browsing preserves the current conversation and any unfinished turn. -->
@@ -356,31 +418,57 @@
 						aria-live="polite"
 						aria-busy={busy}
 					>
-						{#if !session?.messages.length}
+						{#if !session?.messages.length && !session?.lessonUnavailable}
 							<div class="math-welcome">
 								<div class="welcome-mark"><Calculator size={28} /></div>
-								<span class="eyebrow">AOPS · IRISH MATHEMATICAL OLYMPIAD</span>
-								<h2>Let’s make math<br />make sense.</h2>
-								<p>
-									Bring a question, explore an idea, or find a place to begin.
-									We’ll get to know what you know and build from there.
-								</p>
-							</div>
-							<button class="irmo-welcome" onclick={() => (showLibrary = true)}
-								><BookOpen class="size-4" /><span
-									><strong>Explore IrMO Round 2</strong><small
-										>Past papers · Proof practice · AoPS preparation</small
-									></span
-								><ArrowUp class="size-4" /></button
-							>
-							<div class="math-starters">
-								{#each starters as starter}<button
+								{#if boundLesson}<span class="eyebrow"
+										>{boundPlan?.title} · {boundLesson.courseId}</span
+									>
+									<h2>{boundLesson.title}</h2>
+									<p>
+										{boundLesson.definition?.scope ??
+											boundLesson.objectives
+												.map((o) => o.description)
+												.join(' · ')}
+									</p>
+									<p>
+										Your coach will use your saved background and progress. Work
+										here is saved with this lesson.
+									</p>
+									<Button
 										disabled={busy || !configured || !!session?.pending}
-										onclick={() => send(starter.message)}
-										><span>{starter.title}<ArrowUp class="size-4" /></span
-										><small>{starter.detail}</small></button
-									>{/each}
+										onclick={() =>
+											send(
+												'Begin my bound lesson. Load teaching, use my saved plan and background, and start with the next useful task.',
+											)}>Begin lesson</Button
+									>
+								{:else}<span class="eyebrow"
+										>AOPS · IRISH MATHEMATICAL OLYMPIAD</span
+									>
+									<h2>Let’s make math<br />make sense.</h2>
+									<p>
+										Bring a question, explore an idea, or find a place to begin.
+										We’ll get to know what you know and build from there.
+									</p>{/if}
 							</div>
+							{#if !boundLesson}<button
+									class="irmo-welcome"
+									onclick={() => (showLibrary = true)}
+									><BookOpen class="size-4" /><span
+										><strong>Explore IrMO Round 2</strong><small
+											>Past papers · Proof practice · AoPS preparation</small
+										></span
+									><ArrowUp class="size-4" /></button
+								>
+								<div class="math-starters">
+									{#each starters as starter}<button
+											disabled={busy || !configured || !!session?.pending}
+											onclick={() => send(starter.message)}
+											><span>{starter.title}<ArrowUp class="size-4" /></span
+											><small>{starter.detail}</small></button
+										>{/each}
+								</div>
+							{/if}
 							{#if !configured}<div class="math-setup">
 									<BookOpen class="size-5" />
 									<div>
@@ -448,7 +536,7 @@
 								{#if session?.pending}<Button
 										variant="outline"
 										onclick={() => send(session!.pending!.message)}
-										disabled={busy || !configured}
+										disabled={busy || !configured || session?.lessonUnavailable}
 										><RefreshCw class="size-4" /> Retry message</Button
 									><Button variant="ghost" onclick={editPending} disabled={busy}
 										>Edit message</Button
@@ -480,7 +568,7 @@
 								maxlength={6000}
 								rows={2}
 								placeholder="Ask a question, share what you’ve tried, or tell me about your goals…"
-								disabled={!configured}
+								disabled={!configured || session?.lessonUnavailable}
 								onkeydown={(e) => {
 									if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
 										e.preventDefault();
@@ -526,6 +614,8 @@
 				{/if}
 				<MathCoursePlans
 					plans={session?.learner.coursePlans}
+					showPlanning={!session?.lessonContext}
+					onLesson={openLesson}
 					disabled={busy || !!session?.pending || !configured}
 					onStudy={(message) => {
 						showProfile = false;
@@ -537,8 +627,9 @@
 					<h2>Your starting point</h2>
 				</div>
 				<p class="learner-intro">
-					Your profile is updated after completed lessons. New learning stays in
-					this conversation until the next lesson is complete.
+					Your coach saves plans and learning progress as you work. Your
+					original answers stay in their lesson conversations. Open Learning
+					plans to continue a saved lesson.
 				</p>
 				{#if session?.learner.background || session?.learner.goal}<dl>
 						{#if session.learner.background}<dt>Background</dt>

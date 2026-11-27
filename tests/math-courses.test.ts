@@ -98,7 +98,7 @@ it('rejects duplicate lessons and chapters outside the selected route', () => {
 	p.lessons = [{ ...p.lessons[0], courseId: 'V1-C09' }];
 	expect(coursePlanSchema.safeParse(p).success).toBe(false);
 });
-it('keeps proposed plans in the conversation until a lesson completes', async () => {
+it('does not infer saved plans from conversation prose without a checkpoint tool', async () => {
 	const dir = mkdtempSync(join(tmpdir(), 'kane-courses-'));
 	vi.stubEnv('MR_KANE_DATA_DIR', dir);
 	try {

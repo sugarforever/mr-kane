@@ -50,7 +50,16 @@ export type StudyConfig<Learner> = {
 		reply: string;
 		learner?: Learner;
 	}>;
+	prepareSession?: (
+		session: StudySession<Learner>,
+	) => Promise<StudySession<Learner>>;
+	persistLearner?: (
+		next: Learner,
+		previous: StudySession<Learner>,
+	) => Promise<Learner>;
 	checkpoint?: {
+		saveSchema?: z.ZodType<unknown>;
+		applySave?: (input: unknown, previous: Learner) => Learner;
 		completionSchema: z.ZodType<LessonCompletion>;
 		generate: (
 			session: StudySession<Learner>,
@@ -82,6 +91,7 @@ type Turn = {
 	legacy: boolean;
 	profile?: ProfileJob;
 	completionRequested?: LessonCompletion;
+	checkpointSaved?: boolean;
 	replyFormat?: 'markdown';
 };
 // Session JSON preserves the public, subject-specific learner shape without constraining it to a shared profile.
@@ -238,7 +248,9 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 		if (!record) throw new StudyError(404, 'Conversation not found.');
 		return record;
 	}
-	async function createSession(): Promise<Session> {
+	async function createSession(
+		initial?: Pick<Session, 'learner' | 'lessonContext' | 'title'>,
+	): Promise<Session> {
 		await readIndex();
 		const session: Session = {
 			id: randomUUID(),
@@ -247,6 +259,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			learner: config.emptyLearner(),
 			messages: [],
 			pending: null,
+			...initial,
 		};
 		await write(session.id, async ({ harness }) => {
 			await harness.commit(async (tx) => {
@@ -274,6 +287,24 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 		} finally {
 			await harness.close(context);
 		}
+	}
+	async function mutateSession(
+		id: string,
+		update: (session: Session) => Promise<Session> | Session,
+	) {
+		validId(id);
+		if (!(await readIndex()).sessions.includes(id))
+			throw new StudyError(404, 'Conversation not found.');
+		return write(id, async ({ harness }) => {
+			const current = JSON.parse(
+				(await recordFor(harness, id)).session,
+			) as Session;
+			const next = await update(current);
+			await harness.commit(async (tx) => {
+				(await tx.doc(Study, id, '')).session = JSON.stringify(next);
+			}, context);
+			return next;
+		});
 	}
 	async function listSessions(): Promise<StudySummary[]> {
 		const sessions = await Promise.all(
@@ -340,6 +371,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 		const result = await write(sessionId, async ({ harness, configure }) => {
 			const record = await recordFor(harness, sessionId);
 			let session = JSON.parse(record.session) as Session;
+			if (config.prepareSession) session = await config.prepareSession(session);
 			let turn = record.turns[input.requestId];
 			if (turn && turn.message !== input.message)
 				throw new StudyError(409, 'This request belongs to different content.');
@@ -364,8 +396,106 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				? config.agent
 				: {
 						...config.agent,
+						loadPrompt: async () =>
+							`${await config.agent.loadPrompt()}${session.lessonContext ? `\n\nBOUND LESSON\n${JSON.stringify(session.lessonContext)}\nStay within this lesson. Load teaching on entry, use the supplied learner and plan, resume outstanding work and retain assistance levels. Save progress with save_learning_checkpoint. Do not change other lessons or learner facts from this bound conversation.` : ''}`,
 						createTools: (toolContext) => [
 							...config.agent.createTools(toolContext),
+							...(config.checkpoint!.saveSchema
+								? [
+										defineTool({
+											name: 'get_learning_checkpoint',
+											description:
+												'Read the latest authoritative learner and plan. Use when resuming interrupted work or after a save conflict, then reconcile your update with this checkpoint.',
+											parameters: z.toJSONSchema(z.object({}).strict()),
+											replay: 'safe',
+											async execute() {
+												const current = JSON.parse(
+													(await recordFor(harness, sessionId)).session,
+												) as Session;
+												if (current.pending?.id !== input.requestId)
+													throw new Error('This turn is no longer pending.');
+												const fresh = config.prepareSession
+													? await config.prepareSession(current)
+													: current;
+												await harness.commit(async (tx) => {
+													(await tx.doc(Study, sessionId, '')).session =
+														JSON.stringify(fresh);
+												}, context);
+												session.learner = fresh.learner;
+												return {
+													output: [
+														{
+															type: 'text' as const,
+															text: JSON.stringify({
+																learner: fresh.learner,
+																lessonContext: fresh.lessonContext ?? null,
+															}),
+														},
+													],
+												};
+											},
+										}),
+										defineTool({
+											name: 'save_learning_checkpoint',
+											description:
+												'Persist plans and progress now. Prefer incremental updates: provide only changed learner fields, plans and lessons keyed by id/courseId. Omitted fields, lessons and attempts are retained by the server. attempts are additions only; never regenerate or rewrite saved historical attempts. Use lessonOrder only to explicitly reorder/remove lessons. Use the legacy full learner only for small initial imports. Call before claiming a plan or progress is saved.',
+											parameters: z.toJSONSchema(config.checkpoint!.saveSchema),
+											replay: 'safe',
+											async execute(raw) {
+												const parsed =
+													config.checkpoint!.saveSchema!.parse(raw);
+												const current = JSON.parse(
+													(await recordFor(harness, sessionId)).session,
+												) as Session;
+												if (current.pending?.id !== input.requestId)
+													throw new Error('This turn is no longer pending.');
+												const learner = config.checkpoint!.applySave
+													? config.checkpoint!.applySave(
+															parsed,
+															current.learner,
+														)
+													: (parsed as { learner: Learner }).learner;
+												const messages = [
+													...current.messages,
+													{
+														role: 'user' as const,
+														content: input.message,
+														createdAt: new Date().toISOString(),
+													},
+												];
+												config.validateLearner?.(
+													learner,
+													current.learner,
+													messages,
+												);
+												const saved = config.persistLearner
+													? await config.persistLearner(learner, {
+															...current,
+															messages,
+														})
+													: learner;
+												current.learner = saved;
+												await harness.commit(async (tx) => {
+													const state = await tx.doc(Study, sessionId, '');
+													state.session = JSON.stringify(current);
+													state.turns[input.requestId].checkpointSaved = true;
+												}, context);
+												session.learner = saved;
+												return {
+													output: [
+														{
+															type: 'text' as const,
+															text: JSON.stringify({
+																status: 'saved',
+																learner: saved,
+															}),
+														},
+													],
+												};
+											},
+										}),
+									]
+								: []),
 							defineTool({
 								name: 'complete_lesson',
 								description:
@@ -375,6 +505,12 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 								async execute(args) {
 									const completion =
 										config.checkpoint!.completionSchema.parse(args);
+									if (
+										session.lessonContext &&
+										(completion.planId !== session.lessonContext.planId ||
+											completion.courseId !== session.lessonContext.courseId)
+									)
+										throw new StudyError(409, 'Assess only the bound lesson.');
 									const current = await recordFor(harness, sessionId);
 									const saved = JSON.parse(current.session) as Session;
 									if (saved.pending?.id !== input.requestId)
@@ -434,6 +570,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					operation: config.operation,
 					data: {
 						learner: session.learner,
+						lessonContext: session.lessonContext ?? null,
 						...(config.checkpoint
 							? { profileUpdate: session.profileUpdate ?? null }
 							: {}),
@@ -619,9 +756,10 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			const now = new Date().toISOString();
 			session = {
 				...session,
-				title: session.messages.length
-					? session.title
-					: input.message.slice(0, 70),
+				title:
+					session.lessonContext || session.messages.length
+						? session.title
+						: input.message.slice(0, 70),
 				learner: config.checkpoint
 					? session.learner
 					: (answer.data.learner ?? session.learner),
@@ -685,6 +823,13 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				state.turns[input.requestId].content = '';
 			}, context);
 			return session;
+		}).catch((error: unknown) => {
+			if (error instanceof Error && error.name === 'TimeoutError')
+				throw new StudyError(
+					504,
+					'The coach timed out before finishing. Your conversation and previously saved progress are preserved. Retry this message to continue.',
+				);
+			throw error;
 		});
 		if (result.profileUpdate === 'pending') scheduleProfileUpdate(sessionId);
 		return result;
@@ -769,9 +914,26 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					if (failed) job.attempts++;
 					if (!failed) {
 						// Merge into the latest session, retaining messages and any pending chat.
-						current.learner = learner!;
-						job.done = true;
-						delete job.input;
+						// A background result must not overwrite a more recent live checkpoint.
+						if (
+							JSON.stringify(current.learner) !==
+							JSON.stringify(claimed.session.learner)
+						) {
+							job.done = true;
+							current.profileUpdate = 'failed';
+							state.session = JSON.stringify(current);
+							return;
+						}
+						try {
+							current.learner = config.persistLearner
+								? await config.persistLearner(learner!, claimed.session)
+								: learner!;
+							job.done = true;
+							delete job.input;
+						} catch {
+							// Persistence conflicts are terminal for this stale input, not a new model request.
+							job.attempts = 3;
+						}
 					}
 					const outstanding = Object.values(state.turns).filter(
 						(t) => t.profile && !t.profile.done,
@@ -814,6 +976,12 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					`${config.namespace}-${requestId}`,
 				);
 			await conversation?.abort(context);
+			if (pending?.checkpointSaved)
+				session.messages.push({
+					role: 'user',
+					content: pending.message,
+					createdAt: new Date().toISOString(),
+				});
 			session.pending = null;
 			await harness.commit(async (tx) => {
 				if (conversation)
@@ -840,6 +1008,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 	}
 	return {
 		createSession,
+		mutateSession,
 		listSessions,
 		getSession,
 		runTurn,
