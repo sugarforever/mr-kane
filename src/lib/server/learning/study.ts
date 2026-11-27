@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import {
 	defineDoc,
+	defineTool,
 	defineDocFamily,
 	type Harness,
 	type Conversation,
@@ -42,14 +43,15 @@ export type StudyConfig<Learner> = {
 	namespace: string;
 	title: string;
 	operation: string;
+	replyFormat?: 'markdown';
 	agent: AgentDefinition;
 	emptyLearner: () => Learner;
 	answerSchema: z.ZodType<{
 		reply: string;
 		learner?: Learner;
-		lessonCompletion?: LessonCompletion | null;
 	}>;
 	checkpoint?: {
+		completionSchema: z.ZodType<LessonCompletion>;
 		generate: (
 			session: StudySession<Learner>,
 			completion: LessonCompletion,
@@ -79,6 +81,8 @@ type Turn = {
 	submissionId: number | null;
 	legacy: boolean;
 	profile?: ProfileJob;
+	completionRequested?: LessonCompletion;
+	replyFormat?: 'markdown';
 };
 // Session JSON preserves the public, subject-specific learner shape without constraining it to a shared profile.
 const Study = defineDocFamily<
@@ -309,12 +313,13 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 	): AgentOptions['onProgress'] {
 		return onProgress
 			? ({ text, reading }) => {
-					const progress = studyProgress(text, reading);
-					onProgress(
-						config.checkpoint && progress.status === 'finishing'
-							? { ...progress, status: 'writing' }
-							: progress,
-					);
+					if (config.replyFormat === 'markdown') {
+						onProgress({
+							type: 'progress',
+							reply: text.slice(0, 20000),
+							status: reading ? 'reading' : text ? 'writing' : 'thinking',
+						});
+					} else onProgress(studyProgress(text, reading));
 				}
 			: undefined;
 	}
@@ -355,12 +360,76 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					'Start a new conversation to continue studying.',
 				);
 			await reserveRequest(sessionId, input.requestId, input.message);
+			const turnAgent: AgentDefinition = !config.checkpoint
+				? config.agent
+				: {
+						...config.agent,
+						createTools: (toolContext) => [
+							...config.agent.createTools(toolContext),
+							defineTool({
+								name: 'complete_lesson',
+								description:
+									'Request background profile consolidation after assessment establishes a completed chapter lesson. Use its saved planId and courseId. Acceptance records the request, not verified mastery or a saved profile. Runs after this reply is saved.',
+								parameters: z.toJSONSchema(config.checkpoint!.completionSchema),
+								replay: 'safe',
+								async execute(args) {
+									const completion =
+										config.checkpoint!.completionSchema.parse(args);
+									const current = await recordFor(harness, sessionId);
+									const saved = JSON.parse(current.session) as Session;
+									if (saved.pending?.id !== input.requestId)
+										throw new Error('This turn is no longer pending.');
+									let status: 'accepted' | 'pending' | 'already-completed' =
+										'accepted';
+									if (config.checkpoint!.isComplete(saved.learner, completion))
+										status = 'already-completed';
+									else if (
+										Object.values(current.turns).some(
+											(t) =>
+												t.profile &&
+												!t.profile.done &&
+												t.profile.attempts < 3 &&
+												t.profile.completion.planId === completion.planId &&
+												t.profile.completion.courseId === completion.courseId,
+										)
+									)
+										status = 'pending';
+									else {
+										const previous =
+											current.turns[input.requestId].completionRequested;
+										if (
+											previous &&
+											(previous.planId !== completion.planId ||
+												previous.courseId !== completion.courseId)
+										)
+											throw new Error('Complete one chapter per turn.');
+										await harness.commit(async (tx) => {
+											(await tx.doc(Study, sessionId, '')).turns[
+												input.requestId
+											].completionRequested = completion;
+										}, context);
+									}
+									return {
+										output: [
+											{
+												type: 'text',
+												text: JSON.stringify({
+													status,
+													...completion,
+													message:
+														'The saved profile changes only after background validation succeeds.',
+												}),
+											},
+										],
+									};
+								},
+							}),
+						],
+					};
 			const onAgentProgress = progressSink(onProgress);
 			let conversation: Conversation | undefined;
 			if (!turn) {
-				const snapshot = generate
-					? undefined
-					: await snapshotAgent(config.agent);
+				const snapshot = generate ? undefined : await snapshotAgent(turnAgent);
 				const content = JSON.stringify({
 					operation: config.operation,
 					data: {
@@ -371,12 +440,14 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 						messages: [{ role: 'user', content: input.message }],
 						historyOmitted: false,
 					},
-					outputSchema: z.toJSONSchema(config.answerSchema),
+					...(config.replyFormat !== 'markdown'
+						? { outputSchema: z.toJSONSchema(config.answerSchema) }
+						: {}),
 				});
 				if (snapshot) {
 					const agent = configure(
 						snapshot,
-						config.agent,
+						turnAgent,
 						`${config.namespace}-${requestId}`,
 					);
 					conversation = record.conversationId
@@ -399,6 +470,9 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					snapshot: snapshot ? JSON.stringify(snapshot) : '',
 					submissionId: null,
 					legacy: false,
+					...(config.replyFormat === 'markdown'
+						? { replyFormat: 'markdown' as const }
+						: {}),
 				};
 				session.pending = { id: input.requestId, message: input.message };
 				await harness.commit(async (tx) => {
@@ -420,6 +494,30 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				const data = turn.legacy
 					? JSON.parse(turn.content)
 					: JSON.parse(turn.content).data;
+				let responseSchema: unknown =
+					config.replyFormat === 'markdown'
+						? undefined
+						: z.toJSONSchema(config.answerSchema);
+				let executionAgent = turnAgent;
+				if (turn.legacy) {
+					const db = database();
+					try {
+						const archived = db
+							.prepare('SELECT snapshot FROM jobs WHERE id=?')
+							.get(`${config.namespace}-${input.requestId}`) as
+							{ snapshot: string } | undefined;
+						responseSchema = archived
+							? JSON.parse(JSON.parse(archived.snapshot).content).outputSchema
+							: z.toJSONSchema(config.answerSchema);
+					} finally {
+						db.close();
+					}
+					executionAgent = {
+						...turnAgent,
+						loadPrompt: async () =>
+							`${await turnAgent.loadPrompt()}\n\nLEGACY RESPONSE CONTRACT\nThis request was admitted with a JSON response contract. Return one JSON object matching outputSchema, with student-facing Markdown in reply.`,
+					};
+				}
 				raw = await (
 					generate ??
 					((op, data, schema, id, options) =>
@@ -427,9 +525,9 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				)(
 					config.operation,
 					data,
-					z.toJSONSchema(config.answerSchema),
+					responseSchema,
 					`${config.namespace}-${input.requestId}`,
-					{ agent: config.agent, onProgress: onAgentProgress },
+					{ agent: executionAgent, onProgress: onAgentProgress },
 				);
 			} else {
 				const snapshot = JSON.parse(turn.snapshot) as AgentSnapshot;
@@ -440,7 +538,7 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 					);
 				const agent = configure(
 					snapshot,
-					config.agent,
+					turnAgent,
 					`${config.namespace}-${requestId}`,
 				);
 				conversation ??= (await harness.conversation(
@@ -477,9 +575,14 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 			}
 			let parsed: unknown;
 			try {
-				parsed = JSON.parse(
-					raw.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, ''),
-				);
+				parsed =
+					config.replyFormat === 'markdown' && turn.replyFormat === 'markdown'
+						? { reply: raw }
+						: JSON.parse(
+								raw
+									.replace(/^\s*```(?:json)?\s*/, '')
+									.replace(/\s*```\s*$/, ''),
+							);
 			} catch {
 				throw new StudyError(
 					502,
@@ -530,12 +633,21 @@ export function createStudy<Learner>(config: StudyConfig<Learner>) {
 				updatedAt: now,
 				pending: null,
 			};
-			const completion = answer.data.lessonCompletion;
+			const latest = await recordFor(harness, sessionId);
+			const legacyCompletion =
+				config.checkpoint && turn.replyFormat !== 'markdown'
+					? config.checkpoint.completionSchema.safeParse(
+							(parsed as { lessonCompletion?: unknown })?.lessonCompletion,
+						)
+					: undefined;
+			const completion =
+				latest.turns[input.requestId].completionRequested ??
+				(legacyCompletion?.success ? legacyCompletion.data : undefined);
 			const needsProfile =
 				config.checkpoint &&
 				completion &&
 				!config.checkpoint.isComplete(session.learner, completion) &&
-				!Object.values(record.turns).some(
+				!Object.values(latest.turns).some(
 					(t) =>
 						t.profile &&
 						!t.profile.done &&

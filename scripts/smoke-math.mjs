@@ -121,6 +121,15 @@ const model = createServer(async (req, res) => {
 		.filter((m) => m.role === 'tool')
 		.map((m) => m.content)
 		.join('\n');
+	const needCompletion =
+		isCompletion &&
+		!parsed.messages
+			.slice(parsed.messages.findLastIndex((m) => m.role === 'user') + 1)
+			.some(
+				(m) =>
+					m.role === 'assistant' &&
+					m.tool_calls?.some((t) => t.function.name === 'complete_lesson'),
+			);
 	const needIrmo = isIrmo && !toolText.includes('IRMO-2024-P2-Q6');
 	const needAops = isIrmo && !needIrmo && !toolText.includes('pdf-page-');
 	const first = parsed.messages.filter((m) => m.role === 'user').length === 1;
@@ -142,7 +151,6 @@ const model = createServer(async (req, res) => {
 	};
 	if (isCompletion) {
 		answer.reply = 'Lesson complete.';
-		answer.lessonCompletion = completion;
 	}
 	delete answer.learner;
 	if (isIrmo) {
@@ -152,7 +160,7 @@ const model = createServer(async (req, res) => {
 			'Let’s work on **IrMO 2024, Paper 2, Question 6**.\n\n$$\\binom{n}{1}+\\binom{n}{3}=2^m.$$\n\nThe binomial coefficient $\\binom{n}{3}$ counts ways to choose three objects from $n$. Start by writing it as $n(n-1)(n-2)/6$. What happens when you try $n=3$ and $n=4$?\n\nFor the foundations, we can revisit **AoPS Volume 1, section 5.1 (Divisibility)** and then binomial coefficients. [Original question](https://maths.ucd.ie/~dukes/Irish_Maths_Olympiad_Compendium.pdf#page=81).';
 	}
 	const delta =
-		calls === 1 || needIrmo || needAops
+		calls === 1 || needIrmo || needAops || needCompletion
 			? {
 					role: 'assistant',
 					tool_calls: [
@@ -161,17 +169,23 @@ const model = createServer(async (req, res) => {
 							id: 'read-math',
 							type: 'function',
 							function: {
-								name: needIrmo ? 'irmo_read' : 'aops_read',
-								arguments: needIrmo
-									? JSON.stringify({ id: 'IRMO-2024-P2-Q6' })
-									: needAops
-										? JSON.stringify({ chapterId: 'V1-C05', section: '5.1' })
-										: '{"chapterId":"V1-C03","section":"3.2"}',
+								name: needCompletion
+									? 'complete_lesson'
+									: needIrmo
+										? 'irmo_read'
+										: 'aops_read',
+								arguments: needCompletion
+									? JSON.stringify(completion)
+									: needIrmo
+										? JSON.stringify({ id: 'IRMO-2024-P2-Q6' })
+										: needAops
+											? JSON.stringify({ chapterId: 'V1-C05', section: '5.1' })
+											: '{"chapterId":"V1-C03","section":"3.2"}',
 							},
 						},
 					],
 				}
-			: { role: 'assistant', content: JSON.stringify(answer) };
+			: { role: 'assistant', content: answer.reply };
 	res.writeHead(200, { 'Content-Type': 'text/event-stream' });
 	const chunk = (delta, finish_reason) => ({
 		id: 'math-smoke',
@@ -184,7 +198,7 @@ const model = createServer(async (req, res) => {
 		const gate = new Promise((resolve) => {
 			releaseReply = resolve;
 		});
-		const text = JSON.stringify(answer);
+		const text = answer.reply;
 		res.write(
 			`data: ${JSON.stringify(chunk({ role: 'assistant', content: text.slice(0, 60) }, null))}\n\n`,
 		);
@@ -195,7 +209,7 @@ const model = createServer(async (req, res) => {
 		return;
 	}
 	res.end(
-		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 || needIrmo || needAops ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
+		`data: ${JSON.stringify(chunk(delta, null))}\n\ndata: ${JSON.stringify(chunk({}, calls === 1 || needIrmo || needAops || needCompletion ? 'tool_calls' : 'stop'))}\n\ndata: [DONE]\n\n`,
 	);
 });
 await new Promise((r) => model.listen(0, '127.0.0.1', r));

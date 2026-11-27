@@ -26,7 +26,6 @@ export const lessonCompletionSchema = z.object({
 });
 export const mathAnswerSchema = z.object({
 	reply: z.string().trim().min(1).max(20000),
-	lessonCompletion: lessonCompletionSchema.nullable().optional(),
 });
 export { studyTurnSchema as mathTurnSchema } from './learning';
 export type Learner = z.infer<typeof learnerSchema>;

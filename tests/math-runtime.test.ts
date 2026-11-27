@@ -57,7 +57,7 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 				parsed.messages.filter((m: any) => m.role === 'user').at(-1).content,
 			);
 			expect(input.data.learner.background).toBe('');
-			expect(input.outputSchema.properties).not.toHaveProperty('learner');
+			expect(input).not.toHaveProperty('outputSchema');
 			expect(
 				parsed.messages.some(
 					(m: any) =>
@@ -83,11 +83,8 @@ it('runs an AoPS retrieval tool through Pi and keeps math context separate from 
 					}
 				: {
 						role: 'assistant',
-						content: JSON.stringify({
-							reply:
-								'A residue is a remainder. What is the remainder of 12 divided by 5?',
-							learner,
-						}),
+						content:
+							'A residue is a remainder. What is the remainder of 12 divided by 5?',
 					};
 		res.writeHead(200, { 'Content-Type': 'text/event-stream' });
 		const chunk = (delta: unknown, finish_reason: string | null) => ({

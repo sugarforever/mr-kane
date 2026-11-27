@@ -49,15 +49,9 @@ async function setup(suffix?: string) {
 		}
 		calls++;
 		res.writeHead(200, { 'Content-Type': 'text/event-stream' });
-		delta(res, '{"reply":"Try $x');
+		delta(res, 'Try $x');
 		await gate;
-		delta(
-			res,
-			suffix ??
-				'^2$\\nNext step: \\"factor\\".","learner":' +
-					JSON.stringify(emptyLearner()) +
-					'}',
-		);
+		delta(res, suffix ?? '^2$\nNext step: "factor".');
 		delta(res, '', 'stop');
 		res.end('data: [DONE]\n\n');
 	});
@@ -146,8 +140,8 @@ it('delivers partial reply before generation finishes, then saves once and suppo
 		await reader.cancel();
 	}
 }, 10000);
-it('reports invalid completion as a stream error and keeps the turn retryable', async () => {
-	const { session, post } = await setup(' ends here","lessonCompletion":{}}');
+it('reports an oversized reply as a stream error and keeps the turn retryable', async () => {
+	const { session, post } = await setup('x'.repeat(20001));
 	const response = await post();
 	const reader = response.body!.getReader();
 	try {

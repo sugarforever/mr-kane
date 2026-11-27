@@ -109,7 +109,7 @@ it('keeps proposed plans in the conversation until a lesson completes', async ()
 			session.id,
 			randomUUID(),
 			'Please organize my number theory plan',
-			async () => JSON.stringify({ reply: 'Here is your plan.', learner }),
+			async () => 'Here is your plan.',
 		);
 		const saved = await getMathSession(session.id);
 		expect(saved.learner.coursePlans).toBeUndefined();

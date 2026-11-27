@@ -102,10 +102,7 @@ it.each([
 		await setImmediate();
 		await vi.advanceTimersByTimeAsync(delay);
 		const completedEarly = settled;
-		const answer = JSON.stringify({
-			reply: 'Here is the completed lesson on symmetric identities.',
-			learner: emptyLearner(),
-		});
+		const answer = 'Here is the completed lesson on symmetric identities.';
 		const chunk = (delta: unknown, finish_reason: string | null) => ({
 			id: 'slow-lesson',
 			object: 'chat.completion.chunk',

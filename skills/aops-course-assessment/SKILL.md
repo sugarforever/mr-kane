@@ -9,7 +9,7 @@ Use the saved learner plus subsequent conversation evidence. Apply [completion c
 
 ## Decide
 
-- Complete: summarize the chapter evidence and next step, then signal completion under the host's response contract. Teaching may advance.
+- Complete: summarize the chapter evidence and next step, then call `complete_lesson` with the planId and courseId. Teaching may advance.
 - Partial: identify the unresolved objective and one targeted check or remediation action. Add a check only for a remaining uncertainty.
 - Waived: explain the placement evidence and rationale for omitting the chapter. Waiver is distinct from completion.
 - Paused: summarize progress, the current phase and the outstanding task for resumption.

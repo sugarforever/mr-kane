@@ -167,20 +167,10 @@ export async function runScenario(
 		const trace = texts(file);
 		const completion =
 			trace
-				.flatMap((t: any) => {
-					try {
-						const candidate = JSON.parse(
-							t.text
-								.replace(/^\s*```(?:json)?\s*/, '')
-								.replace(/\s*```\s*$/, ''),
-						).lessonCompletion;
-						const checked = lessonCompletionSchema.safeParse(candidate);
-						return checked.success ? [checked.data] : [];
-					} catch {
-						return [];
-					}
-				})
-				.at(0) ?? null;
+				.flatMap((entry: any) => entry.tools)
+				.filter((tool: any) => tool.name === 'complete_lesson')
+				.map((tool: any) => lessonCompletionSchema.safeParse(tool.arguments))
+				.find((parsed: any) => parsed.success)?.data ?? null;
 		let continuedChat: boolean | null = null;
 		// A genuine follow-up uses the same runtime while consolidation may still run.
 		if (completion) {
