@@ -1,36 +1,28 @@
 ---
 name: aops-course-planning
-description: Create or revise a personalized AoPS learning plan, reconcile existing progress, or adopt updated teaching rules in an unfinished lesson.
+description: Create or revise an AoPS learning plan, synchronize historical progress, or adapt an unfinished lesson to updated teaching rules.
 ---
 
 # Plan learning units
 
-A lesson is a learning unit that can be scheduled, assessed and completed independently. Its source may be a chapter, selected sections, a paper or a collection of problems. Define the unit from the student's goal, rather than equating source structure with learning requirements.
+A lesson is a unit with its own scope, objectives and completion criteria. Sources may be chapters, selected sections, papers or problem collections. In the current Mr. Kane adapter, use one selected AoPS chapter per lesson and its catalog courseId. Other groupings require adapter support.
 
-## Define a lesson
+## Define the plan
 
-For each unit establish:
-- Scope and source locators, including exclusions.
-- Observable knowledge and skill objectives.
-- Prerequisites and how missing prerequisites will be repaired.
-- Assessment tasks or task types mapped to objectives, distinguishing independent evidence from assistance.
-- Completion criteria appropriate to each objective, including reasoning or transfer where needed.
+1. Reuse the student's goal, background, time budget and demonstrated knowledge. Use `course_catalog` for routes and locators; optional branches are not prerequisites. Diagnose only uncertainties affecting placement.
+2. Retrieve sources and define each lesson:
+   - Scope, source locators and exclusions.
+   - Observable objectives and prerequisites, including needed repair.
+   - Assessment task types and `masteryCriteria` for each objective. State what independent work must demonstrate; include reasoning or transfer where the objective requires it.
+3. Put scope in the lesson title/objectives, source and prerequisite details in objective descriptions and the working plan, and completion requirements in each objective's `masteryCriteria`. Show the sequence and personalized coverage: summaries for demonstrated targets, detailed teaching for unfamiliar targets and repair for partial understanding.
+4. If asked to begin, load teaching. Otherwise end with the starting point.
 
-The current Mr. Kane adapter stores one selected AoPS chapter per lesson, using catalog courseIds. This is the current default and storage boundary: describe selected scope in the title/objectives and sources, prerequisites and assessment in objective descriptions and the working plan. Store each objective's completion requirement in optional `masteryCriteria`. Paper-based or multi-chapter units require a future adapter; do not invent unsupported courseIds.
+## Revise or synchronize
 
-## Create
+Use the saved checkpoint plus later conversation. Preserve plan/domain IDs, objective IDs, attempts, assistance levels, reports and completed targets. Increment revision and explain changes to scope, order or criteria. Put new targets after completion in a subsequent plan. Keep domains in separate plans.
 
-1. Reuse the student's background, goal, time budget and existing evidence. Use `course_catalog` for routes and locators; order includes optional branches. Diagnose only uncertainties affecting placement.
-2. Retrieve sources, choose the sequence and define the units above. Select criteria before evaluating completion. A complete independent task can cover several objectives; avoid an automatic two-task quota when declared criteria suffice.
-3. Reuse stable plan/objective IDs. Show the route and personal scope: detailed teaching for unfamiliar targets, summaries for demonstrated targets, targeted repair for partial understanding. Self-report informs placement but remains distinct from observed evidence.
-4. If asked to begin, load teaching; otherwise finish with the starting point.
+Map historical answers to equivalent objectives with exact excerpts and original assistance levels. Mark missing evidence unverified. Load assessment before deciding completion or waiver.
 
-## Revise, synchronize or adopt updated rules
+When adopting updated rules in an unfinished lesson, explicitly revise its criteria and personalized coverage. Reconcile the outstanding task: retain it for an unresolved uncertainty, or explain its replacement or retirement. Plain “continue” resumes teaching without requesting this revision.
 
-Read the saved learner checkpoint together with subsequent conversation. Preserve plan/domain IDs, objective IDs, original answers, assistance levels, reports and completed targets. Increment revision and state the reason when scope, objective criteria or order changes. New targets after completion belong in a subsequent plan.
-
-For an unfinished existing lesson, map actual attempts to objectives, retain demonstrated knowledge and identify only unresolved gaps. Adopt explicit masteryCriteria through a visible plan revision, not an implicit relaxation after a failed check. Older objectives without criteria retain the legacy completion default until revised. Load assessment before declaring completion or waiver.
-
-Reconcile the outstanding task: retain it when it answers a remaining uncertainty; replace or retire it with a brief reason when equivalent evidence already exists or a different check is needed. Synchronization alone does not begin teaching. If the student asks to adopt the new approach and continue, summarize the adapted scope briefly and load teaching immediately. A plain continue resumes the current task using current guidance; it does not request a full plan revision.
-
-Keep domains in separate plans. Reuse evidence for equivalent objectives with provenance and assistance intact. Keep the working plan in the conversation; the host persists learner checkpoints only on lesson completion. A rules update or reorganization does not itself call `complete_lesson`.
+End with the revised scope, recovered progress and next action. Synchronization alone stops here; if also asked to continue, load teaching. Keep working revisions in the conversation until the host's completion checkpoint persists them; reorganization alone does not trigger `complete_lesson`.

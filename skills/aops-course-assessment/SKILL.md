@@ -1,24 +1,22 @@
 ---
 name: aops-course-assessment
-description: Evaluate lesson objectives against declared criteria for completion, readiness, targeted repair, placement waiver, or historical synchronization.
+description: Assess lesson completion, readiness for a next activity, remediation, placement waiver, or historical progress.
 ---
 
 # Assess learning evidence
 
-Use the saved learner plus subsequent conversation and [completion criteria](references/completion.md), supplied as `completionCriteria` by `course_skill`. Assess each objective against its declared masteryCriteria; use the legacy default when absent.
+Read the saved learner and later conversation. Apply [completion criteria](references/completion.md), supplied as `completionCriteria` by `course_skill`.
 
-Map actual independent work to targets. Distinguish unassessed, partial, assisted and independently demonstrated understanding in the report using existing attempt support/result fields. A wrong answer may reflect a slip, method error or conceptual gap; resolve material uncertainty rather than inferring a missing concept from correctness alone. An all-correct diagnostic establishes completion only when coverage, reasoning and independence meet every target's criteria.
+For each objective identify the applicable criterion, supporting attempts, assistance and unresolved uncertainty. Distinguish unassessed, partial, assisted and independently demonstrated understanding using the existing support/result fields. Reassess disputed answers without rewriting original attempts.
 
 ## Decide
 
-- Complete: every target meets its criteria. Give a concise personalized summary and next step, then call `complete_lesson` with planId/courseId. Prior independent knowledge can satisfy the same criteria without repeated teaching.
-- Partial: identify the unresolved target and a discriminating check or targeted repair. Reuse sufficient evidence and retire redundant checks.
-- Ready to advance: prerequisites for the next activity are supported, while other targets remain incomplete. Record outstanding repair/review; readiness alone is not formal lesson completion.
-- Waived: explain why scope is omitted from the plan and the placement evidence. Waiver remains distinct from mastery-based completion.
-- Paused: retain the current phase and outstanding work for resumption.
+- Complete: all objectives meet the completion criteria. Give a concise summary and next step, then call `complete_lesson` with planId/courseId.
+- Partial: select a check or repair for the unresolved objective.
+- Ready for the next activity: its prerequisites are supported; retain other gaps. This is not a completion status. Pause the current lesson explicitly if moving to another formal lesson.
+- Waived: report the placement rationale for omitting scope. Demonstrated mastery is assessed as completion instead.
+- Paused: retain the phase and outstanding task.
 
 ## Report
 
-Identify source scope, each target's evidence and criterion, assistance and uncertainties. Cite original student excerpts. Recommend advancement, targeted repair or delayed review. Reading, tutor demonstrations and prompted agreement show exposure, not independent mastery. Re-solving a demonstrated problem does not alone establish transfer.
-
-Apply the same standards to historical synchronization and disputed assessments. Preserve original attempts and assistance when re-evaluating; describe any explicit plan revision rather than silently changing criteria.
+Identify source scope and each objective's criterion, exact evidence excerpts, assistance and uncertainty. Explain the decision and recommend the next task, repair or delayed review. Use the same criteria for historical synchronization; load planning if the unfinished plan needs revision.
